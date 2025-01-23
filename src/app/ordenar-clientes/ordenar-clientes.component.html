@@ -1,0 +1,67 @@
+<app-nav-var></app-nav-var>
+<div class="container mt-4">
+  <!-- Selección de criterio de ordenamiento -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label for="sortCriteria" class="form-label">Ordenar por:</label>
+      <select id="sortCriteria" class="form-select" [(ngModel)]="sortCriteria" (change)="onCriteriaChange()">
+        <option value="antiguedad">Antigüedad</option>
+        <option value="ultimaVenta">Fecha de Última Venta</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="dateRangeStart" class="form-label">Desde:</label>
+      <input
+        type="date"
+        id="dateRangeStart"
+        class="form-control"
+        [(ngModel)]="dateRangeStart"
+        (change)="fetchClients()"
+      />
+    </div>
+    <div class="col-md-4">
+      <label for="dateRangeEnd" class="form-label">Hasta:</label>
+      <input
+        type="date"
+        id="dateRangeEnd"
+        class="form-control"
+        [(ngModel)]="dateRangeEnd"
+        (change)="fetchClients()"
+      />
+    </div>
+  </div>
+
+  <!-- Selección de orden ascendente/descendente -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label for="sortOrder" class="form-label">Orden:</label>
+      <select id="sortOrder" class="form-select" [(ngModel)]="sortOrder" (change)="fetchClients()">
+        <option value="asc">Ascendente</option>
+        <option value="desc">Descendente</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Listado de clientes -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4" *ngFor="let client of clients">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ client.businessName }}</h5>
+            <p class="card-text">ID: {{ client._id }}</p>
+            <p class="card-text">CUIT: {{ client.cuit }}</p>
+            <p class="card-text">Dirección: {{ client.address }}</p>
+            <p class="card-text">Email: {{ client.email }}</p>
+            <p class="card-text">Estado: {{ client.status }}</p>
+            <p class="card-text">Teléfono: {{ client.phoneNumber }}</p>
+            <p class="card-text">Antigüedad: {{ client.createdAt | date }}</p>
+            <p class="card-text">Última Venta: {{ client.lastOrderDate | date }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>

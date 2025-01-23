@@ -1,0 +1,37 @@
+<app-nav-var></app-nav-var>
+
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label for="sortOrder" class="form-label">Ordenar por:</label>
+      <select id="sortOrder" class="form-select" [(ngModel)]="sortOrder" (change)="sortProducts()">
+        <option value="none">Ninguno</option>
+        <option value="asc">Precio: Menor a Mayor</option>
+        <option value="desc">Precio: Mayor a Menor</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-lg-3 mt-4" *ngFor="let product of products">
+        <div class="product-card">
+          <a [routerLink]="['/product', product._id]" class="no-underline">
+            <div class="card">
+              <img class="card-img-top" [src]="'http://localhost:3000/' + product.image"  alt="{{ product.name }}">
+              <div class="card-body">
+                <h5 class="card-title truncate">{{ product.desc }}</h5>
+                <p class="card-text truncate">{{ product.desc }}</p>
+                <p class="card-text">Stock: {{ product.stock }}</p>
+                <p class="card-text">Precio: {{ product.price }}</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="my-4"></div>
+  <app-footer></app-footer>
+</div>

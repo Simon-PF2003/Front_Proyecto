@@ -1,0 +1,62 @@
+<app-nav-var></app-nav-var>
+
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label for="categoryFilter" class="form-label">Filtrar por Categoría:</label>
+      <select id="categoryFilter" class="form-select" [(ngModel)]="selectedCategory" (change)="filterByCategory(selectedCategory)">
+        <option value="all">Todas</option>
+        <option value="Perifericos">Periféricos</option>
+        <option value="Componentes">Componentes</option>
+        <option value="Impresoras">Impresoras</option>      
+      </select>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 col-lg-3 mt-4" *ngFor="let product of filteredProducts">
+        <div class="product-card">
+          <div class="card">
+            <img class="card-img-top" [src]="'http://localhost:3000/' + product.image" alt="{{ product.name }}">
+            <div class="card-body">
+              <h5 class="card-title truncate">{{ product.name }}</h5>
+              <p class="card-text truncate">{{ product._id }}</p>
+              <p class="card-text truncate">{{ product.desc }}</p>
+              <p class="card-text">Stock: {{ product.stock }}</p>
+              <p class="card-text">Precio: {{ product.price }}</p>
+              <p class="card-text">Categoría: {{ product.cat }}</p>
+              <button class="btn btn-primary btn-sm" (click)="openModal(product)">Modificar Categoría</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="my-4"></div>
+  <app-footer></app-footer>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'd-block': showModal }">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modificar Categoría</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+        <label for="newCategory" class="form-label">Nueva Categoría:</label>
+        <select id="newCategory" class="form-select" [(ngModel)]="newCategory">
+            <option value="Perifericos">Periféricos</option>
+            <option value="Componentes">Componentes</option>
+            <option value="Impresoras">Impresoras</option>    
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="saveCategory()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
