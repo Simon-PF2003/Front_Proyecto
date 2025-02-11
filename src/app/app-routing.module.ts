@@ -23,6 +23,7 @@ import { AgruparProductosComponent } from './agrupar-productos/agrupar-productos
 import { OrdenarClientesComponent } from './ordenar-clientes/ordenar-clientes.component';
 import { FacturacionComponent } from './facturacion/facturacion.component';
 import { RecaudacionComponent } from './recaudacion/recaudacion.component';
+import { AltaDeClienteComponent } from './alta-de-cliente/alta-de-cliente.component';
 
 const routes: Routes = [
 
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'perfilUsuario', component: PerfilUsuarioComponent},
   { path: 'cart', component: CartComponent },
   { path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  { path: 'alta-de-cliente', component: AltaDeClienteComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
   { path: 'alta-usuario', component: AltaClienteComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
   { path: 'ingreso-stock', component: IngresoStockComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
   {path:'retrieve-pass',component:RetrievePassComponent},

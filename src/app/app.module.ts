@@ -45,6 +45,7 @@ import { OrdenarClientesComponent } from './ordenar-clientes/ordenar-clientes.co
 import { AgruparProductosComponent } from './agrupar-productos/agrupar-productos.component';
 import { FacturacionComponent } from './facturacion/facturacion.component';
 import { RecaudacionComponent } from './recaudacion/recaudacion.component';
+import { AltaDeClienteComponent } from './alta-de-cliente/alta-de-cliente.component';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { RecaudacionComponent } from './recaudacion/recaudacion.component';
     AgruparProductosComponent,
     FacturacionComponent,
     RecaudacionComponent,
+    AltaDeClienteComponent,
 
   ],
 

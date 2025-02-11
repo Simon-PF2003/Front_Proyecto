@@ -3,10 +3,6 @@
 **Parte Front del Trabajo**
 PENDIENTES
 
-Caso de uso: Registrar Cliente:
-•	Se genera una solicitud al admin que debe aceptar al usuario (incluir en alta de usuarios o nueva sección de admin panel).
-•	Se debe generar id y contraseña automática. Ingresa con ID, no con email. CAMBIAR LOGIN.
-
 Caso de uso: Realizar pedido:
 •	Validar temas de moroso o al día. Para esto vamos a tener que hacer temas de facturación 
 
@@ -43,9 +39,13 @@ PREGUNTAS
 Caso de uso: Actualizar o agregar producto:
 o	Es necesario el cambio en la interfaz en la actualización?? Ralentiza los tiempos de carga, es poco accesible y poco usable. Tener que buscar al producto por ID es ridículo. Me gusta mas como esta hecho. PREGUNTAR A RIPANI
 
+Caso de uso: Registrar cliente:
+o   Podemos dejarlo con que ingresa con email en vez de id? Mongo no usa id numericos ni autoincrementales.
+
 --------------
 
 TERMINADOS
 Caso de uso: Conformar pedido: LISTO
 Caso de uso: Cancelar pedido: Listo 
 Caso de uso: Agrupar por categoría: LISTO
+Caso de uso: Registrar Cliente: LISTO (Email en vez de ID) --> Se agrego una sección "alta-de-cliente" para el listado de clientes pendientes de aprobación y funciones referidas a la aprobacion o rechazo del mismo. El login ahora recibe otro codigo de error si el usuario no fue aceptado o si fue rechazado. Se agregan funciones referidas a aceptar usuario o rechazarlo y a obtener el listado en el auth.service. El registro no pide contraseña porque ahora se genera automaticamente al aceptar al usuario y se le envia por mail. En app-routing, se agregan rutas correspondientes a la nueva componente de angular (alta-de-cliente). En el reporte de ordenamiento de clientes, si se encuentra vacio el campo de ultima venta, se muestra la aclaración de que no se encontraron ventas. Se agrega la sección para alta de clientes en el admin panel y se modifica la otra a "Editar clientes".

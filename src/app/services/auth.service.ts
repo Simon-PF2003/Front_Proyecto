@@ -25,6 +25,20 @@ export class AuthService {
     return this.http.post<any>(this.URL + '/signup', user);
   }
 
+  
+  getPendingUsers(): Observable<any[]> {
+    console.log('Obteniendo usuarios pendientes');
+    return this.http.get<any[]>(`${this.URL}/pendingUsers`);
+  }
+
+  rejectUser(email: string) {
+    return this.http.patch<any>(`${this.URL}/rejectUser/${ email }`, {});
+  }
+
+  acceptUser(id: string, email: string, password: string) {
+    return this.http.patch<any>(`${this.URL}/acceptUser/${ email }`, { password });
+  }
+
   logIn(user: any): Observable<any> {
     return this.http.post<any>(this.URL + '/login', user).pipe(
       tap((response) => {

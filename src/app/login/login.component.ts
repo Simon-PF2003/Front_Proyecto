@@ -48,15 +48,20 @@ sanitizeInput(input: string): SafeHtml {
 
          if (err.status === 401) {
            errorMessage = 'Credenciales incorrectas. Por favor, verifique su nombre de usuario y contraseña.';
-         } else if (err.status === 403) {
+         } else if (err.status === 402) {
+            errorMessage = 'Acceso denegado. El usuario aún no ha sido aceptado por el administrador.';
+          } 
+         else if (err.status === 403) {
           errorMessage = 'Acceso denegado. No tiene permiso para acceder a esta página.';
-         } 
+         }
+         else if (err.status === 405) {
+          errorMessage = 'Acceso denegado. El usuario ha sido rechazado por el administrador.';
+          }
 
         Swal.fire({
            icon: 'error',
            title: 'Inicio de sesión fallido',
            text: err.error,
-           timer: 1000,
          });
           }
         }

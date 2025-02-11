@@ -56,7 +56,12 @@
             <p class="card-text">Estado: {{ client.status }}</p>
             <p class="card-text">Teléfono: {{ client.phoneNumber }}</p>
             <p class="card-text">Antigüedad: {{ client.createdAt | date }}</p>
-            <p class="card-text">Última Venta: {{ client.lastOrderDate | date }}</p>
+            <p class="card-text" *ngIf="client.lastOrderDate; else noSales">
+              Última Venta: {{ client.lastOrderDate | date }}
+            </p>
+            <ng-template #noSales>
+              <p class="card-text">Ultima venta: No se realizaron ventas a este cliente</p>
+            </ng-template>
           </div>
         </div>
       </div>

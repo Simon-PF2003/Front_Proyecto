@@ -1,0 +1,29 @@
+<app-nav-var></app-nav-var>
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Alta de Clientes</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" *ngFor="let user of users">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Razón Social: {{ user.businessName }}</h5>
+                        <p class="card-text">ID: {{ user._id }}</p>
+                        <p class="card-text">CUIT: {{ user.cuit }}</p>
+                        <p class="card-text">Dirección: {{ user.address }}</p>
+                        <p class="card-text">Email: {{ user.email }}</p>
+                        <p class="card-text">Estado: {{ user.status }}</p>
+                        <p class="card-text">Teléfono: {{ user.phoneNumber }}</p>
+                        <p class="card-text">Antigüedad: {{ user.createdAt | date }}</p>
+                        <p class="card-text">Estado de aceptación: {{ user.accepted }}</p>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-primary" (click)="acceptUser(user)">Aceptar</button>
+                            <button class="btn btn-danger" (click)="rejectUser(user._id, user.email)">Rechazar</button>
+                        </div>
+
+            </div>
+        </div>
+    </div>
+    <app-footer></app-footer>
+</div>
+
