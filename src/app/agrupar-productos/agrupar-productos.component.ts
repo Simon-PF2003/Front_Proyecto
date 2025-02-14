@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-agrupar-productos',
@@ -15,20 +16,35 @@ export class AgruparProductosComponent implements OnInit {
   editingProduct: any = null;
   newCategory: string = '';
   showModal: boolean = false;
+  searchTerm: string = '';
 
   constructor(
     private productService: ProductService,
-    private authService: AuthService
+    private authService: AuthService,
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
     this.authService.checkAuthAndRedirect();
+    this.route.queryParams.subscribe((queryParams) => {
+      this.searchTerm = queryParams['q'] || '';
+      this.fetchProducts();
+    }
+    );
+  }
 
+  async fetchProducts() {
     try {
       // Fetch all products and categories
-      const data = await firstValueFrom(this.productService.getProducts());
-      this.products = data || [];
-      this.filteredProducts = [...this.products];
+      if (this.searchTerm === 'all' || !this.searchTerm) {
+        const data = await firstValueFrom(this.productService.getProducts());
+        this.products = data || [];
+      } else {
+        // Filter products by search term
+        const data = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
+        this.products = data || [];
+      }
+      this.filterByCategory(this.selectedCategory);
     } catch (error) {
       console.error('Error fetching products:', error);
     }

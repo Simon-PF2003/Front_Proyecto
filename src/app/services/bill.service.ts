@@ -15,7 +15,12 @@ export class BillService {
         private http: HttpClient,
         private router: Router
     ) {}
+    
     createBill (billData: any, pagado: boolean): Observable<any> {
         return this.http.post<any>(this.URL + '/generateNewBill', { billData, pagado });
     };
+
+    getBills (dateStart: string, dateEnd: string): Observable<any> {
+        return this.http.get<any>(this.URL + '/getBills', { params: { dateStart, dateEnd }});
     }
+}

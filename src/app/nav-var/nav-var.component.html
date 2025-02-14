@@ -28,7 +28,7 @@
             <app-down-comp *ngIf="isProductosRoute()"></app-down-comp>
             <app-down-comp *ngIf="isStockRoute()"></app-down-comp>
         </li>
-        <li class="col-auto d-flex" *ngIf="isProductosRoute() || isStockRoute() || isEditProductsRoute()">
+        <li class="col-auto d-flex" *ngIf="isProductosRoute() || isStockRoute() || isEditProductsRoute() || isProductCategoryRoute()">
             <input class="busqueda form-control" type="text" id="searchProduct" [(ngModel)]="searchTerm" (keyup.enter)="searchProducts()"
                 placeholder="Buscar producto">
             <form class="form-inline" role="search">

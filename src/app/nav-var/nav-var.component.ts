@@ -75,6 +75,10 @@ export class NavVarComponent implements OnInit {
     return this.currentRoute.includes('/modificar-producto');
   }
 
+  isProductCategoryRoute(): boolean {
+    return this.currentRoute.includes('/agrupar-productos');
+  }
+
   isOrdersRoute(): boolean {
     return this.currentRoute.includes('/pedidos');
   }
@@ -90,14 +94,27 @@ searchProducts() {
   if (this.searchTerm) {
     if (this.currentRoute.includes('/productos')) {
       this.router.navigate(['/productos'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
-    } else if (this.currentRoute.includes('/ingresar-stock')) {
-      this.router.navigate(['/ingresar-stock'], { relativeTo: this.route, queryParams: { q: this.searchTerm } }); 
+    } else if (this.currentRoute.includes('/ingreso-stock')) {
+      this.router.navigate(['/ingreso-stock'], { relativeTo: this.route, queryParams: { q: this.searchTerm } }); 
     } else if (this.currentRoute.includes('/modificar-producto')) {
       this.router.navigate(['/modificar-producto'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
-    } else {
-      this.router.navigate(['/productos'], { relativeTo: this.route });
+    } else if (this.currentRoute.includes('/agrupar-productos')) {
+      this.router.navigate(['/agrupar-productos'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     }
-  }
+  } else {
+    if (this.currentRoute.includes('/productos')) {
+      this.router.navigate(['/productos'], { relativeTo: this.route });
+    } else if (this.currentRoute.includes('/ingreso-stock')) {
+      this.router.navigate(['/ingreso-stock'], { relativeTo: this.route });
+    } else if (this.currentRoute.includes('/modificar-producto')) {
+      this.router.navigate(['/modificar-producto'], { relativeTo: this.route });
+    } else if (this.currentRoute.includes('/agrupar-productos')) {
+      this.router.navigate(['/agrupar-productos'], { relativeTo: this.route });
+    } else {
+
+      console.warn('No matching route found for search.');
+    }
+}
 }
 
 searchOrders() {
