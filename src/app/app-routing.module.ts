@@ -25,6 +25,8 @@ import { EmisionFacturaComponent } from './emision-factura/emision-factura.compo
 import { RecaudacionComponent } from './recaudacion/recaudacion.component';
 import { AltaDeClienteComponent } from './alta-de-cliente/alta-de-cliente.component';
 import { AgregarClienteManualComponent } from './alta-cliente/agregar-cliente-manual/agregar-cliente-manual.component';
+import { ModificarProductoComponent } from './productos/modificar-producto/modificar-producto.component';
+import { ModificarProveedorComponent } from './ud-proveedor/modificar-proveedor/modificar-proveedor.component';
 
 const routes: Routes = [
 
@@ -35,6 +37,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'nuevo-producto', component: NuevoProductoComponent },
+  { path: 'modificar-producto', component: ModificarProductoComponent },
   { path: 'product/:id', component: SingleProductComponent },
   { path: 'perfilUsuario', component: PerfilUsuarioComponent},
   { path: 'cart', component: CartComponent },
@@ -46,7 +49,8 @@ const routes: Routes = [
   { path: 'ingreso-stock', component: IngresoStockComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
   {path:'retrieve-pass',component:RetrievePassComponent},
   {path: 'alta-proveedor', component:AltaProveedorComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
-  {path: 'ud-proveedor', component:UdProveedorComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
+  {path: 'ud-proveedor', component:UdProveedorComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},  
+  { path: 'modificar-proveedor', component: ModificarProveedorComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
   {path: 'myorders', component:OrdersComponent},
   {path: 'pedidos', component:PedidosAdminComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   {path: 'agrupar-productos', component:AgruparProductosComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },

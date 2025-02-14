@@ -71,6 +71,10 @@ export class NavVarComponent implements OnInit {
   return this.currentRoute.includes('/ingreso-stock');
 }
 
+  isEditProductsRoute(): boolean {
+    return this.currentRoute.includes('/modificar-producto');
+  }
+
   isOrdersRoute(): boolean {
     return this.currentRoute.includes('/pedidos');
   }
@@ -84,10 +88,15 @@ searchProducts() {
   console.log(this.searchTerm);
 
   if (this.searchTerm) {
-    this.router.navigate(['/productos'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
-  }
-  else {
-    this.router.navigate(['/productos'], { relativeTo: this.route });
+    if (this.currentRoute.includes('/productos')) {
+      this.router.navigate(['/productos'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
+    } else if (this.currentRoute.includes('/ingresar-stock')) {
+      this.router.navigate(['/ingresar-stock'], { relativeTo: this.route, queryParams: { q: this.searchTerm } }); 
+    } else if (this.currentRoute.includes('/modificar-producto')) {
+      this.router.navigate(['/modificar-producto'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
+    } else {
+      this.router.navigate(['/productos'], { relativeTo: this.route });
+    }
   }
 }
 

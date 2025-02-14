@@ -58,11 +58,29 @@ async searchSuppliers(query: string): Promise<any[]> {
   });
 }
 
-  deleteSupplier(supplierId:string){ 
+  getSuppliers(): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      this.http.get<any[]>(this.URL + '/getSuppliers').subscribe(
+        {
+          next: response => {
+            console.log('Proveedores encontrados:', response);
+            const suppliers = response;
+            resolve(suppliers);
+          },
+          error: error => {
+            console.error('Error en la solicitud HTTP', error);
+            reject(error);
+          }
+        }
+      );
+    });
+  }
+
+  deleteSupplier(supplierId: string) { 
     const url = `${this.URL}/deleteSupplier/${supplierId}`;         
     return this.http.delete(url);
   };
-updateDetails(supplierId: string, details: { address: string, phoneNumber: string }): Observable<any> {
+updateDetails(supplierId: string, details: any): Observable<any> {
     const url = `${this.URL}/updateDetails/details/${supplierId}`;
     return this.http.patch(url, details);
   };

@@ -48,6 +48,8 @@ import { AltaDeClienteComponent } from './alta-de-cliente/alta-de-cliente.compon
 import { EmisionFacturaComponent } from './emision-factura/emision-factura.component';
 import { EdicionClienteComponent } from './alta-cliente/edicion-cliente/edicion-cliente.component';
 import { AgregarClienteManualComponent } from './alta-cliente/agregar-cliente-manual/agregar-cliente-manual.component';
+import { ModificarProductoComponent } from './productos/modificar-producto/modificar-producto.component';
+import { ModificarProveedorComponent } from './ud-proveedor/modificar-proveedor/modificar-proveedor.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +88,8 @@ import { AgregarClienteManualComponent } from './alta-cliente/agregar-cliente-ma
     EmisionFacturaComponent,
     EdicionClienteComponent,
     AgregarClienteManualComponent,
+    ModificarProductoComponent,
+    ModificarProveedorComponent,
   ],
 
   imports: [
