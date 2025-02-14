@@ -75,12 +75,25 @@ export class NuevoProductoComponent implements OnInit {
           },
           error:err => {
             console.log(err);
-
-           Swal.fire({
-             icon: 'error',
-             title: 'Registro fallido',
-             text: err.error,
-           });
+            if (err.status === 401) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Registro fallido',
+                text: 'El producto ya existe.',
+              });
+            } else if (err.status === 400) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Registro fallido',
+                text: 'No se ha adjuntado una imagen.',
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Registro fallido',
+                text: err.error,
+              });
+            }
           }
         }
         // res => {
