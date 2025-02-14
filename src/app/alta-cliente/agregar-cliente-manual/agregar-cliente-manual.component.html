@@ -1,0 +1,55 @@
+<!--<div class="modal-dialog" role="document">-->
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProductModalLabel">Agregar un cliente</h5>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+              <label for="clientMail">Email:</label>
+              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newUser.email" required>
+            </div>
+            <div class="form-group">
+                <label for="clientPassword">Contraseña:</label>
+                <input type="text" class="form-control" id="password" name="password" [(ngModel)]="newUser.password" required>
+            </div>
+            <div class="form-group">
+                <label for="clientCuit">Cuit:</label>
+                <input type="number" class="form-control" id="cuit" name="cuit" [(ngModel)]="newUser.cuit" required>
+            </div>
+            <div class="form-group">
+              <label for="clientBusinessName">Razón social:</label>
+              <input type="text" class="form-control" id="businessName" name="businessName" [(ngModel)]="newUser.businessName" required>
+            </div>
+            <div class="form-group">
+              <label for="clientStatus">Estado:</label>
+              <select class="form-control" name="status" id="status" [(ngModel)]="newUser.status" required>
+                <option value="Al día">Al día</option>
+                <option value="Moroso">Moroso</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="phoneNumber">Teléfono</label>
+              <input type="number" class="form-control" id="phoneNumber" name="phoneNumber" [(ngModel)]="newUser.phoneNumber" required>
+            </div>
+            <div class="form-group">
+              <label for="clientAddress">Dirección:</label>
+              <input type="text" class="form-control" id="address" name="address" [(ngModel)]="newUser.address" required>
+            </div>   
+            <div class="form-group">
+              <label for="role">Rol: </label>
+              <select class="form-control" name="role" id="role" [(ngModel)]="newUser.role" required>
+                <option value="Administrador">Administrador</option>
+                <option value="Usuario Comun">Usuario</option>
+              </select>
+            </div>
+            <div class="form-group mb-3 mt-2">
+              <label for="profileImage">Imagen del Cliente:</label>
+              <input type="file" class="form-control-file" id="profileImage" name="profileImage" accept="image/*" (change)="onImageSelected($event)">
+            </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
+        </div>
+      </div>

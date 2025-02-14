@@ -45,8 +45,8 @@
   <!-- Listado de clientes -->
   <div class="container">
     <div class="row">
-      <div class="col-md-4" *ngFor="let client of clients">
-        <div class="card mb-3">
+      <div class="col-md-4"  *ngFor="let client of clients">
+        <div class="card mb-3" style="background-color: gainsboro;">
           <div class="card-body">
             <h5 class="card-title">{{ client.businessName }}</h5>
             <p class="card-text">ID: {{ client._id }}</p>

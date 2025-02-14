@@ -43,9 +43,11 @@ import { PedidosAdminComponent } from './pedidos-admin/pedidos-admin.component';
 import { IngresoStockComponent } from './ingreso-stock/ingreso-stock.component';
 import { OrdenarClientesComponent } from './ordenar-clientes/ordenar-clientes.component';
 import { AgruparProductosComponent } from './agrupar-productos/agrupar-productos.component';
-import { FacturacionComponent } from './facturacion/facturacion.component';
 import { RecaudacionComponent } from './recaudacion/recaudacion.component';
 import { AltaDeClienteComponent } from './alta-de-cliente/alta-de-cliente.component';
+import { EmisionFacturaComponent } from './emision-factura/emision-factura.component';
+import { EdicionClienteComponent } from './alta-cliente/edicion-cliente/edicion-cliente.component';
+import { AgregarClienteManualComponent } from './alta-cliente/agregar-cliente-manual/agregar-cliente-manual.component';
 
 @NgModule({
   declarations: [
@@ -79,10 +81,11 @@ import { AltaDeClienteComponent } from './alta-de-cliente/alta-de-cliente.compon
     PedidosAdminComponent,
     OrdenarClientesComponent,
     AgruparProductosComponent,
-    FacturacionComponent,
     RecaudacionComponent,
     AltaDeClienteComponent,
-
+    EmisionFacturaComponent,
+    EdicionClienteComponent,
+    AgregarClienteManualComponent,
   ],
 
   imports: [

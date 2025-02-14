@@ -1,0 +1,53 @@
+<!--<div class="modal-dialog" role="document">-->
+    <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProductModalLabel">Editar Cliente</h5>
+        </div>
+        <div class="modal-body">
+          <form *ngIf="editedUser">
+            <div class="form-group">
+              <label for="clientMail">Email:</label>
+              <input type="text" class="form-control" id="clientMail" [(ngModel)]="editedUser.email" name="email">
+            </div>
+            <div class="form-group">
+                <label for="clientCuit">Cuit:</label>
+                <input type="number" class="form-control" id="clientCuit" [(ngModel)]="editedUser.cuit" name="cuit">
+            </div>
+            <div class="form-group">
+              <label for="clientBusinessName">Razón social:</label>
+              <input type="text" class="form-control" id="businessName" [(ngModel)]="editedUser.businessName" name="businessName">
+            </div>
+            <div class="form-group">
+              <label for="clientStatus">Estado:</label>
+              <select class="form-control" name="status" id="status" [(ngModel)]="editedUser.status" required>
+                <option value="Al día">Al día</option>
+                <option value="Moroso">Moroso</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="clientNumber">Teléfono</label>
+              <input type="number" class="form-control" id="clientNumber" [(ngModel)]="editedUser.phoneNumber"
+                name="phoneNumber">
+            </div>
+            <div class="form-group">
+              <label for="clientAddress">Dirección:</label>
+              <input type="text" class="form-control" id="clientAddress" [(ngModel)]="editedUser.address" name="address">
+            </div>   
+            <div class="form-group">
+              <label for="clientRole">Rol: </label>
+              <select class="form-control" name="role" id="role" [(ngModel)]="editedUser.role" required>
+                <option value="Administrador">Administrador</option>
+                <option value="Usuario Comun">Usuario</option>
+              </select>
+            </div>
+            <div class="form-group mb-3 mt-2">
+              <label for="image">Imagen del Cliente:</label>
+              <input type="file" class="form-control-file" id="image" name="image" accept="image/*" (change)="onImageSelected($event)">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
+          <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
+        </div>
+      </div>

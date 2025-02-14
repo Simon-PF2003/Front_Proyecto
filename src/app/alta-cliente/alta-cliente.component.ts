@@ -1,251 +1,101 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EdicionClienteComponent } from './edicion-cliente/edicion-cliente.component';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AgregarClienteManualComponent } from './agregar-cliente-manual/agregar-cliente-manual.component';
+
 @Component({
   selector: 'app-alta-cliente',
   templateUrl: './alta-cliente.component.html',
   styleUrls: ['./alta-cliente.component.css']
 })
 export class AltaClienteComponent implements OnInit {
-  decodedToken: any;
-  userData: any; 
+  clientes: any[] = [];
   cuit: string = '';
-  cuilEncontrado: boolean = false;
-  cliente: any = null; 
-  clientesEncontrados: any[] = [];
+  clienteSeleccionado: any = null;
+  clienteEncontrado: boolean = false;
   clienteEliminado: boolean = false;
   clienteModificado: boolean = false;
 
   constructor(
     public authService: AuthService,
     private router: Router,
-    private modalService: NgbModal,
+    private modalService: NgbModal
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.obtenerClientes();
+  }
 
+  async obtenerClientes() {
+    try {
+      const authToken = this.authService.getToken();
+      this.clientes = await this.authService.getUsers(authToken as string);
+    } catch (error) {
+      console.error('Error al obtener los clientes', error);
+    }
+  }
 
   async onBuscarClick() {
-  try {
-    const authToken = this.authService.getToken();
-    
-    // Si el término de búsqueda es un número, asumimos que es un CUIT
-    if (!isNaN(Number(this.cuit))) {
-      const cliente = await this.authService.getClienteCuil(this.cuit, authToken as string);
-      console.log(cliente);
-      if (cliente) {
-        this.cuilEncontrado = true;
-        this.cliente = cliente;
-        this.clienteModificado = false;
-        this.clienteEliminado = false;
+    try {
+      const authToken = this.authService.getToken();
+      if (!isNaN(Number(this.cuit))) {
+        this.clienteSeleccionado = await this.authService.getClienteCuil(this.cuit, authToken as string);
+      } else {
+        this.clientes = await this.authService.searchClientes(this.cuit, authToken as string);
       }
-    } else {
-      // Si no es un número, asumimos que es un nombre y buscamos por nombre
-      console.log('buscamos por nombre')
-      const clientes = await this.authService.searchClientes(this.cuit, authToken as string);
-      if (clientes && clientes.length > 0) {
-        this.cuilEncontrado = true;
-        this.clientesEncontrados = clientes;
-        this.clienteModificado = false;
-        this.clienteEliminado = false;
-  } else {
-    this.cuilEncontrado = false;
-    this.cliente = null;
-    Swal.fire(
-      'Denegado',
-      'No se encontraron clientes',
-      'warning',
-    );
-  }
+      this.clienteEncontrado = this.clienteSeleccionado || this.clientes.length > 0;
+    } catch (error) {
+      Swal.fire('Error', 'No se encontró ningún cliente. Busque por CUIT o Razón Social', 'warning');
     }
-  } catch (error) {
-    Swal.fire(
-      'Denegado',
-      'Error al buscar los clientes',
-      'warning',
-    );
-    console.error('Error al buscar los clientes', error);
   }
-}
 
-async onClienteSelect(cliente: any) {
-  try {
-    const authToken = this.authService.getToken();
-    const clienteSeleccionado = cliente;
-    console.log(clienteSeleccionado)
-    const client = await this.authService.getClienteCuil(clienteSeleccionado, authToken as string);
-  } catch (error) {
-    console.error('Error al obtener el cliente', error);
+  agregarCliente() {
+    const modalRef = this.modalService.open(AgregarClienteManualComponent, { centered: true });
+    modalRef.result.then((result) => {
+      if (result) {
+        this.obtenerClientes();
+      }
+    }, (reason) => {
+      console.log('Modal dismissed', reason);
+    });
   }
-}
 
+  modificarCliente(cliente: any) {
+    const modalRef = this.modalService.open(EdicionClienteComponent, { centered: true });
+    modalRef.componentInstance.editedUser = { ...cliente }; 
+    modalRef.result.then((result) => {
+      if (result) {
+        this.obtenerClientes();
+      }
+    }, (reason) => {
+      console.log('Modal dismissed', reason);
+    });
+  }
+  
 
-
-
- deleteClient() {
+  deleteClient(clienteId: string) {
     Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esta acción no se puede deshacer',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, confirmar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.authService.deleteCliente(this.cliente._id)
-        .subscribe(
-
-        {
-          next:res => {
-               Swal.fire(
-               'Confirmado',
-               'La acción ha sido confirmada',
-               'success'
-             );
-             this.cliente= null;
-             this.cuit = '';
-             this.clienteEliminado= true;
-             this.clienteModificado= false;
+        this.authService.deleteCliente(clienteId).subscribe({
+          next: () => {
+            Swal.fire('Confirmado', 'El cliente ha sido eliminado', 'success');
+            this.obtenerClientes();
           },
-          error:err => {
-              Swal.fire(
-             'Denegado',
-             'El usuario no ha podido ser eliminado',
-             'warning',
-           );
-             console.log(err);
+          error: () => {
+            Swal.fire('Denegado', 'No se pudo eliminar el cliente', 'error');
           }
-        }
-          // res => {
-          //   Swal.fire(
-          //     'Confirmado',
-          //     'La acción ha sido confirmada',
-          //     'success'
-          //   );
-          //   this.cliente= null;
-          //   this.cuit = '';
-          //   this.clienteEliminado= true;
-          //   this.clienteModificado= false;
-          // },
-          // (err) => {Swal.fire(
-          //   'Denegado',
-          //   'El usuario no ha podido ser eliminado',
-          //   'warning',
-          // );
-          //   console.log(err);
-          //   }
-          );       
+        });
       }
     });
-  
   }
-
-modifyStatus(){
-  Swal.fire({
-    title: 'Modificación del estado del cliente',
-    text: 'Seleccione el nuevo estado del cliente',
-    icon: 'info',
-    showCancelButton: true,
-    showDenyButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#aaa',
-    denyButtonColor: '#d33',
-    denyButtonText: 'Moroso',
-    confirmButtonText: 'Al día',
-    cancelButtonText: 'Cancelar',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.updateClientStatus('Al día');
-    } else if (result.isDenied) {
-      this.updateClientStatus('Moroso');
-    }
-  });
-}
-
-updateClientStatus(newStatus: string) {
-  this.authService.modifyStatus(this.cliente._id, newStatus).subscribe({
-    next:res => {
-      Swal.fire(
-        'Estado',
-        `El estado del cliente ha sido cambiado a "${newStatus}"`,
-        'success'
-      );
-      this.cliente= null;
-      this.cuit = '';
-      this.clienteModificado= true;
-      this.clienteEliminado= false;
-    },
-    error:err => {
-      Swal.fire(
-        'Denegado',
-        'El usuario no ha podido ser modificado',
-        'error',
-      );
-      console.log(err);
-    }
-  })
-}
-
-asignPrivileges(){
-  Swal.fire({
-    title: '¿Estás seguro de asignar rol Administrador?',
-    text: 'Esta acción implica cambios importantes',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Sí, confirmar',
-    cancelButtonText: 'Cancelar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.authService.asignPrivileges(this.cliente._id)
-      .subscribe(
-        {
-          next:res => {
-             Swal.fire(
-             'Confirmado',
-             'La acción ha sido confirmada',
-             'success'
-           );
-         this.cliente= null;
-           this.cuit = '';
-           this.clienteModificado= true;
-           this.clienteEliminado= false;
-          },
-          error:err => {
-              Swal.fire(
-           'Denegado',
-           'El usuario no ha podido ser eliminado',
-           'warning',
-        );
-           console.log(err);
-          }
-        }
-        // res => {
-        //   Swal.fire(
-        //     'Confirmado',
-        //     'La acción ha sido confirmada',
-        //     'success'
-        //   );
-        //   this.cliente= null;
-        //   this.cuit = '';
-        //   this.clienteModificado= true;
-        //   this.clienteEliminado= false;
-        // },
-        // (err) => {Swal.fire(
-        //   'Denegado',
-        //   'El usuario no ha podido ser eliminado',
-        //   'warning',
-        // );
-        //   console.log(err);
-        //   }
-        );       
-    }
-  });
-};
-
 }

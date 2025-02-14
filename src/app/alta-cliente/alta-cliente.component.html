@@ -1,64 +1,37 @@
 <app-nav-var></app-nav-var>
+<div class="container mt-4">
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label for="search" class="form-label">Buscar por CUIT o razón social:</label>
+      <input type="text" id="search" class="form-control" [(ngModel)]="cuit" placeholder="Ingrese CUIT o razón social">
+    </div>
+    <div class="col-md-4 align-self-end">
+      <button class="btn btn-primary" (click)="onBuscarClick()">Buscar</button>
+    </div>
+    <div class="col-md-4 align-self-end">
+      <button class="btn btn-success" (click)="agregarCliente()">Agregar Cliente</button>
+    </div>
+  </div>
 
-<div class="container">
   <div class="row">
-    <div class="col-lg-6 col-md-8 col-sm-10 mx-auto">
-      <div class="card mt-5">
-        <div class="card-header text-center">
-          <h2>Edición de Cliente</h2>
-        </div>
+    <div class="col-md-4" *ngFor="let client of clientes">
+      <div class="card mb-3">
         <div class="card-body">
-          <form>
-            <div class="mb-3">
-              <label for="cuit" class="form-label">CUIT o razón social del cliente</label>
-              <input type="text" class="form-control" id="cuit" name="cuit" placeholder="Ingrese el CUIT o razón social del cliente"
-                [(ngModel)]="cuit">
-
-            </div>
-
-            <!-- Lista de clientes encontrados -->
-            <div *ngIf="cuilEncontrado && clientesEncontrados && clientesEncontrados.length > 0">
-              <label for="selectCliente" class="form-label">Seleccione un cliente</label>
-              <select class="form-select" id="selectCliente" [(ngModel)]="cliente" (change)="onClienteSelect(cliente)"
-                [ngModelOptions]="{ standalone: true }">
-                <option *ngFor="let c of clientesEncontrados" [ngValue]="c">{{ c.businessName }}</option>
-              </select>
-            </div>
-
-            <!-- Detalles del cliente seleccionado -->
-            <div class="card-body" *ngIf="cuilEncontrado && cliente">
-              <p class="card-text">Correo Electrónico: {{ cliente.email }}</p>
-              <p class="card-text">Cuit: {{ cliente.cuit }}</p>
-              <p class="card-text">Dirección: {{ cliente.address }}</p>
-              <p class="card-text">Rol: {{ cliente.role }}</p>
-              <p class="card-text">Estado: {{ cliente.status }}</p>
-            </div>
-
-            <div class="row">
-              <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="btn btn-secondary" style="width: 48%;"
-                  [routerLink]="'/admin-panel'">Atrás</button>
-                <button class="btn btn-primary btn-block" style="width: 48%;" (click)="onBuscarClick()">Buscar</button>
-              </div>
-
-              <div class="d-flex justify-content-between mt-4">
-                <button class="btn btn-success btn-block" style="width: 100%;"
-                  *ngIf="cuilEncontrado && !clienteEliminado && !clienteModificado" (click)="modifyStatus()">Modificar
-                  Estado</button>
-              </div>
-              
-              <div class="d-flex justify-content-between mt-4">
-                <button class="btn btn-success btn-warning" style="width: 48%;"
-                  *ngIf="cuilEncontrado && !clienteEliminado && !clienteModificado"
-                  (click)="asignPrivileges()">Modificar Privilegios</button>
-                <button class="btn btn-danger btn-block" style="width: 48%;"
-                  *ngIf="cuilEncontrado && !clienteEliminado && !clienteModificado" (click)="deleteClient()">Eliminar
-                  Usuario</button>
-              </div>
-            </div>
-          </form>
+          <h5 class="card-title">Razón Social: {{ client.businessName }}</h5>
+          <p class="card-text">CUIT: {{ client.cuit }}</p>
+          <p class="card-text">Email: {{ client.email }}</p>
+          <p class="card-text">Dirección: {{ client.address }}</p>
+          <p class="card-text">Estado: {{ client.status }}</p>
+          <p class="card-text">Teléfono: {{ client.phoneNumber }}</p>
+          <p class="card-text">Rol: {{ client.role }}</p>
+          <div class="d-flex justify-content-between mt-2">
+            <button class="btn btn-warning" (click)="modificarCliente(client)">Modificar</button>
+            <button class="btn btn-danger" (click)="deleteClient(client._id)">Eliminar</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
+  <app-footer></app-footer>
 </div>

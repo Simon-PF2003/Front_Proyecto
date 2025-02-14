@@ -21,9 +21,10 @@ import { OrdersComponent } from './orders/orders.component';
 import { PedidosAdminComponent } from './pedidos-admin/pedidos-admin.component';
 import { AgruparProductosComponent } from './agrupar-productos/agrupar-productos.component';
 import { OrdenarClientesComponent } from './ordenar-clientes/ordenar-clientes.component';
-import { FacturacionComponent } from './facturacion/facturacion.component';
+import { EmisionFacturaComponent } from './emision-factura/emision-factura.component';
 import { RecaudacionComponent } from './recaudacion/recaudacion.component';
 import { AltaDeClienteComponent } from './alta-de-cliente/alta-de-cliente.component';
+import { AgregarClienteManualComponent } from './alta-cliente/agregar-cliente-manual/agregar-cliente-manual.component';
 
 const routes: Routes = [
 
@@ -39,6 +40,8 @@ const routes: Routes = [
   { path: 'cart', component: CartComponent },
   { path: 'admin-panel', component: AdminPanelComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
   { path: 'alta-de-cliente', component: AltaDeClienteComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  { path: 'agregar-cliente-manual', component: AgregarClienteManualComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  { path: 'edicion-cliente/:id', component: AltaClienteComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
   { path: 'alta-usuario', component: AltaClienteComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
   { path: 'ingreso-stock', component: IngresoStockComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
   {path:'retrieve-pass',component:RetrievePassComponent},
@@ -48,7 +51,7 @@ const routes: Routes = [
   {path: 'pedidos', component:PedidosAdminComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   {path: 'agrupar-productos', component:AgruparProductosComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   {path: 'ordenar-clientes', component:OrdenarClientesComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
-  {path: 'facturacion', component:FacturacionComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'emision-factura', component: EmisionFacturaComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   {path: 'recaudacion', component:RecaudacionComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   { path: '**', redirectTo: '' }
 ];

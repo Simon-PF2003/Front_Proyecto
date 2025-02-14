@@ -24,7 +24,6 @@ export class AuthService {
   signUp(user: any) {
     return this.http.post<any>(this.URL + '/signup', user);
   }
-
   
   getPendingUsers(): Observable<any[]> {
     console.log('Obteniendo usuarios pendientes');
@@ -37,6 +36,28 @@ export class AuthService {
 
   acceptUser(id: string, email: string, password: string) {
     return this.http.patch<any>(`${this.URL}/acceptUser/${ email }`, { password });
+  }
+
+  addUser(user: FormData): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post<any>(this.URL + '/addUser', user).subscribe(
+        {
+          next: response => {
+            if (response) {
+              console.log('Cliente agregado:', response);
+              resolve(response);
+            } else {
+              console.log('No se pudo agregar el cliente');
+              reject('No se pudo agregar el cliente');
+            }
+          },
+          error: error => {
+            console.error('Error en la solicitud HTTP', error);
+            reject(error);
+          }
+        }
+      );
+    });
   }
 
   logIn(user: any): Observable<any> {
@@ -58,6 +79,11 @@ export class AuthService {
     return this.http.delete(url);
   }
 
+  updateUser(userId: string, user: FormData) {
+    const url = `${this.URL}/updateUser/${userId}`;
+    return this.http.patch(url, user);
+  }
+  
   asignPrivileges(userId: string) { 
     const url = `${this.URL}/asignPrivileges/${userId}`;
     return this.http.patch(url, { role: 'Administrador' });
@@ -96,6 +122,33 @@ export class AuthService {
 
   getUserImage(userId: any){
     return `${this.URL}/getUserImage/${userId}`;
+  }
+
+  getUsers(authToken: string): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      const headers = {
+        Authorization: `Bearer ${authToken}`,
+      };
+
+      this.http.get<any[]>(this.URL + '/allUsers', { headers }).subscribe(
+        {
+          next: response => {
+            if (response) {
+              console.log('Clientes encontrados:', response);
+              const clientes = response;
+              resolve(clientes);
+            } else {
+              console.log('No se encontraron clientes');
+              reject('No se encontraron clientes');
+            }
+          },
+          error: error => {
+            console.error('Error en la solicitud HTTP', error);
+            reject(error);
+          }
+        }
+      );
+    });
   }
 
 async getClienteCuil(cuit: string, authToken: string): Promise<any> {

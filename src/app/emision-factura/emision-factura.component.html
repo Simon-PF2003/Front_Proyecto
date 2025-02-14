@@ -1,0 +1,68 @@
+<app-nav-var></app-nav-var>
+<div class="container">
+    <h2 class="text-center my-4">Pedidos Terminados</h2>
+
+    <form (submit)="applyFilters()" class="p-3 border rounded bg-light">
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <input [(ngModel)]="filters.orderId" name="orderId" placeholder="ID Pedido" class="form-control">
+            </div>
+            <div class="col-md-3 mb-2">
+                <input [(ngModel)]="filters.userBusiness" name="userBusiness" placeholder="Razón Social del Cliente" class="form-control">
+            </div>
+            <div class="col-md-3 mb-2">
+                <input [(ngModel)]="filters.minTotal" name="minTotal" placeholder="Mín Total" type="number" class="form-control">
+            </div>
+            <div class="col-md-3 mb-2">
+                <input [(ngModel)]="filters.maxTotal" name="maxTotal" placeholder="Máx Total" type="number" class="form-control">
+            </div>
+            <div class="col-md-3 mb-2">
+                <input [(ngModel)]="filters.minDate" name="minDate" placeholder="Fecha Desde" type="date" class="form-control">
+            </div>
+            <div class="col-md-3 mb-2">
+                <input [(ngModel)]="filters.maxDate" name="maxDate" placeholder="Fecha Hasta" type="date" class="form-control">
+            </div>
+            <div class="col-md-3 d-flex align-items-center">
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-search"></i> Filtrar</button>
+            </div>
+        </div>
+    </form>
+    
+    <hr>
+
+    <div *ngIf="orders.length">
+        <div class="accordion" id="accordionExample">
+            <div *ngFor="let order of orders" class="card mb-2">
+                <div class="card-header" id="heading{{ order._id }}">
+                    <h2 class="mb-0">
+                        <button class="btn btn-light w-100 text-left" type="button" data-toggle="collapse" 
+                                [attr.data-target]="'#collapse' + order._id" aria-expanded="true">
+                            <strong>Pedido ID:</strong> {{ order._id }} |
+                            <strong>Cliente:</strong> {{ order.userId.businessName }} |
+                            <strong>Fecha:</strong> {{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }} |
+                            <strong>Total (sin IVA):</strong> {{ order.total | currency }}
+                        </button>
+                    </h2>
+                    <div [attr.id]="'collapse' + order._id" class="collapse" data-parent="#accordionExample">
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li *ngFor="let item of order.items" class="list-group-item">
+                                    <strong>{{ item.desc }}</strong> - Cantidad: {{ item.quantity }} - Precio Unitario sin IVA: ${{ item.price }} - Precio Total sin IVA: ${{ item.price * item.quantity }} - Precio Total con IVA (21%): ${{ item.price * item.quantity * 1.21 }} 
+                                </li>
+                            </ul>
+                            <div class="d-flex justify-content-end mt-3">
+                                <strong>Total (Incluye IVA): </strong> {{ order.total * 1.21 | currency }}
+                            </div>
+                            <div class="text-center mt-3">
+                                <button class="btn btn-success" (click)="emitirFactura(order)">
+                                    <i class="fas fa-file-invoice-dollar"></i> Emitir Factura
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

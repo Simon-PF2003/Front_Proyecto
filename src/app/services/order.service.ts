@@ -51,6 +51,11 @@ export class OrderService {
     console.log(url);
     return this.http.get<any[]>(url);
   }
+  
+
+  getFinishedOrders(filters: any): Observable<any[]> {
+    return this.http.get<any[]>(`${this.URL}/finishedOrders`, { params: filters });
+  }
 }
 
   
