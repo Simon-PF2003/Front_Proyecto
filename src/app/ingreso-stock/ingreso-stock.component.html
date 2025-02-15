@@ -1,6 +1,17 @@
 <app-nav-var></app-nav-var>
 
 <div class="container mt-4">
+  <h2 class="mb-4">Solicitar Stock</h2>
+
+  <div *ngIf="products.length === 0" class="alert alert-info">
+    No hay productos con stock por debajo del mínimo.
+  </div>
+
+  <div class="d-flex justify-content-end mb-3">
+    <button class="btn btn-success me-2" (click)="ingresarStock()">Ingresar Stock</button>
+    <button class="btn btn-primary" (click)="solicitarStock()">Solicitar Stock</button>
+  </div>
+
   <div class="row">
     <div *ngFor="let product of products" class="col-lg-12 mb-4">
       <div class="card">
@@ -13,13 +24,14 @@
               <h5 class="card-title">{{ product.desc }}</h5>
               <p class="card-text">Precio: {{ product.price }}</p>
               <p class="card-text">Stock: {{ product.stock }}</p>
-              <p class="card-text">Stock Mínimo: {{product.stockMin}}</p>
+              <p class="card-text">Stock Mínimo: {{ product.stockMin }}</p>
+              <p *ngIf="product.pending > 0" class="text-danger">Stock pendiente de ingreso: {{ product.pending }}</p>
+              <p *ngIf="product.pending === 0" class="text-muted">Sin stock pendiente</p>
               <div class="form-group">
-                <label for="stockInput{{ product._id }}">Cantidad a Comprar:</label>
+                <label for="stockInput{{ product._id }}">Cantidad a Solicitar:</label>
                 <input type="number" id="stockInput{{ product._id }}" class="form-control"
-                  [(ngModel)]="quantityToBuy" min="1">
+                  [(ngModel)]="product.quantityToBuy" min="0">
               </div>
-              <button class="btn btn-primary" (click)="solicitarStock(product._id, quantityToBuy)">Ingresar Stock</button>
             </div>
           </div>
         </div>

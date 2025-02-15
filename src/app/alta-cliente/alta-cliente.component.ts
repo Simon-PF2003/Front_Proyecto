@@ -41,6 +41,11 @@ export class AltaClienteComponent implements OnInit {
   async onBuscarClick() {
     try {
       const authToken = this.authService.getToken();
+      if (!this.cuit.trim()) {
+        this.obtenerClientes();
+        this.clienteEncontrado = false;
+        return;
+      }
       if (!isNaN(Number(this.cuit))) {
         this.clienteSeleccionado = await this.authService.getClienteCuil(this.cuit, authToken as string);
       } else {

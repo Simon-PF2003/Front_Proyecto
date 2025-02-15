@@ -28,10 +28,18 @@ export class ProductService {
     return this.http.get<any[]>(this.URL + '/featuredProducts');
   }
 
+  getPendingStockProducts(): Observable<any[]> {
+    return this.http.get<any[]>(this.URL + '/pendingStock');
+  }
+
+
   getNoStockProducts(): Observable<any[]> {
     return this.http.get<any[]>(`${this.URL}/noProducts`);
   }
 
+  requestStock(productsToRequest: { _id: string, quantityToBuy: number}[]): Observable<any> {
+    return this.http.patch(this.URL + '/requestStock', {productsToRequest});
+  }
 
   getProductDetailsById(productId: any): Observable<any> {
     const url = `${this.URL}/product/${productId}`;
@@ -65,5 +73,10 @@ export class ProductService {
     console.log(orderData);
     const url = `${this.URL}/orderStockProduct`;
     return this.http.patch(url, {orderData});
+  }
+
+  updateStock(stockData: any) {
+    const url = `${this.URL}/updateStock`;
+    return this.http.patch(url, stockData);
   }
 }

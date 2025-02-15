@@ -37,6 +37,11 @@ export class UdProveedorComponent {
 
   async onBuscarClick() {
     try {
+      if (!this.cuit.trim()) {
+        this.obtenerProveedores();
+        this.foundCuil = false;
+        return;
+      }
       if (!isNaN(Number(this.cuit))) {
         this.supplier = await this.supplierService.searchSuppliers(this.cuit);
       } else {

@@ -83,6 +83,10 @@ export class NavVarComponent implements OnInit {
     return this.currentRoute.includes('/pedidos');
   }
 
+  isChargeStockRoute(): boolean {
+    return this.currentRoute.includes('/cargar-stock');
+  }
+
   isUserRoleDefined(): boolean {
     return this.userRole !== null && this.userRole !== undefined;
   }
@@ -101,6 +105,9 @@ searchProducts() {
     } else if (this.currentRoute.includes('/agrupar-productos')) {
       this.router.navigate(['/agrupar-productos'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     }
+    else if (this.currentRoute.includes('/cargar-stock')) {
+      this.router.navigate(['/cargar-stock'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
+    }
   } else {
     if (this.currentRoute.includes('/productos')) {
       this.router.navigate(['/productos'], { relativeTo: this.route });
@@ -110,6 +117,8 @@ searchProducts() {
       this.router.navigate(['/modificar-producto'], { relativeTo: this.route });
     } else if (this.currentRoute.includes('/agrupar-productos')) {
       this.router.navigate(['/agrupar-productos'], { relativeTo: this.route });
+    } else if (this.currentRoute.includes('/cargar-stock')) {
+      this.router.navigate(['/cargar-stock'], { relativeTo: this.route });
     } else {
 
       console.warn('No matching route found for search.');
