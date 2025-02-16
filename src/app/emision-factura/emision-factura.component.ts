@@ -36,12 +36,13 @@ export class EmisionFacturaComponent implements OnInit {
 
   loadOrders(): void {
     this.orderService.getFinishedOrders(this.filters).subscribe((orders) => {
-      if (orders.length === 0) {
+      /*if (orders.length === 0) {
         Swal.fire('Sin resultados', 'No hay pedidos que cumplan con los criterios seleccionados.', 'info');
         this.resetFilters();
       } else {
         this.orders = orders;
-      }
+      }*/
+     this.orders = orders;
     },
     (err) => {
       console.log(err);
@@ -100,48 +101,50 @@ export class EmisionFacturaComponent implements OnInit {
     this.selectedOrder = order;
     Swal.fire({
       title: '¿Se realizó el pago?',
-      text: "Seleccione una opción",
+      text: 'Seleccione una opción',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Sí',
       cancelButtonText: 'No',
-
     }).then((result) => {
-      if (result.isConfirmed) {
-        this.confirmarFactura(true);
-      } else {
-        this.confirmarFactura(false);
-      }
+      this.confirmarFactura(result.isConfirmed);
     });
   }
-
-  imprimirFactura(): void {
-    const data = document.querySelector('.invoice') as HTMLElement;
-    if (data) {
-      html2canvas(data).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        pdf.addImage(imgData, 'PNG', 10, 10, canvas.width, canvas.height, '', 'FAST');
-        pdf.save(`Factura_${this.selectedOrder._id}.pdf`);
-      });
-    }
-  }
-
+  
   confirmarFactura(pagado: boolean): void {
     if (!this.selectedOrder) return;
-    
-    const facturaData = {
-      orderId: this.selectedOrder._id,
-    };
-    
+  
+    const facturaData = { orderId: this.selectedOrder._id };
+  
     this.billService.createBill(facturaData, pagado).subscribe({
-      next: () => {
+      next: (pdfBlob: Blob) => {
         Swal.fire('Éxito', 'Factura generada correctamente', 'success');
         this.selectedOrder = null;
+  
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+  
+        const fechaFactura = new Intl.DateTimeFormat('es-AR', {
+          year: 'numeric',
+          month: 'long',
+          day: '2-digit',
+        }).format(new Date());
+
+        const filename = `${fechaFactura}_${facturaData.orderId}.pdf`;
+        const a = document.createElement('a');
+        a.href = pdfUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(pdfUrl);
+
+        location.reload();
       },
       error: () => {
         Swal.fire('Error', 'No se pudo generar la factura', 'error');
       },
     });
   }
+  
+  
 }

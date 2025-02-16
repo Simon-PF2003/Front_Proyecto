@@ -30,6 +30,10 @@
     
     <hr>
 
+    <div *ngIf="!orders.length" class="alert alert-info text-center">
+        <strong>No hay pedidos terminados para mostrar.</strong>
+    </div>
+
     <div *ngIf="orders.length">
         <div class="accordion" id="accordionExample">
             <div *ngFor="let order of orders" class="card mb-2">
