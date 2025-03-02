@@ -79,4 +79,9 @@ export class ProductService {
     const url = `${this.URL}/updateStock`;
     return this.http.patch(url, stockData);
   }
+
+  notifyMe(productId: any, userId: any) {
+    const url = `${this.URL}/createStockNotification`;
+    return this.http.post(url, { productId, userId });
+  }
 }

@@ -2,11 +2,19 @@
     padding: 10px 80px;
 }
 
-.notify {
-    cursor: pointer;
+.btn-notify {
+    color: red; 
+    margin-top: 10px; 
+    cursor: pointer; 
     text-decoration: underline;
 }
 
+.btn-notify:hover {
+    background-color: #f4f4f4;
+    color: purple;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
 
 #productDetails {
     display: flex;

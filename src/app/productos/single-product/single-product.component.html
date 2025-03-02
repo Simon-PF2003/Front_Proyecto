@@ -19,9 +19,9 @@
             [disabled]="productStock === 0">
             {{ productStock === 0 ? 'No hay stock' : 'Agregar al carrito' }}
         </button>
-        <p class="notify" *ngIf="productStock === 0" style="color: red; margin-top: 10px;">
-            Notificarme cuando haya stock
-        </p>
+        <button class="btn btn-notify" *ngIf="productStock === 0" (click)="notifyMe()">
+           Notificarme cuando haya stock
+        </button>
         <h4>Detalles del producto</h4>
         <span>{{ productDetails.data.desc }}</span>
     </div>

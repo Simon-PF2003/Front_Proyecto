@@ -49,11 +49,14 @@ export class SingleProductComponent implements  OnInit {
     if (authToken) {
       const decodedToken: any = jwt_decode(authToken);
       this.userRole = decodedToken.role;
+      
     }    
     
     this.authService.getUserData().subscribe({
       next: (data: any) => {
         this.userStatus = data.status;
+        this.userId = data.id;
+        console.log('User ID:', this.userId);
         console.log('User Status:', this.userStatus);
       },
       error: (err) => {
@@ -153,4 +156,22 @@ addToCart(quantity: number) {
      }
     }
   }
-} 
+
+notifyMe() {
+  if(!this.userId) {
+    Swal.fire({
+      title: 'Debes iniciar sesión',
+      text: 'Debes iniciar sesión para recibir una notificación cuando tengamos este producto en stock',
+      icon: 'error'
+    });
+    return;
+  }
+  this.productService.notifyMe(this.productId, this.userId).subscribe(() => {
+    Swal.fire({
+      title: 'Notificación de stock',
+      text: 'Te notificaremos por mail cuando tengamos este producto en stock',
+      icon: 'info'
+    });
+  });
+}
+}
