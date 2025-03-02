@@ -13,11 +13,17 @@ import { AgregarClienteManualComponent } from './agregar-cliente-manual/agregar-
 })
 export class AltaClienteComponent implements OnInit {
   clientes: any[] = [];
+  filteredClientes: any[] = [];
+  displayedClientes: any[] = [];
+
   cuit: string = '';
   clienteSeleccionado: any = null;
   clienteEncontrado: boolean = false;
-  clienteEliminado: boolean = false;
-  clienteModificado: boolean = false;
+
+  // Paginación
+  currentPage: number = 1;
+  pageSize: number = 6;
+  totalPages: number = 1;
 
   constructor(
     public authService: AuthService,
@@ -33,6 +39,8 @@ export class AltaClienteComponent implements OnInit {
     try {
       const authToken = this.authService.getToken();
       this.clientes = await this.authService.getUsers(authToken as string);
+      this.filteredClientes = [...this.clientes];
+      this.actualizarPaginacion();
     } catch (error) {
       console.error('Error al obtener los clientes', error);
     }
@@ -43,17 +51,38 @@ export class AltaClienteComponent implements OnInit {
       const authToken = this.authService.getToken();
       if (!this.cuit.trim()) {
         this.obtenerClientes();
-        this.clienteEncontrado = false;
         return;
       }
       if (!isNaN(Number(this.cuit))) {
         this.clienteSeleccionado = await this.authService.getClienteCuil(this.cuit, authToken as string);
+        this.filteredClientes = this.clienteSeleccionado ? [this.clienteSeleccionado] : [];
       } else {
-        this.clientes = await this.authService.searchClientes(this.cuit, authToken as string);
+        this.filteredClientes = await this.authService.searchClientes(this.cuit, authToken as string);
       }
-      this.clienteEncontrado = this.clienteSeleccionado || this.clientes.length > 0;
+      
+      this.clienteEncontrado = this.filteredClientes.length > 0;
+      this.actualizarPaginacion();
     } catch (error) {
       Swal.fire('Error', 'No se encontró ningún cliente. Busque por CUIT o Razón Social', 'warning');
+    }
+  }
+
+  actualizarPaginacion() {
+    this.totalPages = Math.ceil(this.filteredClientes.length / this.pageSize);
+    this.currentPage = 1;
+    this.actualizarClientesMostrados();
+  }
+
+  actualizarClientesMostrados() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedClientes = this.filteredClientes.slice(start, end);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.actualizarClientesMostrados();
     }
   }
 
@@ -63,9 +92,7 @@ export class AltaClienteComponent implements OnInit {
       if (result) {
         this.obtenerClientes();
       }
-    }, (reason) => {
-      console.log('Modal dismissed', reason);
-    });
+    }, () => {});
   }
 
   modificarCliente(cliente: any) {
@@ -75,11 +102,8 @@ export class AltaClienteComponent implements OnInit {
       if (result) {
         this.obtenerClientes();
       }
-    }, (reason) => {
-      console.log('Modal dismissed', reason);
-    });
+    }, () => {});
   }
-  
 
   deleteClient(clienteId: string) {
     Swal.fire({

@@ -1,9 +1,10 @@
 <app-nav-var></app-nav-var>
 <div class="container mt-4">
     <h2 class="text-center mb-4">Alta de Clientes</h2>
+    <div class="alert alert-info text-center" *ngIf="users.length === 0"><strong>No hay clientes pendientes de aceptación</strong></div>
     <div class="container">
         <div class="row">
-            <div class="col-md-4" *ngFor="let user of users">
+            <div class="col-md-4" *ngFor="let user of displayedUsers">
                 <div class="card mb-3">
                     <div class="card-body">
                         <h5 class="card-title">Razón Social: {{ user.businessName }}</h5>
@@ -24,6 +25,19 @@
             </div>
         </div>
     </div>
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="changePage(currentPage - 1)">Anterior</button>
+          </li>
+          <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [class.active]="currentPage === (i + 1)">
+            <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="changePage(currentPage + 1)">Siguiente</button>
+          </li>
+        </ul>
+      </nav>
     <app-footer></app-footer>
 </div>
 

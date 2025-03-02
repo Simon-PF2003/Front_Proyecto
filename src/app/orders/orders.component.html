@@ -12,7 +12,7 @@
         <div class="row justify-content-center">
             <div class="col-md-9 offset-md-1">
                 <div class="accordion" id="accordionExample">
-                    <div *ngFor="let order of orders" class="card mb-1 ">
+                    <div *ngFor="let order of displayedOrders" class="card mb-1 ">
                         <div class="card-header" id="heading{{ order._id }}">
                             <h2 class="mb-0">
                                 <button class="open btn " type="button" data-toggle="collapse" 
@@ -69,4 +69,18 @@
             </div>
         </div>
     </div>
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" (click)="changePage(currentPage - 1)">Anterior</button>
+          </li>
+          <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [class.active]="currentPage === (i + 1)">
+            <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" (click)="changePage(currentPage + 1)">Siguiente</button>
+          </li>
+        </ul>
+      </nav>
 </div>
+<app-footer></app-footer>

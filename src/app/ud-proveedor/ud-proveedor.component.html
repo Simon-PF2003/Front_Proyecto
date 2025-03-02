@@ -11,7 +11,7 @@
   </div>
 
   <div class="row">
-    <div class="col-md-4" *ngFor="let supplier of foundSuppliers">
+    <div class="col-md-4" *ngFor="let supplier of displayedSuppliers">
       <div class="card mb-3">
         <div class="card-body">
           <h5 class="card-title">Razón Social: {{ supplier.businessName }}</h5>
@@ -20,12 +20,25 @@
           <p class="card-text">Teléfono: {{ supplier.phoneNumber }}</p>
           <div class="d-flex justify-content-between mt-2">
             <button class="btn btn-warning" (click)="modifySupplier(supplier)">Modificar</button>
-            <button class="btn btn-danger" (click)="modifySupplier(supplier._id)">Eliminar</button>
+            <button class="btn btn-danger" (click)="deleteSupplier(supplier._id)">Eliminar</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="changePage(currentPage - 1)">Anterior</button>
+      </li>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [class.active]="currentPage === (i + 1)">
+        <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="changePage(currentPage + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
   <app-footer></app-footer>
 </div>

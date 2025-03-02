@@ -15,7 +15,7 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-md-6 col-lg-3 mt-4" *ngFor="let product of filteredProducts">
+      <div class="col-md-6 col-lg-3 mt-4" *ngFor="let product of displayedProducts">
         <div class="product-card">
           <div class="card">
             <img class="card-img-top" [src]="'http://localhost:3000/' + product.image" alt="{{ product.name }}">
@@ -34,8 +34,21 @@
     </div>
   </div>
 
+  <!-- Paginación -->
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="changePage(currentPage - 1)">Anterior</button>
+      </li>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [class.active]="currentPage === (i + 1)">
+        <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="changePage(currentPage + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
+
   <div class="my-4"></div>
   <app-footer></app-footer>
 </div>
-
-<app-footer></app-footer>

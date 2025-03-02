@@ -11,12 +11,17 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AgruparProductosComponent implements OnInit {
   products: any[] = [];
+  displayedProducts: any[] = [];
   filteredProducts: any[] = [];
   selectedCategory: string = 'all';
   editingProduct: any = null;
   newCategory: string = '';
   showModal: boolean = false;
   searchTerm: string = '';
+
+  currentPage: number = 1;
+  pageSize: number = 8;
+  totalPages: number = 1;
 
   constructor(
     private productService: ProductService,
@@ -56,6 +61,23 @@ export class AgruparProductosComponent implements OnInit {
       this.filteredProducts = [...this.products];
     } else {
       this.filteredProducts = this.products.filter(product => product.cat === category);
+    }
+
+    this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
+    this.currentPage = 1;
+    this.updateDisplayedProducts();
+  }
+
+  updateDisplayedProducts() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedProducts = this.filteredProducts.slice(start, end);
+  }
+
+  changePage(page: number) {
+    if(page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateDisplayedProducts();
     }
   }
 

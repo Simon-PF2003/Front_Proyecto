@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { CategorySelectionService } from '../services/category-selection-service.service';
 
@@ -14,7 +13,13 @@ import { CategorySelectionService } from '../services/category-selection-service
 })
 export class IngresoStockComponent implements OnInit {
   products: any[] = [];
+  displayedProducts: any[] = [];
   searchTerm: string = '';
+
+  // Paginación
+  currentPage: number = 1;
+  pageSize: number = 5;
+  totalPages: number = 1;
 
   constructor(
     public authService: AuthService,
@@ -43,23 +48,15 @@ export class IngresoStockComponent implements OnInit {
     } else {
       this.products = noStockData;
     }
-    /*if (this.products.length === 0) {
-      Swal.fire({
-        title: 'Información',
-        text: 'No hay productos sin stock.',
-        icon: 'info',
-        confirmButtonText: 'Aceptar'
-      });
-    } else {
-      this.products.forEach(product => product.quantityToBuy = 0);
-    }*/
     this.products.forEach(product => product.quantityToBuy = 0);
+    this.updatePagination();
   }
 
   async filterByCategory(category: string) {
     try {
       const data = await firstValueFrom(this.productService.filterByCategory(category));
       this.products = data.filter(product => product.stock < product.stockMin);
+      this.updatePagination();
     } catch (error) {
       console.error('Error fetching products by category', error);
     }
@@ -89,9 +86,28 @@ export class IngresoStockComponent implements OnInit {
       }
     );
   }
-  
 
   ingresarStock() {
     this.router.navigate(['/cargar-stock']);
+  }
+
+  // Métodos de paginación
+  updatePagination() {
+    this.totalPages = Math.ceil(this.products.length / this.pageSize);
+    this.currentPage = 1;
+    this.updateDisplayedProducts();
+  }
+
+  updateDisplayedProducts() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedProducts = this.products.slice(start, end);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateDisplayedProducts();
+    }
   }
 }

@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../services/order.service';
 import { BillService } from '../services/bill.service';
 import { AuthService } from '../services/auth.service';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -13,7 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class EmisionFacturaComponent implements OnInit {
   orders: any[] = [];
-  userId: string = '';
+  displayedOrders: any[] = [];
   selectedOrder: any = null;
   filters = {
     orderId: '',
@@ -23,6 +21,11 @@ export class EmisionFacturaComponent implements OnInit {
     minDate: '',
     maxDate: '',
   };
+
+  // Paginación
+  currentPage: number = 1;
+  pageSize: number = 6;
+  totalPages: number = 1;
 
   constructor(
     private orderService: OrderService, 
@@ -36,21 +39,11 @@ export class EmisionFacturaComponent implements OnInit {
 
   loadOrders(): void {
     this.orderService.getFinishedOrders(this.filters).subscribe((orders) => {
-      /*if (orders.length === 0) {
-        Swal.fire('Sin resultados', 'No hay pedidos que cumplan con los criterios seleccionados.', 'info');
-        this.resetFilters();
-      } else {
-        this.orders = orders;
-      }*/
-     this.orders = orders;
-    },
-    (err) => {
-      console.log(err);
-      if (err.status === 404) {
-        Swal.fire('Error', 'Usuario no encontrado. Verifique la razón social ingresada', 'error');
-      } else {
-        Swal.fire('Error', 'Error al cargar los pedidos', 'error');
-      }      
+      this.orders = orders;
+      this.updatePagination();
+    }, (err) => {
+      console.error(err);
+      Swal.fire('Error', 'Error al cargar los pedidos', 'error');
     });
   }
 
@@ -70,31 +63,30 @@ export class EmisionFacturaComponent implements OnInit {
       Swal.fire('Error', 'El total máximo no puede ser menor al total mínimo.', 'error');
       return false;
     }
-    const today = new Date();
-    if (this.filters.minDate && new Date(this.filters.minDate) > today) {
-      Swal.fire('Error', 'La fecha desde no puede ser mayor que hoy.', 'error');
-      return false;
-    }
     if (this.filters.minDate && this.filters.maxDate && new Date(this.filters.maxDate) < new Date(this.filters.minDate)) {
       Swal.fire('Error', 'La fecha hasta no puede ser menor que la fecha desde.', 'error');
-      return false;
-    }
-    if (this.filters.orderId && !/^[a-zA-Z0-9]{24}$/.test(this.filters.orderId)) {
-      Swal.fire('Error', 'El ID del pedido debe tener 24 caracteres alfanuméricos.', 'error');
       return false;
     }
     return true;
   }
 
-  resetFilters(): void {
-    this.filters = {
-      orderId: '',
-      userBusiness: '',
-      minTotal: '',
-      maxTotal: '',
-      minDate: '',
-      maxDate: '',
-    };
+  updatePagination() {
+    this.totalPages = Math.ceil(this.orders.length / this.pageSize);
+    this.currentPage = 1;
+    this.updateDisplayedOrders();
+  }
+
+  updateDisplayedOrders() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedOrders = this.orders.slice(start, end);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateDisplayedOrders();
+    }
   }
 
   emitirFactura(order: any): void {
@@ -122,14 +114,7 @@ export class EmisionFacturaComponent implements OnInit {
         this.selectedOrder = null;
   
         const pdfUrl = URL.createObjectURL(pdfBlob);
-  
-        const fechaFactura = new Intl.DateTimeFormat('es-AR', {
-          year: 'numeric',
-          month: 'long',
-          day: '2-digit',
-        }).format(new Date());
-
-        const filename = `${fechaFactura}_${facturaData.orderId}.pdf`;
+        const filename = `factura_${facturaData.orderId}.pdf`;
         const a = document.createElement('a');
         a.href = pdfUrl;
         a.download = filename;
@@ -145,6 +130,4 @@ export class EmisionFacturaComponent implements OnInit {
       },
     });
   }
-  
-  
 }

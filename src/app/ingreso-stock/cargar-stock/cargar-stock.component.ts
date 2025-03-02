@@ -11,7 +11,12 @@ import { firstValueFrom } from 'rxjs';
 })
 export class CargarStockComponent implements OnInit {
   products: any[] = [];
+  displayedProducts: any[] = [];
   searchTerm: string = '';
+
+  currentPage: number = 1;
+  pageSize: number = 5;
+  totalPages: number = 1;
 
   constructor(
     private productService: ProductService,
@@ -47,8 +52,28 @@ export class CargarStockComponent implements OnInit {
         this.products.forEach(product => product.quantityToAdd = product.pending);
       }*/
       this.products.forEach(product => product.quantityToAdd = product.pending);
+      this.updatePagination();
     } catch (error) {
       console.error('Error fetching pending stock products', error);
+    }
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.products.length / this.pageSize);
+    this.currentPage = 1;
+    this.updateDisplayedProducts();
+  }
+
+  updateDisplayedProducts() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedProducts = this.products.slice(start, end);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateDisplayedProducts();
     }
   }
 

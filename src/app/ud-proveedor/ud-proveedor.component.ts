@@ -2,27 +2,29 @@ import { Component, OnInit } from '@angular/core';
 import { SupplierService } from '../services/supplier.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
-import { firstValueFrom } from 'rxjs';
 import { ModificarProveedorComponent } from './modificar-proveedor/modificar-proveedor.component';
+
 @Component({
   selector: 'app-ud-proveedor',
   templateUrl: './ud-proveedor.component.html',
   styleUrls: ['./ud-proveedor.component.css']
 })
-export class UdProveedorComponent {
+export class UdProveedorComponent implements OnInit {
   cuit: string = '';
-  foundCuil: boolean = false;
   foundSuppliers: any[] = [];
-  newAddress: string = '';
-  newPhoneNumber: string = '';
-  showModal: boolean = false;
-  supplier: any = null; 
+  displayedSuppliers: any[] = [];
+  supplier: any = null;
+
+  // Paginación
+  currentPage: number = 1;
+  pageSize: number = 6;
+  totalPages: number = 1;
 
   constructor(
       private supplierService: SupplierService,
       private modalService: NgbModal
   ){}
-  
+
   ngOnInit(): void {
     this.obtenerProveedores();
   }
@@ -30,6 +32,7 @@ export class UdProveedorComponent {
   async obtenerProveedores() {
     try {
       this.foundSuppliers = await this.supplierService.getSuppliers();
+      this.actualizarPaginacion();
     } catch (error) {
       console.error('Error al obtener los proveedores', error);
     }
@@ -39,20 +42,33 @@ export class UdProveedorComponent {
     try {
       if (!this.cuit.trim()) {
         this.obtenerProveedores();
-        this.foundCuil = false;
         return;
       }
-      if (!isNaN(Number(this.cuit))) {
-        this.supplier = await this.supplierService.searchSuppliers(this.cuit);
-      } else {
-        this.foundSuppliers = await this.supplierService.searchSuppliers(this.cuit);
-      }
-      this.foundCuil = this.supplier || this.foundSuppliers.length > 0;
+      this.foundSuppliers = await this.supplierService.searchSuppliers(this.cuit);
+      this.actualizarPaginacion();
     } catch (error) {
       Swal.fire('Error', 'No se encontró ningún proveedor. Busque por CUIT o Razón Social', 'warning');
     }
   }
 
+  actualizarPaginacion() {
+    this.totalPages = Math.ceil(this.foundSuppliers.length / this.pageSize);
+    this.currentPage = 1;
+    this.actualizarProveedoresMostrados();
+  }
+
+  actualizarProveedoresMostrados() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedSuppliers = this.foundSuppliers.slice(start, end);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.actualizarProveedoresMostrados();
+    }
+  }
 
   modifySupplier(supplier: any) {
     const modalRef = this.modalService.open(ModificarProveedorComponent, { centered: true });
@@ -61,11 +77,8 @@ export class UdProveedorComponent {
       if (result) {
         this.obtenerProveedores();
       }
-    }, (reason) => {
-      console.log('Modal dismissed', reason);
     });
   }
-  
 
   deleteSupplier(supplierId: string) {
     Swal.fire({

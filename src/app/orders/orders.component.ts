@@ -3,62 +3,87 @@ import { OrderService } from '../services/order.service';
 import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-orders',
   templateUrl: './orders.component.html',
   styleUrls: ['./orders.component.css']
 })
-export class OrdersComponent implements OnInit{
+export class OrdersComponent implements OnInit {
   orders: any[] = [];
-  userId: string = ''; // Aquí colocarás el ID del usuario autenticado
+  displayedOrders: any[] = [];
+  userId: string = '';
+
+  // Paginación
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 1;
 
   constructor(
     private orderService: OrderService,
-    private authService: AuthService,
-    ) {}
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.authService.getUserData().subscribe((data) => {
       this.userId = data.id;
-      console.log(this.userId);
+      this.fetchOrders();
+    });
+  }
+
+  fetchOrders(): void {
     this.orderService.getPedidosUsuario(this.userId).subscribe((data: any) => {
       this.orders = data.pedidos;
-    this.orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-      console.log(this.orders);
+      this.orders.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      this.updatePagination();
     });
-  }); 
   }
 
-   hourFormat(fechaISO: string): string {
+  updatePagination(): void {
+    this.totalPages = Math.ceil(this.orders.length / this.pageSize);
+    this.currentPage = 1;
+    this.updateDisplayedOrders();
+  }
+
+  updateDisplayedOrders(): void {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedOrders = this.orders.slice(start, end);
+  }
+
+  changePage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateDisplayedOrders();
+    }
+  }
+
+  hourFormat(fechaISO: string): string {
     const fecha = new Date(fechaISO);
-    const fechaFormateada = fecha.toISOString().split('T')[0];
-    return fechaFormateada;
+    return fecha.toISOString().split('T')[0];
   }
 
-cancelOrder(orderId: string) {
-  Swal.fire({
-    title: '¿Estás seguro de cancelar el pedido?',
-    text: "Esta acción no se puede deshacer",
-    icon: 'warning',
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Sí, confirmar',
-    cancelButtonText: 'Cancelar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.orderService.cancelOrder(orderId)
-      .subscribe({
-        next:res => {
-          Swal.fire('Confirmado', 'Pedido Cancelado', 'success').then(() => {
-            location.reload();
-          });
-        },
-        error:err => {
-          console.log(err);
-        }
-      }); 
-   }
-  });
-}
+  cancelOrder(orderId: string): void {
+    Swal.fire({
+      title: '¿Estás seguro de cancelar el pedido?',
+      text: 'Esta acción no se puede deshacer',
+      icon: 'warning',
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, confirmar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.orderService.cancelOrder(orderId).subscribe({
+          next: () => {
+            Swal.fire('Confirmado', 'Pedido Cancelado', 'success').then(() => {
+              this.fetchOrders();
+            });
+          },
+          error: (err) => {
+            console.error(err);
+          }
+        });
+      }
+    });
+  }
 }

@@ -10,10 +10,16 @@ import Swal from 'sweetalert2';
 })
 export class OrdenarClientesComponent implements OnInit {
   clients: any[] = [];
+  displayedClients: any[] = [];
   sortCriteria: string = 'antiguedad';
   dateRangeStart: string = '';
   dateRangeEnd: string = '';
   sortOrder: string = 'asc';
+
+  // Paginación
+  currentPage: number = 1;
+  pageSize: number = 6;
+  totalPages: number = 1;
 
   constructor(private authService: AuthService) {}
 
@@ -30,7 +36,6 @@ export class OrdenarClientesComponent implements OnInit {
     const startDate = new Date(this.dateRangeStart);
     const endDate = new Date(this.dateRangeEnd);
 
-    // Validar que startDate no sea mayor a hoy
     if (this.dateRangeStart && startDate > today) {
       Swal.fire({
         icon: 'error',
@@ -41,7 +46,6 @@ export class OrdenarClientesComponent implements OnInit {
       return false;
     }
 
-    // Validar que endDate no sea menor a startDate
     if (this.dateRangeEnd && this.dateRangeStart && endDate < startDate) {
       Swal.fire({
         icon: 'error',
@@ -51,7 +55,6 @@ export class OrdenarClientesComponent implements OnInit {
       this.dateRangeEnd = '';
       return false;
     }
-
     return true;
   }
 
@@ -68,13 +71,13 @@ export class OrdenarClientesComponent implements OnInit {
     this.authService.getFilteredClients(filters).subscribe(
       (data) => {
         this.clients = data;
+        this.updatePagination();
 
-        // Mostrar alerta si no hay clientes
         if (this.clients.length === 0) {
           Swal.fire({
             icon: 'info',
             title: 'Sin resultados',
-            text: 'No hay clientes que cumplan con los criterios seleccionados. Modifique el rango de fechas seleccionado o eliminelo',
+            text: 'No hay clientes que cumplan con los criterios seleccionados. Modifique el rango de fechas seleccionado o elimínelo',
           });
         }
       },
@@ -87,5 +90,24 @@ export class OrdenarClientesComponent implements OnInit {
         });
       }
     );
+  }
+
+  updatePagination() {
+    this.totalPages = Math.ceil(this.clients.length / this.pageSize);
+    this.currentPage = 1;
+    this.updateDisplayedClients();
+  }
+
+  updateDisplayedClients() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedClients = this.clients.slice(start, end);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateDisplayedClients();
+    }
   }
 }

@@ -45,7 +45,7 @@
   <!-- Listado de clientes -->
   <div class="container">
     <div class="row">
-      <div class="col-md-4"  *ngFor="let client of clients">
+      <div class="col-md-4"  *ngFor="let client of displayedClients">
         <div class="card mb-3" style="background-color: gainsboro;">
           <div class="card-body">
             <h5 class="card-title">{{ client.businessName }}</h5>
@@ -67,6 +67,18 @@
       </div>
     </div>
   </div>
-
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="changePage(currentPage - 1)">Anterior</button>
+      </li>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [class.active]="currentPage === (i + 1)">
+        <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="changePage(currentPage + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
   <app-footer></app-footer>
 </div>

@@ -13,9 +13,15 @@ export class RecaudacionComponent implements OnInit {
   dateRangeStart: string = '';
   dateRangeEnd: string = '';
 
+  // Paginación
+  currentPage: number = 1;
+  pageSize: number = 10;
+  totalPages: number = 1;
+  displayedFacturas: any[] = [];
+
   constructor(
     private billService: BillService
-    ) {}
+  ) {}
 
   ngOnInit() {
     this.setDefaultDateRange();
@@ -54,42 +60,37 @@ export class RecaudacionComponent implements OnInit {
       (response: any) => {
         this.facturas = response.bills;
         this.totalRecaudado = response.totalRecaudado;
-        console.log(this.facturas);
+        this.totalPages = Math.ceil(this.facturas.length / this.pageSize);
+        this.currentPage = 1;
+        this.updateDisplayedFacturas();
       },
       (error) => {
         console.log(error);
-        if (error.status === 401) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'La fecha de inicio debe ser menor a la fecha de fin.',
-          });
-        } else if (error.status === 402) {
-            Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'La fecha de inicio no puede ser mayor a la actual',
-          });
-        } else if (error.status === 403) {
-          Swal.fire({
-            icon: 'info',
-            title: 'Error',
-            text: 'No se encontraron facturas en ese rango de fechas.',
-          });
-        } else if (error.status === 400) {
-            Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Se ha producido un error con la solicitud.',
-          });
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Se ha producido un error.',
-          });
-        }
+        let errorMessage = 'Se ha producido un error.';
+        if (error.status === 401) errorMessage = 'La fecha de inicio debe ser menor a la fecha de fin.';
+        else if (error.status === 402) errorMessage = 'La fecha de inicio no puede ser mayor a la actual';
+        else if (error.status === 403) errorMessage = 'No se encontraron facturas en ese rango de fechas.';
+        else if (error.status === 400) errorMessage = 'Se ha producido un error con la solicitud.';
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: errorMessage,
+        });
       }
     );
+  }
+
+  updateDisplayedFacturas() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedFacturas = this.facturas.slice(start, end);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateDisplayedFacturas();
+    }
   }
 }

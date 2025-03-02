@@ -13,91 +13,80 @@ import Swal from 'sweetalert2';
 export class PedidosAdminComponent {
   searchTerm: string = '';
   pedidos: any[] = [];
+  pedidosFiltrados: any[] = [];
   showModal: boolean = false;
   selectedPedido: any | null = null;
-  pedidosFiltrados = this.pedidos;
   selectedStatus: string = '';
+
+  // Paginación
+  currentPage: number = 1;
+  itemsPerPage: number = 1; // Cantidad de pedidos por página
+  totalPages: number = 1;
 
   constructor(
     private orderService: OrderService,
     private authService: AuthService,
     private route: ActivatedRoute
-    ) { }
+  ) {}
 
-    ngOnInit() {
-      this.getOrders();
-      this.route.queryParams.subscribe((queryParams) => {
-        this.searchTerm = queryParams['q'];
-        this.fetchOrders();
-      });
-      this.pedidosFiltrados = this.pedidos;
-    }
-  
-    filterPedidos(status?: string) {
-      this.selectedStatus = status || ''; // Si no se pasa un estado, mostramos todos
-      if (status) {
-        this.pedidosFiltrados = this.pedidos.filter(pedido => pedido.status === status);
-      } else {
-        this.pedidosFiltrados = [...this.pedidos]; // Mostrar todos si no hay filtro
-      }
-    }
-  getOrders() {
-    this.orderService.getPedidos().subscribe(async(data: any) => {
-      for (const pedido of data) {
-      try {
-          const cliente = await this.authService.getOrderUser(pedido.userId);
-          pedido.businessName = cliente.businessName;
-      } catch (error) {
-        console.error('Error fetching business name for user:', error);
-      }
-    }
-    this.pedidos = data;
-    this.pedidosFiltrados = data || [];
+  ngOnInit() {
+    this.getOrders();
+    this.route.queryParams.subscribe((queryParams) => {
+      this.searchTerm = queryParams['q'];
+      this.fetchOrders();
     });
   }
-  openModal(pedido: any) {
-    this.showModal = true;
-    this.selectedPedido = pedido._id;
-    console.log("ID del pedido:", this.selectedPedido);
+
+  async getOrders() {
+    this.orderService.getPedidos().subscribe(async (data: any) => {
+      for (const pedido of data) {
+        try {
+          const cliente = await this.authService.getOrderUser(pedido.userId);
+          pedido.businessName = cliente.businessName;
+        } catch (error) {
+          console.error('Error obteniendo nombre del cliente:', error);
+        }
+      }
+      this.pedidos = data;
+      this.pedidosFiltrados = [...this.pedidos];
+      this.updatePagination();
+    });
   }
 
-  closeModal() {
-    this.showModal = false;
-    this.selectedPedido = null;
+  filterPedidos(status?: string) {
+    this.selectedStatus = status || '';
+    if (status) {
+      this.pedidosFiltrados = this.pedidos.filter(pedido => pedido.status === status);
+    } else {
+      this.pedidosFiltrados = [...this.pedidos];
+    }
+    this.currentPage = 1;
+    this.updatePagination();
   }
 
   async fetchOrders() {
     if (this.searchTerm) {
-      // Si hay un término de búsqueda, obtén los pedidos filtrados
       const data = await firstValueFrom(this.orderService.getOrdersFiltered(this.searchTerm));
-      
       for (const pedido of data) {
         const cliente = await this.authService.getOrderUser(pedido.userId);
-        pedido.businessName = cliente.businessName; // Agrega el nombre del cliente al pedido
+        pedido.businessName = cliente.businessName;
       }
-      
-      // Asigna los pedidos filtrados
-      this.pedidosFiltrados = data || [];
-      console.log(data, 'filtered data');
+      this.pedidosFiltrados = data;
     } else {
-      // Si no hay término de búsqueda, obtén todos los pedidos
       this.getOrders();
     }
+    this.currentPage = 1;
+    this.updatePagination();
   }
-  
 
-  
   async cambiarEstado(pedId: string, nuevoEstado: string) {
     try {
       await firstValueFrom(this.orderService.cambiarEstado(pedId, nuevoEstado));
-
       this.getOrders();
-
-      this.showModal = false; 
+      this.showModal = false;
       this.selectedPedido = null;
-      
-      if (nuevoEstado === 'Terminado' || nuevoEstado === 'Cancelado'){
-        console.log('Entrando al mail');
+
+      if (nuevoEstado === 'Terminado' || nuevoEstado === 'Cancelado') {
         await firstValueFrom(this.orderService.getEmailByOrder(pedId));
       }
 
@@ -107,7 +96,35 @@ export class PedidosAdminComponent {
         text: `El pedido ${pedId} ahora está ${nuevoEstado}`,
       });
     } catch (error) {
-      console.error('Error al cambiar el estado del pedido:', error);
+      console.error('Error al cambiar estado:', error);
+    }
+  }
+
+  openModal(pedido: any) {
+    this.showModal = true;
+    this.selectedPedido = pedido._id;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.selectedPedido = null;
+  }
+
+  // Métodos de paginación
+  updatePagination() {
+    this.totalPages = Math.ceil(this.pedidosFiltrados.length / this.itemsPerPage);
+  }
+
+  get paginatedPedidos() {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    const end = start + this.itemsPerPage;
+    return this.pedidosFiltrados.slice(start, start + this.itemsPerPage);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updatePagination();
     }
   }
 }

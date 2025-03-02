@@ -12,8 +12,14 @@ import { firstValueFrom } from 'rxjs';
 })
 export class ProductosComponent implements OnInit {
   products: any[] = [];
+  displayedProducts: any[] = [];
   searchTerm: string = '';
   sortOrder: string = 'none';
+
+  // Paginación
+  currentPage: number = 1;
+  pageSize: number = 8;
+  totalPages: number = 1;
 
   constructor(
     private productService: ProductService,
@@ -30,6 +36,7 @@ export class ProductosComponent implements OnInit {
       this.searchTerm = queryParams['q'] || ''; // Obtiene el término de búsqueda de la URL
       this.fetchProducts();
     });
+
     this.categorySelectionService.categorySelected$.subscribe(async (category) => {
       await this.filterByCategory(category);
     });
@@ -37,17 +44,16 @@ export class ProductosComponent implements OnInit {
 
   async fetchProducts() {
     try {
+      let data;
       if (this.searchTerm === 'Todos' || !this.searchTerm) {
-        // Si el término de búsqueda es 'Todos' o no hay término, trae todos los productos
-        const data = await firstValueFrom(this.productService.getProducts());
-        this.products = data || [];
-        console.log(data, 'all data');
+        data = await firstValueFrom(this.productService.getProducts());
       } else {
-        // Si hay un término de búsqueda, filtra los productos
-        const data = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
-        this.products = data || [];
-        console.log(data, 'filtered data');
+        data = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
       }
+
+      this.products = data || [];
+      this.totalPages = Math.ceil(this.products.length / this.pageSize);
+      this.updateDisplayedProducts();
     } catch (error) {
       console.error('Error al obtener los productos:', error);
     }
@@ -55,23 +61,36 @@ export class ProductosComponent implements OnInit {
 
   async filterByCategory(category: string) {
     try {
-      const data = await firstValueFrom(this.productService.filterByCategory(category));
-      this.products = data || [];
-      console.log(data, 'filtered by category');
+      this.products = await firstValueFrom(this.productService.filterByCategory(category)) || [];
     } catch (error) {
-      const data = await firstValueFrom(this.productService.getProducts());
-      this.products = data || [];
+      this.products = await firstValueFrom(this.productService.getProducts()) || [];
       console.error('Error fetching products by category', error);
     }
+
+    this.totalPages = Math.ceil(this.products.length / this.pageSize);
+    this.updateDisplayedProducts();
   }
 
   sortProducts() {
-    if (this.sortOrder === 'none') {
-    }
-    else if (this.sortOrder === 'asc') {
+    if (this.sortOrder === 'asc') {
       this.products.sort((a, b) => a.price - b.price); // Ordena por precio ascendente
     } else if (this.sortOrder === 'desc') {
       this.products.sort((a, b) => b.price - a.price); // Ordena por precio descendente
+    }
+    this.updateDisplayedProducts();
+  }
+
+  // Actualiza los productos mostrados según la página actual
+  updateDisplayedProducts() {
+    const start = (this.currentPage - 1) * this.pageSize;
+    const end = start + this.pageSize;
+    this.displayedProducts = this.products.slice(start, end);
+  }
+
+  changePage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.updateDisplayedProducts();
     }
   }
 }
