@@ -28,6 +28,13 @@ export class EditProductModalComponent implements OnInit {
     this.supplierService.obtenerSuppliers().subscribe((data: any) => {
       this.suppliers = data; 
       console.log("suppliers del modal", this.suppliers);
+
+      if (this.editedProduct.supplier) {
+        const supplierFound = this.suppliers.find(sup => sup._id === this.editedProduct.supplier);
+        if(supplierFound) {
+          this.editedProduct.supplier = supplierFound.businessName;
+        }
+      }
     });
   }
 

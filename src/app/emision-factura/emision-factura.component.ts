@@ -43,7 +43,7 @@ export class EmisionFacturaComponent implements OnInit {
       this.updatePagination();
     }, (err) => {
       console.error(err);
-      Swal.fire('Error', 'Error al cargar los pedidos', 'error');
+      Swal.fire('Error', 'El Nro de pedido debe ser un alfanumerico de 24 caracteres', 'error');
     });
   }
 

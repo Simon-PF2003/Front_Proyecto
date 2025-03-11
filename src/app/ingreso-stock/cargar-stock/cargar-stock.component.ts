@@ -36,9 +36,22 @@ export class CargarStockComponent implements OnInit {
       this.products = productsPending.filter(product => product.pending > 0);
       
       if (this.searchTerm) {
-        this.products = this.products.filter(product =>
-          product.desc.toLowerCase().includes(this.searchTerm.toLowerCase())
-        );
+        try {
+          const filteredData = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
+          const stockFilteredData = filteredData.filter(product => product.stock < product.stockMin);
+
+          if (stockFilteredData.length === 0) {
+            Swal.fire('Sin resultados', 'No hay productos que cumplan con la descripción ingresada', 'info');
+          }
+
+          this.products = stockFilteredData;
+        } catch (error) {
+          if ((error as any).status === 400) {
+            this.products = [];
+          } else {
+            console.error('Error al buscar productos', error);
+          }
+        }
       }
 
       /*if (this.products.length === 0) {

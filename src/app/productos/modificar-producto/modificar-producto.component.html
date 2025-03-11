@@ -24,6 +24,7 @@
               <p class="card-text truncate">ID: {{ product._id }}</p>
               <p class="card-text truncate">{{ product.desc }}</p>
               <p class="card-text">Stock: {{ product.stock }}</p>
+              <p class="card-text">Stock mínimo: {{ product.stockMin }}</p>
               <p class="card-text">Precio: {{ product.price }}</p>
               <p class="card-text">Categoría: {{ product.cat }}</p>
               <button class="btn btn-primary btn-sm" (click)="openEditModal(product)">Editar Producto</button>

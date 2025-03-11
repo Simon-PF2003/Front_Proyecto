@@ -4,6 +4,7 @@ import { CategorySelectionService } from '../services/category-selection-service
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-productos',
@@ -45,12 +46,22 @@ export class ProductosComponent implements OnInit {
   async fetchProducts() {
     try {
       let data;
+  
       if (this.searchTerm === 'Todos' || !this.searchTerm) {
         data = await firstValueFrom(this.productService.getProducts());
       } else {
-        data = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
+        try {
+          data = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
+        } catch (error) {
+          if ((error as any).status === 400) {
+            data = []; // Vaciar la lista de productos si no hay coincidencias
+            Swal.fire('Sin resultados', 'No hay productos que cumplan con la descripción ingresada', 'info');
+          } else {
+            console.error('Error al buscar productos:', error);
+          }
+        }
       }
-
+  
       this.products = data || [];
       this.totalPages = Math.ceil(this.products.length / this.pageSize);
       this.updateDisplayedProducts();
@@ -58,6 +69,7 @@ export class ProductosComponent implements OnInit {
       console.error('Error al obtener los productos:', error);
     }
   }
+  
 
   async filterByCategory(category: string) {
     try {

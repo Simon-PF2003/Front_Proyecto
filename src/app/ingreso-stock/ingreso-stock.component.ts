@@ -15,6 +15,7 @@ export class IngresoStockComponent implements OnInit {
   products: any[] = [];
   displayedProducts: any[] = [];
   searchTerm: string = '';
+  selectedProducts: any[] = [];
 
   // Paginación
   currentPage: number = 1;
@@ -41,17 +42,38 @@ export class IngresoStockComponent implements OnInit {
   }
 
   async fetchProducts() {
-    const noStockData = await firstValueFrom(this.productService.getNoStockProducts());
-    if (this.searchTerm) {
-      const filteredData = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
-      this.products = filteredData.filter(product => product.stock < product.stockMin);
-    } else {
-      this.products = noStockData;
+    try {
+      const noStockData = await firstValueFrom(this.productService.getNoStockProducts());
+  
+      if (this.searchTerm) {
+        try {
+          const filteredData = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
+          const stockFilteredData = filteredData.filter(product => product.stock < product.stockMin);
+  
+          if (stockFilteredData.length === 0) {
+            Swal.fire('Sin resultados', 'No hay productos que cumplan con la descripción ingresada', 'info');
+          }
+  
+          this.products = stockFilteredData;
+        } catch (error) {
+          if ((error as any).status === 400) {
+            this.products = [];
+            Swal.fire('Sin resultados', 'No hay productos que cumplan con la descripción ingresada', 'info');
+          } else {
+            console.error('Error al buscar productos:', error);
+          }
+        }
+      } else {
+        this.products = noStockData;
+      }
+  
+      this.products.forEach(product => product.quantityToBuy = 0);
+      this.updatePagination();
+    } catch (error) {
+      console.error('Error al obtener productos:', error);
     }
-    this.products.forEach(product => product.quantityToBuy = 0);
-    this.updatePagination();
   }
-
+  
   async filterByCategory(category: string) {
     try {
       const data = await firstValueFrom(this.productService.filterByCategory(category));
@@ -62,7 +84,34 @@ export class IngresoStockComponent implements OnInit {
     }
   }
 
-  solicitarStock() {
+  generarOrdenDeCompra() {
+    this.selectedProducts = this.products.filter(product => product.quantityToBuy > 0);
+    if (this.selectedProducts.length === 0) {
+      Swal.fire('Error', 'No ha seleccionado ninguna cantidad para comprar', 'error');
+      return;
+    }
+    let orderSummary = '<ul>';
+    this.selectedProducts.forEach(product => {
+      orderSummary += `<li>${product.desc} - Cantidad: ${product.quantityToBuy} - Precio</li>`;
+    });
+    orderSummary += '</ul>';
+    const currentDate = new Date().toLocaleDateString();
+    Swal.fire({
+      title: 'Orden de Compra',
+      html: `Proveedor: Star Computación <br> Fecha: ${currentDate}<br>Estos son los productos que va a solicitar:<br>${orderSummary}`,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Confirmar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+      this.solicitarStock();
+      }
+    });
+  } 
+
+
+ solicitarStock() {
     const productsToRequest = this.products
       .filter(product => product.quantityToBuy > 0)
       .map(product => ({

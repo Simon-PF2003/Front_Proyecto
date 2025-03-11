@@ -20,7 +20,7 @@ export class PedidosAdminComponent {
 
   // Paginación
   currentPage: number = 1;
-  itemsPerPage: number = 1; // Cantidad de pedidos por página
+  itemsPerPage: number = 2; // Cantidad de pedidos por página
   totalPages: number = 1;
 
   constructor(

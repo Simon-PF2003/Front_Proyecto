@@ -5,7 +5,7 @@ import { ProductService } from '../../services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-modificar-producto',
   templateUrl: './modificar-producto.component.html',
@@ -43,27 +43,45 @@ export class ModificarProductoComponent implements OnInit {
   async fetchProducts() {
     try {
       let data;
+  
       if (this.searchTerm === 'Todos' || !this.searchTerm) {
         data = await firstValueFrom(this.productService.getProducts());
       } else {
-        data = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
+        try {
+          data = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
+        } catch (error) {
+          if ((error as any).status === 400) {
+            data = []; // Vaciar la lista si no hay coincidencias
+            Swal.fire('Sin resultados', 'No hay productos que cumplan con la descripción ingresada', 'info');
+          } else {
+            console.error('Error al buscar productos:', error);
+          }
+        }
       }
   
-      this.products = data || []; 
-      this.filterByCategory(this.selectedCategory);
+      this.products = data || [];
+  
+      // **Solución: Asegurar que filteredProducts siempre tenga datos**
+      this.filteredProducts = [...this.products];
+  
+      // **Actualizar paginación**
+      this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
+      this.updateDisplayedProducts();
     } catch (error) {
       console.error('Error al obtener los productos:', error);
     }
   }
 
   filterByCategory(category: string): void {
+    this.selectedCategory = category; // **Actualizar la categoría seleccionada**
+  
     if (category === 'all') {
-      this.filteredProducts = this.products;
+      this.filteredProducts = [...this.products];
     } else {
       this.filteredProducts = this.products.filter(p => p.cat === category);
     }
-
-    // Actualizar paginación
+  
+    // **Actualizar paginación**
     this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
     this.currentPage = 1;
     this.updateDisplayedProducts();

@@ -9,7 +9,7 @@
 
   <div class="d-flex justify-content-end mb-3">
     <button class="btn btn-success me-2" (click)="ingresarStock()">Ingresar Stock</button>
-    <button class="btn btn-primary" (click)="solicitarStock()">Solicitar Stock</button>
+    <button class="btn btn-primary" (click)="generarOrdenDeCompra()">Solicitar Stock</button>
   </div>
 
   <div class="row">
@@ -22,6 +22,7 @@
           <div class="col-md-8">
             <div class="card-body">
               <h5 class="card-title">{{ product.desc }}</h5>
+              <p class="card-text">Id: {{ product._id }}</p>
               <p class="card-text">Precio: {{ product.price }}</p>
               <p class="card-text">Stock: {{ product.stock }}</p>
               <p class="card-text">Stock Mínimo: {{ product.stockMin }}</p>
@@ -39,6 +40,8 @@
     </div>
   </div>
 </div>
+
+
 <nav class="mt-4">
   <ul class="pagination justify-content-center">
     <li class="page-item" [class.disabled]="currentPage === 1">

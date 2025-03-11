@@ -35,7 +35,7 @@
         <label for="supplier">Proveedor:</label>
         <select class="form-control" id="supplier" [(ngModel)]="editedProduct.supplier" name="supplier">
           <option disabled selected value="">Seleccione un proveedor</option>
-          <option *ngFor="let supplier of suppliers">{{ supplier.businessName }}</option>
+            <option *ngFor="let supplier of suppliers" [value]="supplier.businessName">{{ supplier.businessName }} - Rubro: {{ supplier.category }}</option>
         </select>
       </div>
       <div class="form-group mb-3">

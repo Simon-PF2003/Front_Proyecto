@@ -19,12 +19,14 @@
       <div class="card mb-3">
         <div class="card-body">
           <h5 class="card-title">Razón Social: {{ client.businessName }}</h5>
+          <p class="card-text">Id: {{ client._id }}</p>
           <p class="card-text">CUIT: {{ client.cuit }}</p>
           <p class="card-text">Email: {{ client.email }}</p>
           <p class="card-text">Dirección: {{ client.address }}</p>
           <p class="card-text">Estado: {{ client.status }}</p>
           <p class="card-text">Teléfono: {{ client.phoneNumber }}</p>
           <p class="card-text">Rol: {{ client.role }}</p>
+          <p class="card-text">Fecha de alta (Antiguedad): {{ client.createdAt | date:'dd/MM/yyyy' }}</p>
           <div class="d-flex justify-content-between mt-2">
             <button class="btn btn-warning" (click)="modificarCliente(client)">Modificar</button>
             <button class="btn btn-danger" (click)="deleteClient(client._id)">Eliminar</button>
