@@ -22,13 +22,19 @@ export class IngresoStockComponent implements OnInit {
   pageSize: number = 5;
   totalPages: number = 1;
 
+  // Número de orden de compra
+  orderNumber: number;
+
   constructor(
     public authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private productService: ProductService,
     private categorySelectionService: CategorySelectionService
-  ) {}
+  ) {
+    // Cargar el número de orden desde localStorage o inicializarlo en 1243
+    this.orderNumber = parseInt(localStorage.getItem('orderNumber') || '1243', 10);
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((queryParams) => {
@@ -90,28 +96,33 @@ export class IngresoStockComponent implements OnInit {
       Swal.fire('Error', 'No ha seleccionado ninguna cantidad para comprar', 'error');
       return;
     }
+
     let orderSummary = '<ul>';
     this.selectedProducts.forEach(product => {
       orderSummary += `<li>${product.desc} - Cantidad: ${product.quantityToBuy} - Precio</li>`;
     });
     orderSummary += '</ul>';
+    
     const currentDate = new Date().toLocaleDateString();
+    const orderNum = this.orderNumber;
+
     Swal.fire({
       title: 'Orden de Compra',
-      html: `Proveedor: Star Computación <br> Fecha: ${currentDate}<br>Estos son los productos que va a solicitar:<br>${orderSummary}`,
+      html: `Proveedor: Star Computación <br> Número: ${orderNum} <br> Fecha: ${currentDate} <br> Estos son los productos que va a solicitar:<br>${orderSummary}`,
       icon: 'info',
       showCancelButton: true,
       confirmButtonText: 'Confirmar',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-      this.solicitarStock();
+        this.solicitarStock();
+        this.orderNumber++; // Incrementar el número de orden
+        localStorage.setItem('orderNumber', this.orderNumber.toString()); // Guardar en localStorage
       }
     });
-  } 
+  }
 
-
- solicitarStock() {
+  solicitarStock() {
     const productsToRequest = this.products
       .filter(product => product.quantityToBuy > 0)
       .map(product => ({
@@ -126,7 +137,7 @@ export class IngresoStockComponent implements OnInit {
   
     this.productService.requestStock(productsToRequest).subscribe(
       () => {
-        Swal.fire('Solicitud enviada', 'Se ha solicitado stock de los productos seleccionados', 'success');
+        Swal.fire('Orden de Compra Registrada', 'Se ha solicitado stock de los productos seleccionados', 'success');
         this.fetchProducts(); // Recargar productos para actualizar el stock pendiente en la UI
       },
       (error) => {
