@@ -21,6 +21,12 @@
         En Curso
       </button>
 
+      <button class="mx-2 btn btn-success" 
+        [ngClass]="{'active': selectedStatus === 'Facturado'}" 
+        (click)="filterPedidos('Facturado')">
+        Facturados
+      </button>
+
       <button class="mx-2 btn btn-secondary" 
         [ngClass]="{'active': selectedStatus === ''}" 
         (click)="filterPedidos()">
@@ -49,7 +55,7 @@
 
         <div class="d-flex justify-content-between align-items-center mt-3">
           <p><strong>Total:</strong> ${{ pedido.total }}</p>
-          <p [ngClass]="{ 'pendiente': pedido.status === 'Pendiente', 'en-curso': pedido.status === 'En curso' }">
+          <p [ngClass]="{ 'pendiente': pedido.status === 'Pendiente', 'en-curso': pedido.status === 'En curso', 'facturado': pedido.status === 'Facturado' }">
             <strong>Estado:</strong> {{ pedido.status }}
           </p>
           <p><strong>Usuario ID:</strong> {{ pedido.userId }}</p>
@@ -76,6 +82,7 @@
           <button class="btn btn-warning mx-2" (click)="cambiarEstado(selectedPedido,'En curso')">En Curso</button>
           <button class="btn btn-danger mx-2" (click)="cambiarEstado(selectedPedido, 'Cancelado')">Cancelado</button>
           <button class="btn btn-success mx-2" (click)="cambiarEstado(selectedPedido, 'Terminado')">Terminado</button>
+          <button class="btn btn-info mx-2" (click)="cambiarEstado(selectedPedido, 'Entregado')">Entregado</button>
         </div>
       </div>
     </div>
