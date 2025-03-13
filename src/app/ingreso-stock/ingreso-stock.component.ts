@@ -99,7 +99,7 @@ export class IngresoStockComponent implements OnInit {
 
     let orderSummary = '<ul>';
     this.selectedProducts.forEach(product => {
-      orderSummary += `<li>${product.desc} - Cantidad: ${product.quantityToBuy} - Precio</li>`;
+      orderSummary += `<li>${product.desc} - Cantidad: ${product.quantityToBuy} - Precio: ${product.price}</li>`;
     });
     orderSummary += '</ul>';
     
