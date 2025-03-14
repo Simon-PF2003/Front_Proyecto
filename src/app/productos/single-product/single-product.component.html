@@ -13,7 +13,9 @@
     <div class="single-product-details">
         <!--<h6>Hardware / Motherboards</h6>-->
         <h4>{{ productDetails.data.desc }}</h4>
-        <h2>$ {{ productDetails.data.price }}</h2>
+        <h2 *ngIf="discountPercentage===0">$ {{ productDetails.data.price }}</h2>
+        <h2 *ngIf="discountPercentage>0"><span class="text-danger"><del>{{ productDetails.data.price | currency }}</del></span> 
+            <strong>     {{ discountedPrice * (1 - (discountPercentage)) | currency }}</strong></h2>
         <input id="productQuantity" type="number" [(ngModel)]="productQuantity" min="1" max="{{ productStock }}">
         <button type="submit" class="btn btn-primary btn-block" (click)="addToCart(productQuantity)"
             [disabled]="productStock === 0">

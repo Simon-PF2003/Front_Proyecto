@@ -16,7 +16,7 @@ export class ProductosComponent implements OnInit {
   displayedProducts: any[] = [];
   searchTerm: string = '';
   sortOrder: string = 'none';
-
+  discountPercentage: number = 0;
   // Paginación
   currentPage: number = 1;
   pageSize: number = 8;
@@ -33,6 +33,9 @@ export class ProductosComponent implements OnInit {
     // Verifica la autenticación al cargar la página
     this.authService.checkAuthAndRedirect();
 
+    await this.fetchUserDiscount();
+    await this.fetchProducts();
+
     this.route.queryParams.subscribe((queryParams) => {
       this.searchTerm = queryParams['q'] || ''; // Obtiene el término de búsqueda de la URL
       this.fetchProducts();
@@ -43,6 +46,23 @@ export class ProductosComponent implements OnInit {
     });
   }
 
+
+  async fetchUserDiscount() {
+    try {
+      const response = await firstValueFrom(this.authService.getUserData());
+      if (response) {
+        this.authService.getUserDiscount(response.id).subscribe((discount: any) => {
+          this.discountPercentage = discount.discountPercentage;
+          console.log('User discount:', this.discountPercentage);
+        });
+        console.log('User discount fetching is asynchronous, may not reflect updated value immediately.'); 
+      }
+
+        } catch (error) {
+      console.error('Error fetching user discount:', error);
+    }
+  }
+  
   async fetchProducts() {
     try {
       let data;
@@ -63,6 +83,9 @@ export class ProductosComponent implements OnInit {
       }
   
       this.products = data || [];
+
+      await this.applyDiscountToProducts();
+
       this.totalPages = Math.ceil(this.products.length / this.pageSize);
       this.updateDisplayedProducts();
     } catch (error) {
@@ -70,7 +93,18 @@ export class ProductosComponent implements OnInit {
     }
   }
   
-
+  async applyDiscountToProducts() {
+    if (this.discountPercentage > 0) {
+      this.products.forEach((product) => {
+        product.discountedPrice = product.price * (1 - this.discountPercentage); 
+      });
+    } else {
+      this.products.forEach((product) => {
+        product.discountedPrice = product.price; 
+      });
+    }
+  }
+  
   async filterByCategory(category: string) {
     try {
       this.products = await firstValueFrom(this.productService.filterByCategory(category)) || [];

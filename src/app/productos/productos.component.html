@@ -23,7 +23,11 @@
                 <h5 class="card-title truncate">{{ product.desc }}</h5>
                 <p class="card-text truncate">{{ product._id }}</p>
                 <p class="card-text">Stock: {{ product.stock }}</p>
-                <p class="card-text">Precio: {{ product.price }}</p>
+                <p class="card-text" *ngIf="discountPercentage === 0">Precio: {{ product.price | currency }}</p>
+                <p class="card-text" *ngIf="discountPercentage > 0 ">
+                  Precio: <span class="text-danger"><del>{{ product.price | currency }}</del></span> 
+                  <strong> {{ product.discountedPrice | currency }}</strong>
+                </p>
               </div>
             </div>
           </a>

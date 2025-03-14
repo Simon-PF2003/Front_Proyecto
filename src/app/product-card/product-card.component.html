@@ -3,6 +3,10 @@
   <div class="card-body">
     <h5 class="card-title truncate">{{ product.desc }}</h5>
     <p class="card-text truncate">{{ product.desc }}</p>
-    <p class="card-text">Precio: {{ product.price }}</p>
+    <p class="card-text" *ngIf="discountPercentage === 0">Precio: {{ product.price | currency }}</p>
+                <p class="card-text" *ngIf="discountPercentage > 0 ">
+                  Precio: <span class="text-danger"><del>{{ product.price | currency }}</del></span> 
+                  <strong>     {{ product.price * (1 - (discountPercentage)) | currency }}</strong>
+                </p>
     <button class="btn btn-primary" (click)="comprar()">Comprar</button>
   </div>

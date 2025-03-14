@@ -70,6 +70,10 @@ export class AuthService {
     );
   }
 
+  getUserDiscount(user: any): Observable<any> {
+    return this.http.get<any>(`${this.URL}/user-discount/${user}`);
+  }
+
   loggedIn() {
     return !!localStorage.getItem('token');
   }
