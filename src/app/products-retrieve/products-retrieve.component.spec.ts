@@ -1,23 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { SingleProductComponent } from './single-product.component';
-import { ActivatedRoute } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { NavVarComponent } from 'src/app/nav-var/nav-var.component';
+import { ProductsRetrieveComponent } from './products-retrieve.component';
+import { ActivatedRoute } from '@angular/router';
+import { NavVarComponent } from '../nav-var/nav-var.component';
+import { FooterComponent } from '../footer/footer.component';
 
-describe('SingleProductComponent', () => {
-  let component: SingleProductComponent;
-  let fixture: ComponentFixture<SingleProductComponent>;
+describe('ProductsRetrieveComponent', () => {
+  let component: ProductsRetrieveComponent;
+  let fixture: ComponentFixture<ProductsRetrieveComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SingleProductComponent, NavVarComponent],
       imports: [HttpClientModule, HttpClientTestingModule],
+      declarations: [ProductsRetrieveComponent, NavVarComponent, FooterComponent],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'test-id' } } } }
       ]
     });
-    fixture = TestBed.createComponent(SingleProductComponent);
+    fixture = TestBed.createComponent(ProductsRetrieveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -7,11 +7,11 @@ import { firstValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-productos',
-  templateUrl: './productos.component.html',
-  styleUrls: ['./productos.component.css']
+  selector: 'app-products-retrieve',
+  templateUrl: './products-retrieve.component.html',
+  styleUrls: ['./products-retrieve.component.css']
 })
-export class ProductosComponent implements OnInit {
+export class ProductsRetrieveComponent implements OnInit {
   products: any[] = [];
   displayedProducts: any[] = [];
   searchTerm: string = '';

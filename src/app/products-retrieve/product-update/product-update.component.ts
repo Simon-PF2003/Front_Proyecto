@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EditProductModalComponent } from '../edit-product-modal/edit-product-modal.component';
+import { ProductUpdateModalComponent } from '../product-update-modal/product-update-modal.component';
 import { ProductService } from '../../services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
 import Swal from 'sweetalert2';
 @Component({
-  selector: 'app-modificar-producto',
-  templateUrl: './modificar-producto.component.html',
-  styleUrls: ['./modificar-producto.component.css']
+  selector: 'app-product-update',
+  templateUrl: './product-update.component.html',
+  styleUrls: ['./product-update.component.css']
 })
-export class ModificarProductoComponent implements OnInit {
+export class ProductUpdateComponent implements OnInit {
   products: any[] = [];
   filteredProducts: any[] = [];
   displayedProducts: any[] = [];
@@ -101,7 +101,7 @@ export class ModificarProductoComponent implements OnInit {
   }
 
   openEditModal(product: any): void {
-    const modalRef = this.modalService.open(EditProductModalComponent, { centered: true });
+    const modalRef = this.modalService.open(ProductUpdateModalComponent, { centered: true });
     modalRef.componentInstance.editedProduct = { ...product };
     modalRef.result.then((result: any) => {
       if (result) {

@@ -50,6 +50,8 @@
           <li class="list-group-item" *ngFor="let producto of pedido.items">
             <strong>Producto:</strong> {{ producto.desc }}<br>
             <strong>Cantidad:</strong> {{ producto.quantity }}<br>
+            <strong>Precio:</strong> {{ producto.price }}
+            <strong>Subtotal: {{ producto.price * producto.quantity }}</strong>
           </li>
         </ul>
 

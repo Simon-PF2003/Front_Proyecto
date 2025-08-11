@@ -43,7 +43,7 @@ export class ProductCardComponent {
       {
       next: (product: any) => {
         console.log('Detalles del producto:', product);
-        this.router.navigate(['/product', this.product._id]); 
+        this.router.navigate(['/product-retrieve', this.product._id]); 
       },
       error: err => {
         console.error('Error al obtener detalles del producto', err);

@@ -5,11 +5,11 @@ import Swal from 'sweetalert2';
 import { SupplierService } from 'src/app/services/supplier.service';
 
 @Component({
-  selector: 'app-edit-product-modal',
-  templateUrl: './edit-product-modal.component.html',
-  styleUrls: ['./edit-product-modal.component.css']
+  selector: 'app-product-update-modal',
+  templateUrl: './product-update-modal.component.html',
+  styleUrls: ['./product-update-modal.component.css']
 })
-export class EditProductModalComponent implements OnInit {
+export class ProductUpdateModalComponent implements OnInit {
   @Input() editedProduct: any;
   suppliers: any[] = [];
   public value: string='';

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { EditProductModalComponent } from './edit-product-modal.component';
+import { ProductUpdateModalComponent } from './product-update-modal.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-describe('EditProductModalComponent', () => {
-  let component: EditProductModalComponent;
-  let fixture: ComponentFixture<EditProductModalComponent>;
+describe('ProductUpdateModalComponent', () => {
+  let component: ProductUpdateModalComponent;
+  let fixture: ComponentFixture<ProductUpdateModalComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule, HttpClientTestingModule],
-      declarations: [EditProductModalComponent],
+      declarations: [ProductUpdateModalComponent],
       providers: [NgbActiveModal]
     });
-    fixture = TestBed.createComponent(EditProductModalComponent);
+    fixture = TestBed.createComponent(ProductUpdateModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

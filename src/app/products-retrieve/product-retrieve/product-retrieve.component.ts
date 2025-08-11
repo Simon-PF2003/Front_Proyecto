@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EditProductModalComponent } from '../edit-product-modal/edit-product-modal.component';
+import { ProductUpdateModalComponent } from '../product-update-modal/product-update-modal.component';
 import Swal from 'sweetalert2';
 import { CartServiceService } from 'src/app/services/cart-service.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -11,11 +11,11 @@ import { countService } from 'src/app/services/count-cart.service';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-single-product',
-  templateUrl: './single-product.component.html',
-  styleUrls: ['./single-product.component.css']
+  selector: 'app-product-retrieve',
+  templateUrl: './product-retrieve.component.html',
+  styleUrls: ['./product-retrieve.component.css']
 })
-export class SingleProductComponent implements OnInit {
+export class ProductRetrieveComponent implements OnInit {
   
   productId: string | null = null; 
   productDetails: any;
@@ -102,7 +102,7 @@ export class SingleProductComponent implements OnInit {
   }
 
   openEditModal() {
-    const modalRef = this.modalService.open(EditProductModalComponent, { centered: true }); 
+    const modalRef = this.modalService.open(ProductUpdateModalComponent, { centered: true }); 
     modalRef.componentInstance.editedProduct = { ...this.productDetails.data, _id: this.productId }; 
     modalRef.result.then((result: any) => {
       if (result) {
@@ -127,7 +127,7 @@ export class SingleProductComponent implements OnInit {
         this.productService.deleteProduct(this.productId).subscribe({
           next: () => {
             Swal.fire('Confirmado', 'La acción ha sido confirmada', 'success');
-            this.router.navigate(['/productos']);
+            this.router.navigate(['/products-retrieve']);
           },
           error: (err) => {
             console.error(err);

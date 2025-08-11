@@ -5,11 +5,11 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 import { SupplierService } from '../services/supplier.service';
 @Component({
-  selector: 'app-nuevo-producto',
-  templateUrl: './nuevo-producto.component.html',
-  styleUrls: ['./nuevo-producto.component.css']
+  selector: 'app-product-create',
+  templateUrl: './product-create.component.html',
+  styleUrls: ['./product-create.component.css']
 })
-export class NuevoProductoComponent implements OnInit {
+export class ProductCreateComponent implements OnInit {
   product = {
     desc: '',
     stock: '',

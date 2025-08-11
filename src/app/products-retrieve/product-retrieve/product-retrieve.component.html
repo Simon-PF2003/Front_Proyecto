@@ -6,11 +6,11 @@
             style="color: #ffffff;"></i></button>
 </div>
 <section id="productDetails" class="section-p1" *ngIf="productDetails">
-    <div class="single-product-image">
+    <div class="product-retrieve-image">
         <img [src]="productDetails.data.image" alt="Imagen del producto">
     </div>
 
-    <div class="single-product-details">
+    <div class="product-retrieve-details">
         <!--<h6>Hardware / Motherboards</h6>-->
         <h4>{{ productDetails.data.desc }}</h4>
         <h2 *ngIf="discountPercentage===0">$ {{ productDetails.data.price }}</h2>
