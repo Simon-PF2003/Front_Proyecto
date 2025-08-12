@@ -18,10 +18,10 @@ import { HomeComponent } from './home/home.component';
 import { FooterComponent } from './footer/footer.component';
 
 //Institucional
-import { QuienesSomosComponent } from './quienes-somos/quienes-somos.component';
-import { ContactoComponent } from './contacto/contacto.component';
+import { InstitucionalQuienesSomosComponent } from './institucional-quienes-somos/institucional-quienes-somos.component';
+import { InstitucionalContactoComponent } from './institucional-contacto/institucional-contacto.component';
 import { BottomNavbarComponent } from './bottom-navbar/bottom-navbar.component';
-import { ContactFormComponent } from './contacto/contact-form/contact-form.component';
+import { ContactFormComponent } from './institucional-contacto/contact-form/contact-form.component';
 
 //Products
 import { ProductsRetrieveComponent } from './products-retrieve/products-retrieve.component';
@@ -35,8 +35,8 @@ import { ProductUpdateComponent } from './products-retrieve/product-update/produ
 import { CategorySelectionService } from './services/category-selection-service.service';
 
 //Orders
-import { OrdersComponent } from './orders/orders.component';
-import { PedidosAdminComponent } from './pedidos-admin/pedidos-admin.component';
+import { OrdersRetrieveClientComponent } from './orders-retrieve-client/orders-retrieve-client.component';
+import { OrdersUpdateAdminComponent } from './orders-update-admin/orders-update-admin.component';
 import { CartComponent } from './cart/cart/cart.component';
 
 //Bills
@@ -100,8 +100,8 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     ProductUpdateComponent,
     
     //Institucional
-    QuienesSomosComponent,
-    ContactoComponent,
+    InstitucionalQuienesSomosComponent,
+    InstitucionalContactoComponent,
     ContactFormComponent,
     
     //Login Signup Retrieve Password
@@ -122,8 +122,8 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     SupplierUpdateModalComponent,
     
     //Orders
-    OrdersComponent,
-    PedidosAdminComponent,
+    OrdersRetrieveClientComponent,
+    OrdersUpdateAdminComponent,
     CartComponent,
     
     //Bills

@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PedidosAdminComponent } from './pedidos-admin.component';
+import { OrdersUpdateAdminComponent } from './orders-update-admin.component';
 import { NavVarComponent } from '../nav-var/nav-var.component';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 
-describe('PedidosAdminComponent', () => {
-  let component: PedidosAdminComponent;
-  let fixture: ComponentFixture<PedidosAdminComponent>;
+describe('OrdersUpdateAdminComponent', () => {
+  let component: OrdersUpdateAdminComponent;
+  let fixture: ComponentFixture<OrdersUpdateAdminComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule, HttpClientTestingModule],
-      declarations: [PedidosAdminComponent, NavVarComponent],
+      declarations: [OrdersUpdateAdminComponent, NavVarComponent],
       providers: [
         { 
           provide: ActivatedRoute, 
@@ -23,7 +23,7 @@ describe('PedidosAdminComponent', () => {
         }
       ]
     });
-    fixture = TestBed.createComponent(PedidosAdminComponent);
+    fixture = TestBed.createComponent(OrdersUpdateAdminComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -4,11 +4,11 @@ import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-orders',
-  templateUrl: './orders.component.html',
-  styleUrls: ['./orders.component.css']
+  selector: 'app-orders-retrieve-client',
+  templateUrl: './orders-retrieve-client.component.html',
+  styleUrls: ['./orders-retrieve-client.component.css']
 })
-export class OrdersComponent implements OnInit {
+export class OrdersRetrieveClientComponent implements OnInit {
   orders: any[] = [];
   displayedOrders: any[] = [];
   userId: string = '';

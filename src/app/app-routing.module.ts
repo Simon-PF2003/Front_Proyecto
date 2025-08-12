@@ -23,8 +23,8 @@ import { SupplierUpdateComponent } from './supplier-update/supplier-update.compo
 import { SupplierUpdateModalComponent } from './supplier-update/supplier-update-modal/supplier-update-modal.component';
 
 //Orders
-import { OrdersComponent } from './orders/orders.component';
-import { PedidosAdminComponent } from './pedidos-admin/pedidos-admin.component';
+import { OrdersRetrieveClientComponent } from './orders-retrieve-client/orders-retrieve-client.component';
+import { OrdersUpdateAdminComponent } from './orders-update-admin/orders-update-admin.component';
 import { CartComponent } from './cart/cart/cart.component';
 
 //Stock
@@ -32,8 +32,8 @@ import { IngresoStockComponent } from './ingreso-stock/ingreso-stock.component';
 import { CargarStockComponent } from './ingreso-stock/cargar-stock/cargar-stock.component';
 
 //Institucional
-import { QuienesSomosComponent } from './quienes-somos/quienes-somos.component';
-import { ContactoComponent } from './contacto/contacto.component';
+import { InstitucionalQuienesSomosComponent } from './institucional-quienes-somos/institucional-quienes-somos.component';
+import { InstitucionalContactoComponent } from './institucional-contacto/institucional-contacto.component';
 
 //Login, SignUp, Authentication, Retrieve Password
 import { LoginComponent } from './login/login.component';
@@ -77,8 +77,8 @@ const routes: Routes = [
   { path: 'supplier-update-modal', component: SupplierUpdateModalComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
 
 //Orders
-  {path: 'myorders', component:OrdersComponent},
-  {path: 'pedidos', component:PedidosAdminComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'orders-retrieve-client', component:OrdersRetrieveClientComponent},
+  {path: 'pedidos', component:OrdersUpdateAdminComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   { path: 'cart', component: CartComponent },
 
 //Bills
@@ -86,8 +86,8 @@ const routes: Routes = [
   {path: 'recaudacion', component:RecaudacionComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
 
 //Institucional
-  { path: 'quienes-somos', component: QuienesSomosComponent },
-  { path: 'contacto', component: ContactoComponent},
+  { path: 'institucional-quienes-somos', component: InstitucionalQuienesSomosComponent },
+  { path: 'institucional-contacto', component: InstitucionalContactoComponent},
   
 //login, signup, retrieve password
   { path: 'login', component: LoginComponent },

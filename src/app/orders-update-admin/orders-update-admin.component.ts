@@ -6,11 +6,11 @@ import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-pedidos-admin',
-  templateUrl: './pedidos-admin.component.html',
-  styleUrls: ['./pedidos-admin.component.css']
+  selector: 'app-orders-update-admin',
+  templateUrl: './orders-update-admin.component.html',
+  styleUrls: ['./orders-update-admin.component.css']
 })
-export class PedidosAdminComponent {
+export class OrdersUpdateAdminComponent {
   searchTerm: string = '';
   pedidos: any[] = [];
   pedidosFiltrados: any[] = [];

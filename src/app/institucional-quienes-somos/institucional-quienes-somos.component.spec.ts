@@ -1,24 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NavVarComponent } from '../nav-var/nav-var.component';
-import { QuienesSomosComponent } from './quienes-somos.component';
+import { InstitucionalQuienesSomosComponent } from './institucional-quienes-somos.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
 import { BottomNavbarComponent } from '../bottom-navbar/bottom-navbar.component';
 
-describe('QuienesSomosComponent', () => {
-  let component: QuienesSomosComponent;
-  let fixture: ComponentFixture<QuienesSomosComponent>;
+describe('InstitucionalQuienesSomosComponent', () => {
+  let component: InstitucionalQuienesSomosComponent;
+  let fixture: ComponentFixture<InstitucionalQuienesSomosComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule, HttpClientTestingModule],
-      declarations: [QuienesSomosComponent, NavVarComponent, BottomNavbarComponent],
+      declarations: [InstitucionalQuienesSomosComponent, NavVarComponent, BottomNavbarComponent],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'test-id' } } } } 
       ]
     });
-    fixture = TestBed.createComponent(QuienesSomosComponent);
+    fixture = TestBed.createComponent(InstitucionalQuienesSomosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
