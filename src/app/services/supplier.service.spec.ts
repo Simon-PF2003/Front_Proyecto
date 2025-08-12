@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SupplierService } from './supplier.service';
-import { UdProveedorComponent } from '../ud-proveedor/ud-proveedor.component';
-import { AltaProveedorComponent } from '../alta-proveedor/alta-proveedor.component';
+import { SupplierUpdateComponent } from '../supplier-update/supplier-update.component';
+import { SupplierCreateComponent } from '../supplier-create/supplier-create.component';
 
 describe('SupplierService', () => {
   let service: SupplierService;
@@ -10,7 +10,7 @@ describe('SupplierService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      declarations: [UdProveedorComponent, AltaProveedorComponent]
+      declarations: [SupplierUpdateComponent, SupplierCreateComponent]
     });
     service = TestBed.inject(SupplierService);
   });

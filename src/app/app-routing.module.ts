@@ -18,9 +18,9 @@ import { UserRetrieveComponent } from './user-retrieve/user-retrieve.component';
 import { UserUpdateComponent } from './user-update/user-update.component';
 
 //Suppliers
-import { AltaProveedorComponent } from './alta-proveedor/alta-proveedor.component';
-import { UdProveedorComponent } from './ud-proveedor/ud-proveedor.component';
-import { ModificarProveedorComponent } from './ud-proveedor/modificar-proveedor/modificar-proveedor.component';
+import { SupplierCreateComponent } from './supplier-create/supplier-create.component';
+import { SupplierUpdateComponent } from './supplier-update/supplier-update.component';
+import { SupplierUpdateModalComponent } from './supplier-update/supplier-update-modal/supplier-update-modal.component';
 
 //Orders
 import { OrdersComponent } from './orders/orders.component';
@@ -72,9 +72,9 @@ const routes: Routes = [
   { path: 'user-retrieve', component: UserRetrieveComponent},
 
 //Suppliers
-  {path: 'alta-proveedor', component:AltaProveedorComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
-  {path: 'ud-proveedor', component:UdProveedorComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},  
-  { path: 'modificar-proveedor', component: ModificarProveedorComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  {path: 'supplier-create', component:SupplierCreateComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'supplier-update', component:SupplierUpdateComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},  
+  { path: 'supplier-update-modal', component: SupplierUpdateModalComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
 
 //Orders
   {path: 'myorders', component:OrdersComponent},

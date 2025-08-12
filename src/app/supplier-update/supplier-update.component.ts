@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { SupplierService } from '../services/supplier.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
-import { ModificarProveedorComponent } from './modificar-proveedor/modificar-proveedor.component';
+import { SupplierUpdateModalComponent } from './supplier-update-modal/supplier-update-modal.component';
 
 @Component({
-  selector: 'app-ud-proveedor',
-  templateUrl: './ud-proveedor.component.html',
-  styleUrls: ['./ud-proveedor.component.css']
+  selector: 'app-supplier-update',
+  templateUrl: './supplier-update.component.html',
+  styleUrls: ['./supplier-update.component.css']
 })
-export class UdProveedorComponent implements OnInit {
+export class SupplierUpdateComponent implements OnInit {
   cuit: string = '';
   foundSuppliers: any[] = [];
   displayedSuppliers: any[] = [];
@@ -71,7 +71,7 @@ export class UdProveedorComponent implements OnInit {
   }
 
   modifySupplier(supplier: any) {
-    const modalRef = this.modalService.open(ModificarProveedorComponent, { centered: true });
+    const modalRef = this.modalService.open(SupplierUpdateModalComponent, { centered: true });
     modalRef.componentInstance.editedSupplier = { ...supplier }; 
     modalRef.result.then((result) => {
       if (result) {

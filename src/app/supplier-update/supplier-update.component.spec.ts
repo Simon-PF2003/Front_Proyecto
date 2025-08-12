@@ -1,26 +1,26 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AltaProveedorComponent } from './alta-proveedor.component';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { SupplierUpdateComponent } from './supplier-update.component';
 import { NavVarComponent } from '../nav-var/nav-var.component';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-describe('AltaProveedorComponent', () => {
-  let component: AltaProveedorComponent;
-  let fixture: ComponentFixture<AltaProveedorComponent>;
+describe('SupplierUpdateComponent', () => {
+  let component: SupplierUpdateComponent;
+  let fixture: ComponentFixture<SupplierUpdateComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule, HttpClientTestingModule, FormsModule, CommonModule, RouterModule],
-      declarations: [AltaProveedorComponent, NavVarComponent],
+      declarations: [SupplierUpdateComponent, NavVarComponent],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'test-id' } } } }
       ]
     });
-    fixture = TestBed.createComponent(AltaProveedorComponent);
+    fixture = TestBed.createComponent(SupplierUpdateComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

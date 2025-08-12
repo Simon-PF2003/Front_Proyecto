@@ -62,9 +62,9 @@ import { TokenInterceptorService } from "./services/token-interceptor.service";
 import { AuthService } from './services/auth.service';
 
 //Suppliers
-import { AltaProveedorComponent } from './alta-proveedor/alta-proveedor.component';
-import { UdProveedorComponent } from './ud-proveedor/ud-proveedor.component';
-import { ModificarProveedorComponent } from './ud-proveedor/modificar-proveedor/modificar-proveedor.component';
+import { SupplierCreateComponent } from './supplier-create/supplier-create.component';
+import { SupplierUpdateComponent } from './supplier-update/supplier-update.component';
+import { SupplierUpdateModalComponent } from './supplier-update/supplier-update-modal/supplier-update-modal.component';
 
 //Reportes
 import { OrdenarClientesComponent } from './ordenar-clientes/ordenar-clientes.component';
@@ -117,9 +117,9 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     UserUpdateModalComponent,
     
     //Suppliers
-    AltaProveedorComponent,
-    UdProveedorComponent,
-    ModificarProveedorComponent,
+    SupplierCreateComponent,
+    SupplierUpdateComponent,
+    SupplierUpdateModalComponent,
     
     //Orders
     OrdersComponent,

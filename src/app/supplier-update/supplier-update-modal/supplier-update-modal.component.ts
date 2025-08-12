@@ -4,11 +4,11 @@ import { SupplierService } from 'src/app/services/supplier.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-modificar-proveedor',
-  templateUrl: './modificar-proveedor.component.html',
-  styleUrls: ['./modificar-proveedor.component.css']
+  selector: 'app-supplier-update-modal',
+  templateUrl: './supplier-update-modal.component.html',
+  styleUrls: ['./supplier-update-modal.component.css']
 })
-export class ModificarProveedorComponent {
+export class SupplierUpdateModalComponent {
   @Input() 
   editedSupplier: any;
 

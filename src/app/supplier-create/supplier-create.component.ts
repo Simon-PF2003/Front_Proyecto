@@ -3,11 +3,11 @@ import { SupplierService } from '../services/supplier.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-alta-proveedor',
-  templateUrl: './alta-proveedor.component.html',
-  styleUrls: ['./alta-proveedor.component.css']
+  selector: 'app-supplier-create',
+  templateUrl: './supplier-create.component.html',
+  styleUrls: ['./supplier-create.component.css']
 })
-export class AltaProveedorComponent {
+export class SupplierCreateComponent {
   supplier = {
     cuit: '',
     businessName: '',
