@@ -4,11 +4,12 @@ import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-alta-de-cliente',
-  templateUrl: './alta-de-cliente.component.html',
-  styleUrls: ['./alta-de-cliente.component.css']
+  selector: 'app-user-create-acceptance',
+  templateUrl: './user-create-acceptance.component.html',
+  styleUrls: ['./user-create-acceptance.component.css']
 })
-export class AltaDeClienteComponent {
+
+export class UserCreateAcceptanceComponent {
   users: any[] = [];
   displayedUsers: any[] = [];
 

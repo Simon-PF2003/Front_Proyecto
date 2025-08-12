@@ -1,17 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { EdicionClienteComponent } from './edicion-cliente/edicion-cliente.component';
+import { UserUpdateModalComponent } from './user-update-modal/user-update-modal.component';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { AgregarClienteManualComponent } from './agregar-cliente-manual/agregar-cliente-manual.component';
+import { UserCreateManuallyComponent } from './user-create-manually/user-create-manually.component';
 
 @Component({
-  selector: 'app-alta-cliente',
-  templateUrl: './alta-cliente.component.html',
-  styleUrls: ['./alta-cliente.component.css']
+  selector: 'app-user-update',
+  templateUrl: './user-update.component.html',
+  styleUrls: ['./user-update.component.css']
 })
-export class AltaClienteComponent implements OnInit {
+export class UserUpdateComponent implements OnInit {
   clientes: any[] = [];
   filteredClientes: any[] = [];
   displayedClientes: any[] = [];
@@ -87,7 +87,7 @@ export class AltaClienteComponent implements OnInit {
   }
 
   agregarCliente() {
-    const modalRef = this.modalService.open(AgregarClienteManualComponent, { centered: true });
+    const modalRef = this.modalService.open(UserCreateManuallyComponent, { centered: true });
     modalRef.result.then((result) => {
       if (result) {
         this.obtenerClientes();
@@ -96,7 +96,7 @@ export class AltaClienteComponent implements OnInit {
   }
 
   modificarCliente(cliente: any) {
-    const modalRef = this.modalService.open(EdicionClienteComponent, { centered: true });
+    const modalRef = this.modalService.open(UserUpdateModalComponent, { centered: true });
     modalRef.componentInstance.editedUser = { ...cliente }; 
     modalRef.result.then((result) => {
       if (result) {

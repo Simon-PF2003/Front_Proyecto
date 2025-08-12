@@ -4,11 +4,11 @@ import { AuthService } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-agregar-cliente-manual',
-  templateUrl: './agregar-cliente-manual.component.html',
-  styleUrls: ['./agregar-cliente-manual.component.css']
+  selector: 'app-user-create-manually',
+  templateUrl: './user-create-manually.component.html',
+  styleUrls: ['./user-create-manually.component.css']
 })
-export class AgregarClienteManualComponent {
+export class UserCreateManuallyComponent {
   newUser = {
     email: '',
     password: '',

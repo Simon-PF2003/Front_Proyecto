@@ -4,12 +4,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import jwt_decode from 'jwt-decode';
 
 @Component({
-  selector: 'app-perfil-usuario',
-  templateUrl: './perfil-usuario.component.html',
-  styleUrls: ['./perfil-usuario.component.css']
+  selector: 'app-user-retrieve',
+  templateUrl: './user-retrieve.component.html',
+  styleUrls: ['./user-retrieve.component.css']
 })
 
-export class PerfilUsuarioComponent implements OnInit {
+export class UserRetrieveComponent implements OnInit {
   selectedImageFile: File | null = null;
   decodedToken: any;
   user = {

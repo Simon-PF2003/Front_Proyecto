@@ -6,16 +6,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 
 //Products
-import { ProductsRetrieveComponent } from './products-retrieve/products-retrieve.component';
 import { ProductCreateComponent } from './product-create/product-create.component';
+import { ProductsRetrieveComponent } from './products-retrieve/products-retrieve.component';
 import { ProductRetrieveComponent } from './products-retrieve/product-retrieve/product-retrieve.component';
 import { ProductUpdateComponent } from './products-retrieve/product-update/product-update.component';
 
 //Users
-import { PerfilUsuarioComponent } from './perfil-usuario/perfil-usuario.component';
-import { AltaClienteComponent } from './alta-cliente/alta-cliente.component';
-import { AltaDeClienteComponent } from './alta-de-cliente/alta-de-cliente.component';
-import { AgregarClienteManualComponent } from './alta-cliente/agregar-cliente-manual/agregar-cliente-manual.component';
+import { UserCreateAcceptanceComponent } from './user-create-acceptance/user-create-acceptance.component';
+import { UserCreateManuallyComponent } from './user-update/user-create-manually/user-create-manually.component';
+import { UserRetrieveComponent } from './user-retrieve/user-retrieve.component';
+import { UserUpdateComponent } from './user-update/user-update.component';
 
 //Suppliers
 import { AltaProveedorComponent } from './alta-proveedor/alta-proveedor.component';
@@ -65,11 +65,11 @@ const routes: Routes = [
   { path: 'cargar-stock', component: CargarStockComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
 
 //Users
-  { path: 'alta-de-cliente', component: AltaDeClienteComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
-  { path: 'agregar-cliente-manual', component: AgregarClienteManualComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
-  { path: 'edicion-cliente/:id', component: AltaClienteComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
-  { path: 'alta-usuario', component: AltaClienteComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
-  { path: 'perfilUsuario', component: PerfilUsuarioComponent},
+  { path: 'user-create-acceptance', component: UserCreateAcceptanceComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  { path: 'user-create-manually', component: UserCreateManuallyComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  { path: 'user-update-modal/:id', component: UserUpdateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  { path: 'user-update', component: UserUpdateComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
+  { path: 'user-retrieve', component: UserRetrieveComponent},
 
 //Suppliers
   {path: 'alta-proveedor', component:AltaProveedorComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },

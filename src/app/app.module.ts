@@ -44,11 +44,11 @@ import { RecaudacionComponent } from './recaudacion/recaudacion.component';
 import { EmisionFacturaComponent } from './emision-factura/emision-factura.component';
 
 //Users
-import { AltaClienteComponent } from './alta-cliente/alta-cliente.component';
-import { AltaDeClienteComponent } from './alta-de-cliente/alta-de-cliente.component';
-import { AgregarClienteManualComponent } from './alta-cliente/agregar-cliente-manual/agregar-cliente-manual.component';
-import { PerfilUsuarioComponent } from './perfil-usuario/perfil-usuario.component';
-import { EdicionClienteComponent } from './alta-cliente/edicion-cliente/edicion-cliente.component';
+import { UserUpdateComponent } from './user-update/user-update.component';
+import { UserCreateAcceptanceComponent } from './user-create-acceptance/user-create-acceptance.component';
+import { UserCreateManuallyComponent } from './user-update/user-create-manually/user-create-manually.component';
+import { UserRetrieveComponent } from './user-retrieve/user-retrieve.component';
+import { UserUpdateModalComponent } from './user-update/user-update-modal/user-update-modal.component';
 //import { AuthService } from './services/auth.service';
 
 //Login Signup Retrieve Password
@@ -110,11 +110,11 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     RetrievePassComponent,
     
     //Users
-    AltaClienteComponent,
-    AltaDeClienteComponent,
-    AgregarClienteManualComponent,
-    PerfilUsuarioComponent,
-    EdicionClienteComponent,
+    UserUpdateComponent,
+    UserCreateAcceptanceComponent,
+    UserCreateManuallyComponent,
+    UserRetrieveComponent,
+    UserUpdateModalComponent,
     
     //Suppliers
     AltaProveedorComponent,

@@ -4,11 +4,11 @@ import { AuthService } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-edicion-cliente',
-  templateUrl: './edicion-cliente.component.html',
-  styleUrls: ['./edicion-cliente.component.css']
+  selector: 'app-user-update-modal',
+  templateUrl: './user-update-modal.component.html',
+  styleUrls: ['./user-update-modal.component.css']
 })
-export class EdicionClienteComponent {
+export class UserUpdateModalComponent {
   @Input() 
   editedUser: any = { acceptance: true };
 
