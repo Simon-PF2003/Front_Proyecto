@@ -7,11 +7,11 @@ import { ProductService } from '../services/product.service';
 import { CategorySelectionService } from '../services/category-selection-service.service';
 
 @Component({
-  selector: 'app-ingreso-stock',
-  templateUrl: './ingreso-stock.component.html',
-  styleUrls: ['./ingreso-stock.component.css']
+  selector: 'app-stock-ingreso',
+  templateUrl: './stock-ingreso.component.html',
+  styleUrls: ['./stock-ingreso.component.css']
 })
-export class IngresoStockComponent implements OnInit {
+export class StockIngresoComponent implements OnInit {
   products: any[] = [];
   displayedProducts: any[] = [];
   searchTerm: string = '';

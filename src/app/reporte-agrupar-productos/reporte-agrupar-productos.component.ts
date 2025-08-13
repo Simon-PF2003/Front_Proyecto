@@ -5,11 +5,11 @@ import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-agrupar-productos',
-  templateUrl: './agrupar-productos.component.html',
-  styleUrls: ['./agrupar-productos.component.css']
+  selector: 'app-reporte-agrupar-productos',
+  templateUrl: './reporte-agrupar-productos.component.html',
+  styleUrls: ['./reporte-agrupar-productos.component.css']
 })
-export class AgruparProductosComponent implements OnInit {
+export class ReporteAgruparProductosComponent implements OnInit {
   products: any[] = [];
   displayedProducts: any[] = [];
   filteredProducts: any[] = [];

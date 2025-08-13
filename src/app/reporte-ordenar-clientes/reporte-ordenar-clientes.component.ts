@@ -4,11 +4,11 @@ import { firstValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-ordenar-clientes',
-  templateUrl: './ordenar-clientes.component.html',
-  styleUrls: ['./ordenar-clientes.component.css']
+  selector: 'app-reporte-ordenar-clientes',
+  templateUrl: './reporte-ordenar-clientes.component.html',
+  styleUrls: ['./reporte-ordenar-clientes.component.css']
 })
-export class OrdenarClientesComponent implements OnInit {
+export class ReporteOrdenarClientesComponent implements OnInit {
   clients: any[] = [];
   displayedClients: any[] = [];
   sortCriteria: string = 'antiguedad';

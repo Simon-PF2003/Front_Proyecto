@@ -5,11 +5,11 @@ import { AuthService } from '../services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-emision-factura',
-  templateUrl: './emision-factura.component.html',
-  styleUrls: ['./emision-factura.component.css']
+  selector: 'app-bill-create',
+  templateUrl: './bill-create.component.html',
+  styleUrls: ['./bill-create.component.css']
 })
-export class EmisionFacturaComponent implements OnInit {
+export class BillCreateComponent implements OnInit {
   orders: any[] = [];
   displayedOrders: any[] = [];
   selectedOrder: any = null;

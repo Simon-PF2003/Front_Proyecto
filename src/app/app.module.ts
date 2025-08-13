@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 
 //Genericos
 import { NavVarComponent } from './nav-var/nav-var.component';
+import { BottomNavbarComponent } from './bottom-navbar/bottom-navbar.component';
 import { DownCompComponent } from './nav-var/down-comp/down-comp.component';
 import { CarouselComponent } from './carousel/carousel.component';
 import { HomeComponent } from './home/home.component';
@@ -20,7 +21,6 @@ import { FooterComponent } from './footer/footer.component';
 //Institucional
 import { InstitucionalQuienesSomosComponent } from './institucional-quienes-somos/institucional-quienes-somos.component';
 import { InstitucionalContactoComponent } from './institucional-contacto/institucional-contacto.component';
-import { BottomNavbarComponent } from './bottom-navbar/bottom-navbar.component';
 import { ContactFormComponent } from './institucional-contacto/contact-form/contact-form.component';
 
 //Products
@@ -40,8 +40,7 @@ import { OrdersUpdateAdminComponent } from './orders-update-admin/orders-update-
 import { CartComponent } from './cart/cart/cart.component';
 
 //Bills
-import { RecaudacionComponent } from './recaudacion/recaudacion.component';
-import { EmisionFacturaComponent } from './emision-factura/emision-factura.component';
+import { BillCreateComponent } from './bill-create/bill-create.component';
 
 //Users
 import { UserUpdateComponent } from './user-update/user-update.component';
@@ -67,12 +66,13 @@ import { SupplierUpdateComponent } from './supplier-update/supplier-update.compo
 import { SupplierUpdateModalComponent } from './supplier-update/supplier-update-modal/supplier-update-modal.component';
 
 //Reportes
-import { OrdenarClientesComponent } from './ordenar-clientes/ordenar-clientes.component';
-import { AgruparProductosComponent } from './agrupar-productos/agrupar-productos.component';
+import { ReporteOrdenarClientesComponent } from './reporte-ordenar-clientes/reporte-ordenar-clientes.component';
+import { ReporteAgruparProductosComponent } from './reporte-agrupar-productos/reporte-agrupar-productos.component';
+import { ReporteRecaudacionComponent } from './reporte-recaudacion/reporte-recaudacion.component';
 
 //Stock
-import { IngresoStockComponent } from './ingreso-stock/ingreso-stock.component';
-import { CargarStockComponent } from './ingreso-stock/cargar-stock/cargar-stock.component';
+import { StockIngresoComponent } from './stock-ingreso/stock-ingreso.component';
+import { CargarStockComponent } from './stock-ingreso/cargar-stock/cargar-stock.component';
 
 //Admin
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
@@ -127,15 +127,15 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     CartComponent,
     
     //Bills
-    RecaudacionComponent,
-    EmisionFacturaComponent,
+    BillCreateComponent,
     
     //Reportes
-    OrdenarClientesComponent,
-    AgruparProductosComponent,
+    ReporteRecaudacionComponent,
+    ReporteOrdenarClientesComponent,
+    ReporteAgruparProductosComponent,
     
     //Stock
-    IngresoStockComponent,
+    StockIngresoComponent,
     CargarStockComponent,
     
     //Admin

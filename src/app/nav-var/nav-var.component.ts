@@ -68,7 +68,7 @@ export class NavVarComponent implements OnInit {
   }
 
   isStockRoute(): boolean {
-  return this.currentRoute.includes('/ingreso-stock');
+  return this.currentRoute.includes('/stock-ingreso');
 }
 
   isEditProductsRoute(): boolean {
@@ -76,11 +76,11 @@ export class NavVarComponent implements OnInit {
   }
 
   isProductCategoryRoute(): boolean {
-    return this.currentRoute.includes('/agrupar-productos');
+    return this.currentRoute.includes('/reporte-agrupar-productos');
   }
 
   isOrdersRoute(): boolean {
-    return this.currentRoute.includes('/pedidos');
+    return this.currentRoute.includes('/orders-update-admin');
   }
 
   isChargeStockRoute(): boolean {
@@ -98,12 +98,12 @@ searchProducts() {
   if (this.searchTerm) {
     if (this.currentRoute.includes('/products-retrieve')) {
       this.router.navigate(['/products-retrieve'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
-    } else if (this.currentRoute.includes('/ingreso-stock')) {
-      this.router.navigate(['/ingreso-stock'], { relativeTo: this.route, queryParams: { q: this.searchTerm } }); 
+    } else if (this.currentRoute.includes('/stock-ingreso')) {
+      this.router.navigate(['/stock-ingreso'], { relativeTo: this.route, queryParams: { q: this.searchTerm } }); 
     } else if (this.currentRoute.includes('/modificar-producto')) {
       this.router.navigate(['/modificar-producto'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
-    } else if (this.currentRoute.includes('/agrupar-productos')) {
-      this.router.navigate(['/agrupar-productos'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
+    } else if (this.currentRoute.includes('/reporte-agrupar-productos')) {
+      this.router.navigate(['/reporte-agrupar-productos'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     }
     else if (this.currentRoute.includes('/cargar-stock')) {
       this.router.navigate(['/cargar-stock'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
@@ -111,12 +111,12 @@ searchProducts() {
   } else {
     if (this.currentRoute.includes('/products-retrieve')) {
       this.router.navigate(['/products-retrieve'], { relativeTo: this.route });
-    } else if (this.currentRoute.includes('/ingreso-stock')) {
-      this.router.navigate(['/ingreso-stock'], { relativeTo: this.route });
+    } else if (this.currentRoute.includes('/stock-ingreso')) {
+      this.router.navigate(['/stock-ingreso'], { relativeTo: this.route });
     } else if (this.currentRoute.includes('/modificar-producto')) {
       this.router.navigate(['/modificar-producto'], { relativeTo: this.route });
-    } else if (this.currentRoute.includes('/agrupar-productos')) {
-      this.router.navigate(['/agrupar-productos'], { relativeTo: this.route });
+    } else if (this.currentRoute.includes('/reporte-agrupar-productos')) {
+      this.router.navigate(['/reporte-agrupar-productos'], { relativeTo: this.route });
     } else if (this.currentRoute.includes('/cargar-stock')) {
       this.router.navigate(['/cargar-stock'], { relativeTo: this.route });
     } else {

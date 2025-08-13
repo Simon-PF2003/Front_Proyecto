@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { IngresoStockComponent } from './ingreso-stock.component';
+import { StockIngresoComponent } from './stock-ingreso.component';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
 import { NavVarComponent } from '../nav-var/nav-var.component';
@@ -8,9 +8,9 @@ import { FooterComponent } from '../footer/footer.component';
 import { ProductService } from '../services/product.service';
 import { CategorySelectionService } from '../services/category-selection-service.service';
 
-describe('IngresoStockComponent', () => {
-  let component: IngresoStockComponent;
-  let fixture: ComponentFixture<IngresoStockComponent>;
+describe('StockIngresoComponent', () => {
+  let component: StockIngresoComponent;
+  let fixture: ComponentFixture<StockIngresoComponent>;
 
   beforeEach(() => {
     // Mock del servicio ProductService
@@ -30,7 +30,7 @@ describe('IngresoStockComponent', () => {
     // Configuración del test
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      declarations: [IngresoStockComponent, NavVarComponent, FooterComponent],
+      declarations: [StockIngresoComponent, NavVarComponent, FooterComponent],
       providers: [
         {
           provide: ActivatedRoute,
@@ -41,7 +41,7 @@ describe('IngresoStockComponent', () => {
       ]
     });
 
-    fixture = TestBed.createComponent(IngresoStockComponent);
+    fixture = TestBed.createComponent(StockIngresoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

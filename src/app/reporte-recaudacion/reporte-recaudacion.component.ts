@@ -3,11 +3,11 @@ import { BillService } from '../services/bill.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-recaudacion',
-  templateUrl: './recaudacion.component.html',
-  styleUrls: ['./recaudacion.component.css']
+  selector: 'app-reporte-recaudacion',
+  templateUrl: './reporte-recaudacion.component.html',
+  styleUrls: ['./reporte-recaudacion.component.css']
 })
-export class RecaudacionComponent implements OnInit {
+export class ReporteRecaudacionComponent implements OnInit {
   facturas: any[] = [];
   totalRecaudado: number = 0;
   dateRangeStart: string = '';

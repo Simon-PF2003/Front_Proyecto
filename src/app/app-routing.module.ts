@@ -28,8 +28,8 @@ import { OrdersUpdateAdminComponent } from './orders-update-admin/orders-update-
 import { CartComponent } from './cart/cart/cart.component';
 
 //Stock
-import { IngresoStockComponent } from './ingreso-stock/ingreso-stock.component';
-import { CargarStockComponent } from './ingreso-stock/cargar-stock/cargar-stock.component';
+import { StockIngresoComponent } from './stock-ingreso/stock-ingreso.component';
+import { CargarStockComponent } from './stock-ingreso/cargar-stock/cargar-stock.component';
 
 //Institucional
 import { InstitucionalQuienesSomosComponent } from './institucional-quienes-somos/institucional-quienes-somos.component';
@@ -45,12 +45,12 @@ import { RetrievePassComponent } from './login/retrieve-pass/retrieve-pass.compo
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 
 //Bills
-import { EmisionFacturaComponent } from './emision-factura/emision-factura.component';
+import { BillCreateComponent } from './bill-create/bill-create.component';
 
 //Reportes
-import { AgruparProductosComponent } from './agrupar-productos/agrupar-productos.component';
-import { OrdenarClientesComponent } from './ordenar-clientes/ordenar-clientes.component';
-import { RecaudacionComponent } from './recaudacion/recaudacion.component';
+import { ReporteAgruparProductosComponent } from './reporte-agrupar-productos/reporte-agrupar-productos.component';
+import { ReporteOrdenarClientesComponent } from './reporte-ordenar-clientes/reporte-ordenar-clientes.component';
+import { ReporteRecaudacionComponent } from './reporte-recaudacion/reporte-recaudacion.component';
 
 
 const routes: Routes = [
@@ -61,7 +61,7 @@ const routes: Routes = [
   { path: 'product-retrieve/:id', component: ProductRetrieveComponent },
 
 //Ingreso Stock
-  { path: 'ingreso-stock', component: IngresoStockComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
+  { path: 'stock-ingreso', component: StockIngresoComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
   { path: 'cargar-stock', component: CargarStockComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
 
 //Users
@@ -78,12 +78,11 @@ const routes: Routes = [
 
 //Orders
   {path: 'orders-retrieve-client', component:OrdersRetrieveClientComponent},
-  {path: 'pedidos', component:OrdersUpdateAdminComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'orders-update-admin', component:OrdersUpdateAdminComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   { path: 'cart', component: CartComponent },
 
 //Bills
-  {path: 'emision-factura', component: EmisionFacturaComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
-  {path: 'recaudacion', component:RecaudacionComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'bill-create', component: BillCreateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
 
 //Institucional
   { path: 'institucional-quienes-somos', component: InstitucionalQuienesSomosComponent },
@@ -95,8 +94,9 @@ const routes: Routes = [
   {path:'retrieve-pass',component:RetrievePassComponent},  
 
 //Reportes
-  {path: 'agrupar-productos', component:AgruparProductosComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
-  {path: 'ordenar-clientes', component:OrdenarClientesComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'reporte-agrupar-productos', component:ReporteAgruparProductosComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'reporte-ordenar-clientes', component:ReporteOrdenarClientesComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'reporte-recaudacion', component:ReporteRecaudacionComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   
 //Extra
   { path: '', component: HomeComponent }, //ruta inicial, si quisiera que me lleve a otra --> redirecTo: '/nombre_pag',pathMatch: 'full'  
