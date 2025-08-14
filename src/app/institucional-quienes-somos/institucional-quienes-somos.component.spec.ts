@@ -4,7 +4,7 @@ import { InstitucionalQuienesSomosComponent } from './institucional-quienes-somo
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ActivatedRoute } from '@angular/router';
-import { BottomNavbarComponent } from '../bottom-navbar/bottom-navbar.component';
+import { NavbarBottomComponent } from '../navbar-bottom/navbar-bottom.component';
 
 describe('InstitucionalQuienesSomosComponent', () => {
   let component: InstitucionalQuienesSomosComponent;
@@ -13,7 +13,7 @@ describe('InstitucionalQuienesSomosComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule, HttpClientTestingModule],
-      declarations: [InstitucionalQuienesSomosComponent, NavVarComponent, BottomNavbarComponent],
+      declarations: [InstitucionalQuienesSomosComponent, NavVarComponent, NavbarBottomComponent],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'test-id' } } } } 
       ]

@@ -127,7 +127,7 @@ export class ProductRetrieveComponent implements OnInit {
         this.productService.deleteProduct(this.productId).subscribe({
           next: () => {
             Swal.fire('Confirmado', 'La acción ha sido confirmada', 'success');
-            this.router.navigate(['/products-retrieve']);
+            this.router.navigate(['/products-list']);
           },
           error: (err) => {
             console.error(err);

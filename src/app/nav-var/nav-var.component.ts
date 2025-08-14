@@ -64,7 +64,7 @@ export class NavVarComponent implements OnInit {
 }
 
   isProductosRoute(): boolean {
-    return this.currentRoute.includes('/products-retrieve');
+    return this.currentRoute.includes('/products-list');
   }
 
   isStockRoute(): boolean {
@@ -96,8 +96,8 @@ searchProducts() {
   console.log(this.searchTerm);
 
   if (this.searchTerm) {
-    if (this.currentRoute.includes('/products-retrieve')) {
-      this.router.navigate(['/products-retrieve'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
+    if (this.currentRoute.includes('/products-list')) {
+      this.router.navigate(['/products-list'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     } else if (this.currentRoute.includes('/stock-ingreso')) {
       this.router.navigate(['/stock-ingreso'], { relativeTo: this.route, queryParams: { q: this.searchTerm } }); 
     } else if (this.currentRoute.includes('/modificar-producto')) {
@@ -109,8 +109,8 @@ searchProducts() {
       this.router.navigate(['/cargar-stock'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     }
   } else {
-    if (this.currentRoute.includes('/products-retrieve')) {
-      this.router.navigate(['/products-retrieve'], { relativeTo: this.route });
+    if (this.currentRoute.includes('/products-list')) {
+      this.router.navigate(['/products-list'], { relativeTo: this.route });
     } else if (this.currentRoute.includes('/stock-ingreso')) {
       this.router.navigate(['/stock-ingreso'], { relativeTo: this.route });
     } else if (this.currentRoute.includes('/modificar-producto')) {

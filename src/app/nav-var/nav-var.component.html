@@ -15,7 +15,7 @@
             <a class="nav-link active" aria-current="page" href="#">Home</a>
         </li>
         <li>
-            <a class="nav-link active" aria-current="page" href="/products-retrieve">Productos</a>
+            <a class="nav-link active" aria-current="page" href="/products-list">Productos</a>
         </li>
         <li>
             <a class="nav-link active" *ngIf="isUserRoleDefined() && userRole === 'Administrador'" aria-current="page"
@@ -52,7 +52,7 @@
             </ng-container>
             <ng-template #loggedIn>
                 <li class="nav-item">
-                    <a class="nav-link active d-flex align-items-center" aria-current="page" routerLink="/user-retrieve">
+                    <a class="nav-link active d-flex align-items-center" aria-current="page" routerLink="/user-profile">
                         <i class="astronaut fa-solid fa-user-astronaut" style="color: #000000;"></i>
                     </a>
                 </li>

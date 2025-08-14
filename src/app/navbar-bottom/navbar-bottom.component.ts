@@ -1,11 +1,11 @@
 import { Component, HostListener } from '@angular/core';
 
 @Component({
-  selector: 'app-bottom-navbar',
-  templateUrl: './bottom-navbar.component.html',
-  styleUrls: ['./bottom-navbar.component.css']
+  selector: 'app-navbar-bottom',
+  templateUrl: './navbar-bottom.component.html',
+  styleUrls: ['./navbar-bottom.component.css']
 })
-export class BottomNavbarComponent {
+export class NavbarBottomComponent {
   shouldDisplay: boolean = false;
 
   shouldDisplayNavbar(): boolean {

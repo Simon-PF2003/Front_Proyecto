@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { InstitucionalContactoComponent } from './institucional-contacto.component';
 import { NavVarComponent } from '../nav-var/nav-var.component';
-import { BottomNavbarComponent } from '../bottom-navbar/bottom-navbar.component';
+import { NavbarBottomComponent } from '../navbar-bottom/navbar-bottom.component';
 import { ActivatedRoute } from '@angular/router';
 import { ContactFormComponent } from './contact-form/contact-form.component';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +15,7 @@ describe('InstitucionalContactoComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientModule, HttpClientTestingModule, FormsModule],
-      declarations: [InstitucionalContactoComponent, NavVarComponent, ContactFormComponent, BottomNavbarComponent],
+      declarations: [InstitucionalContactoComponent, NavVarComponent, ContactFormComponent, NavbarBottomComponent],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'test-id' } } } } 
       ]

@@ -18,9 +18,9 @@ export class DownCompComponent {
     console.log(category);
 
     if (category === 'Todos') {
-      this.router.navigate(['/products-retrieve'], { queryParams: { q: 'Todos' } });
+      this.router.navigate(['/products-list'], { queryParams: { q: 'Todos' } });
     } else {
-      this.router.navigate(['/products-retrieve'], { queryParams: { q: category } });
+      this.router.navigate(['/products-list'], { queryParams: { q: category } });
     }
   }
 }

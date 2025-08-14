@@ -3,11 +3,11 @@ import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgIf } from '@angular/common';
 
 @Component({
-	selector: 'app-carousel',
+	selector: 'app-home-carousel',
 	standalone: true,
 	imports: [NgbCarouselModule, NgIf],
-	templateUrl: './carousel.component.html',
+	templateUrl: './home-carousel.component.html',
 })
-export class CarouselComponent {
+export class HomeCarouselComponent {
 	images = [944, 1011, 984].map((n) => `https://picsum.photos/id/${n}/900/500`);
 }

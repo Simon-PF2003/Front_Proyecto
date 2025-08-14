@@ -3,6 +3,7 @@ Parte Front del TP
 
 Cambios realizados:
 - Reorganizacion mediante renombre de:
-    *Emision-factura --> Bill-create
-    *Agrupar-productos, ordenar-cliente, recaudacion --> reporte-...
-    *Ingreso-Stock --> Stock-ingreso
+    *User-retrieve --> User-profile
+    *Bottom-navbar --> nav-var-bottom
+    *products-retrieve --> products-list
+    *carousel --> home-carousel

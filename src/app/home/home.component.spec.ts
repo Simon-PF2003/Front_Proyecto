@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home.component';
 import { NavVarComponent } from '../nav-var/nav-var.component';
 import { ActivatedRoute } from '@angular/router';
-import { CarouselComponent } from '../carousel/carousel.component';
+import { HomeCarouselComponent } from '../home-carousel/home-carousel.component';
 import { FooterComponent } from '../footer/footer.component';
 
 describe('HomeComponent', () => {
@@ -13,7 +13,7 @@ describe('HomeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientModule, HttpClientTestingModule, CarouselComponent],
+      imports: [HttpClientModule, HttpClientTestingModule, HomeCarouselComponent],
       declarations: [HomeComponent, NavVarComponent, FooterComponent],
       providers: [
         { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => 'test-id' } } } }

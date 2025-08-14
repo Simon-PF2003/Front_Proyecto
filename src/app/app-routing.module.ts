@@ -7,14 +7,14 @@ import { HomeComponent } from './home/home.component';
 
 //Products
 import { ProductCreateComponent } from './product-create/product-create.component';
-import { ProductsRetrieveComponent } from './products-retrieve/products-retrieve.component';
-import { ProductRetrieveComponent } from './products-retrieve/product-retrieve/product-retrieve.component';
-import { ProductUpdateComponent } from './products-retrieve/product-update/product-update.component';
+import { ProductsListComponent } from './products-list/products-list.component';
+import { ProductRetrieveComponent } from './products-list/product-retrieve/product-retrieve.component';
+import { ProductUpdateComponent } from './products-list/product-update/product-update.component';
 
 //Users
 import { UserCreateAcceptanceComponent } from './user-create-acceptance/user-create-acceptance.component';
 import { UserCreateManuallyComponent } from './user-update/user-create-manually/user-create-manually.component';
-import { UserRetrieveComponent } from './user-retrieve/user-retrieve.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserUpdateComponent } from './user-update/user-update.component';
 
 //Suppliers
@@ -56,7 +56,7 @@ import { ReporteRecaudacionComponent } from './reporte-recaudacion/reporte-recau
 const routes: Routes = [
 //Products
   { path: 'product-create', component: ProductCreateComponent },
-  { path: 'products-retrieve', component: ProductsRetrieveComponent },
+  { path: 'products-list', component: ProductsListComponent },
   { path: 'product-update', component: ProductUpdateComponent },
   { path: 'product-retrieve/:id', component: ProductRetrieveComponent },
 
@@ -69,7 +69,7 @@ const routes: Routes = [
   { path: 'user-create-manually', component: UserCreateManuallyComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
   { path: 'user-update-modal/:id', component: UserUpdateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
   { path: 'user-update', component: UserUpdateComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
-  { path: 'user-retrieve', component: UserRetrieveComponent},
+  { path: 'user-profile', component: UserProfileComponent},
 
 //Suppliers
   {path: 'supplier-create', component:SupplierCreateComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },

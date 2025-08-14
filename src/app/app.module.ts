@@ -11,12 +11,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 
 //Genericos
-import { NavVarComponent } from './nav-var/nav-var.component';
-import { BottomNavbarComponent } from './bottom-navbar/bottom-navbar.component';
-import { DownCompComponent } from './nav-var/down-comp/down-comp.component';
-import { CarouselComponent } from './carousel/carousel.component';
+import { HomeCarouselComponent } from './home-carousel/home-carousel.component';
 import { HomeComponent } from './home/home.component';
 import { FooterComponent } from './footer/footer.component';
+
+//navbar
+import { NavVarComponent } from './nav-var/nav-var.component';
+import { NavbarBottomComponent } from './navbar-bottom/navbar-bottom.component';
+import { DownCompComponent } from './nav-var/down-comp/down-comp.component';
 
 //Institucional
 import { InstitucionalQuienesSomosComponent } from './institucional-quienes-somos/institucional-quienes-somos.component';
@@ -24,12 +26,12 @@ import { InstitucionalContactoComponent } from './institucional-contacto/institu
 import { ContactFormComponent } from './institucional-contacto/contact-form/contact-form.component';
 
 //Products
-import { ProductsRetrieveComponent } from './products-retrieve/products-retrieve.component';
+import { ProductsListComponent } from './products-list/products-list.component';
 import { ProductCardComponent } from './product-card/product-card.component';
 import { ProductCreateComponent } from './product-create/product-create.component';
-import { ProductRetrieveComponent } from './products-retrieve/product-retrieve/product-retrieve.component';
-import { ProductUpdateModalComponent } from './products-retrieve/product-update-modal/product-update-modal.component';
-import { ProductUpdateComponent } from './products-retrieve/product-update/product-update.component';
+import { ProductRetrieveComponent } from './products-list/product-retrieve/product-retrieve.component';
+import { ProductUpdateModalComponent } from './products-list/product-update-modal/product-update-modal.component';
+import { ProductUpdateComponent } from './products-list/product-update/product-update.component';
 
 //Category
 import { CategorySelectionService } from './services/category-selection-service.service';
@@ -46,7 +48,7 @@ import { BillCreateComponent } from './bill-create/bill-create.component';
 import { UserUpdateComponent } from './user-update/user-update.component';
 import { UserCreateAcceptanceComponent } from './user-create-acceptance/user-create-acceptance.component';
 import { UserCreateManuallyComponent } from './user-update/user-create-manually/user-create-manually.component';
-import { UserRetrieveComponent } from './user-retrieve/user-retrieve.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserUpdateModalComponent } from './user-update/user-update-modal/user-update-modal.component';
 //import { AuthService } from './services/auth.service';
 
@@ -89,10 +91,10 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     DownCompComponent,
     FooterComponent,
     HomeComponent,
-    BottomNavbarComponent,
+    NavbarBottomComponent,
     
     //Products
-    ProductsRetrieveComponent,
+    ProductsListComponent,
     ProductCardComponent,
     ProductCreateComponent,
     ProductRetrieveComponent,
@@ -113,7 +115,7 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     UserUpdateComponent,
     UserCreateAcceptanceComponent,
     UserCreateManuallyComponent,
-    UserRetrieveComponent,
+    UserProfileComponent,
     UserUpdateModalComponent,
     
     //Suppliers
@@ -150,7 +152,7 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     BrowserModule,
     AppRoutingModule,
     NgbModule,
-    CarouselComponent,
+    HomeCarouselComponent,
     FormsModule,
     RouterModule,
     HttpClientModule,
