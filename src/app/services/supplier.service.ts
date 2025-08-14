@@ -14,9 +14,13 @@ export class SupplierService {
       private router: Router
               ) { }
 
-    createNewSupplier(supplierData: any): Observable<any> {
-    return this.http.post<any>(this.URL + '/createNewSupplier', supplierData);
-                                                          };
+//POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS
+createNewSupplier(supplierData: any): Observable<any> {
+  return this.http.post<any>(this.URL + '/createNewSupplier', supplierData);
+};
+
+//GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS
+  //En el create para verificar que no exista
 getSupplierCuit(cuit: string): Observable<any> {
     console.log('Este es el CUIT ingresado', cuit);
     return this.http.get<any>(this.URL + `/supplier/${cuit}`).pipe(
@@ -34,6 +38,7 @@ getSupplierCuit(cuit: string): Observable<any> {
     );
   }
 
+  //Filtra los proveedores 
 async searchSuppliers(query: string): Promise<any[]> {
   return new Promise((resolve, reject) => {
     
@@ -58,6 +63,7 @@ async searchSuppliers(query: string): Promise<any[]> {
   });
 }
 
+   //Busca suppliers para el update
   getSuppliers(): Promise<any[]> {
     return new Promise((resolve, reject) => {
       this.http.get<any[]>(this.URL + '/getSuppliers').subscribe(
@@ -76,16 +82,20 @@ async searchSuppliers(query: string): Promise<any[]> {
     });
   }
 
-  deleteSupplier(supplierId: string) { 
-    const url = `${this.URL}/deleteSupplier/${supplierId}`;         
-    return this.http.delete(url);
+  //Este es para ver los proveedores a la hora de crear o actualizar un producto.
+  obtenerSuppliers(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.URL}/getSuppliers`);
   };
-updateDetails(supplierId: string, details: any): Observable<any> {
+
+//PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH 
+  updateDetails(supplierId: string, details: any): Observable<any> {
     const url = `${this.URL}/updateDetails/details/${supplierId}`;
     return this.http.patch(url, details);
   };
 
-  obtenerSuppliers(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.URL}/getSuppliers`);
+//DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE 
+  deleteSupplier(supplierId: string) { 
+    const url = `${this.URL}/deleteSupplier/${supplierId}`;         
+    return this.http.delete(url);
   };
 }

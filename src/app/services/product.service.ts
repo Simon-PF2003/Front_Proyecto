@@ -15,11 +15,17 @@ export class ProductService {
     private router: Router
   ) {}
 
-
+//POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS
   createNewProduct(productData: FormData): Observable<any> {
     return this.http.post<any>(this.URL + '/createNewProduct', productData);
   }
 
+  notifyMe(productId: any, userId: any) {
+    const url = `${this.URL}/createStockNotification`;
+    return this.http.post(url, { productId, userId });
+  }
+
+//GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS
   getProducts(): Observable<any[]> {
     return this.http.get<any[]>(this.URL + '/product');
   }
@@ -28,32 +34,17 @@ export class ProductService {
     return this.http.get<any[]>(this.URL + '/featuredProducts');
   }
 
-  getPendingStockProducts(): Observable<any[]> {
-    return this.http.get<any[]>(this.URL + '/pendingStock');
-  }
-
-
   getNoStockProducts(): Observable<any[]> {
     return this.http.get<any[]>(`${this.URL}/noProducts`);
   }
 
-  requestStock(productsToRequest: { _id: string, quantityToBuy: number}[]): Observable<any> {
-    return this.http.patch(this.URL + '/requestStock', {productsToRequest});
+  getPendingStockProducts(): Observable<any[]> {
+    return this.http.get<any[]>(this.URL + '/pendingStock');
   }
 
   getProductDetailsById(productId: any): Observable<any> {
     const url = `${this.URL}/product/${productId}`;
     return this.http.get<any>(url);
-  }
-
-  deleteProduct(productId: any) {
-    const url = `${this.URL}/product/${productId}`;
-    return this.http.delete(url);
-  }
-
-  updateProduct(updatedProduct: any, productId: any) {
-    const url = `${this.URL}/product/${productId}`;
-    return this.http.patch(url, updatedProduct);
   }
 
   getProductsFiltered(searchTerm: string): Observable<any[]> {
@@ -66,7 +57,17 @@ export class ProductService {
   filterByCategory(category: string): Observable<any[]> {
     const url = `${this.URL}/category/${category}`;
     return this.http.get<any[]>(url);
- 
+  }
+
+
+//PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH
+  requestStock(productsToRequest: { _id: string, quantityToBuy: number}[]): Observable<any> {
+    return this.http.patch(this.URL + '/requestStock', {productsToRequest});
+  }
+
+  updateProduct(updatedProduct: any, productId: any) {
+    const url = `${this.URL}/product/${productId}`;
+    return this.http.patch(url, updatedProduct);
   }
 
   actualizarStock(orderData: any) {
@@ -80,8 +81,14 @@ export class ProductService {
     return this.http.patch(url, stockData);
   }
 
-  notifyMe(productId: any, userId: any) {
-    const url = `${this.URL}/createStockNotification`;
-    return this.http.post(url, { productId, userId });
+//DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE
+  deleteProduct(productId: any) {
+    const url = `${this.URL}/product/${productId}`;
+    return this.http.delete(url);
   }
+
+
+  
+
+
 }

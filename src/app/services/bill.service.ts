@@ -15,11 +15,13 @@ export class BillService {
         private http: HttpClient,
         private router: Router
     ) {}
-    
+
+//POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS
     createBill(billData: any, pagado: boolean): Observable<Blob> {
         return this.http.post(`${this.URL}/generateNewBill`, { billData, pagado }, { responseType: 'blob' });
       }
-      
+
+//GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS
     getBills(dateStart: string, dateEnd: string): Observable<any> {
         return this.http.get<any>(this.URL + '/getBills', { params: { dateStart, dateEnd }});
     }
