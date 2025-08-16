@@ -36,6 +36,16 @@
                 </button>
             </form>
         </li>
+        <li class="col-auto d-flex"
+            *ngIf="isOrdersRoute()">
+            <input class="busqueda form-control" type="text" id="searchProduct" [(ngModel)]="searchTerm"
+                (keyup.enter)="searchOrders()" placeholder="Buscar pedido por cliente">
+            <form class="form-inline" role="search">
+                <button class="lupa btn-light d-flex align-items-center" type="submit" (click)="searchOrders()">
+                    <i class="lupita fa-solid fa-magnifying-glass" style="color: #000000;"></i>
+                </button>
+            </form>
+        </li>
         <li>
             <button class="cart-btn btn-light d-flex align-items-center" routerLink="/cart">
                 <i class="fa-solid fa-cart-shopping fa-bounce" style="color: #000000;"></i>
