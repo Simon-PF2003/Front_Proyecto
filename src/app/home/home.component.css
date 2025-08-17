@@ -3,3 +3,7 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.container {
+  z-index: 3;
+}

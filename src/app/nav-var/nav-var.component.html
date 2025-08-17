@@ -1,7 +1,7 @@
 
 <header>
 <a href="#">
-    <img class="logo" src="\assets\prodBase.jpg" alt="logo">
+    <img class="logo" src="\assets\prodBase.png" alt="logo">
 </a>
 <button class="abrir-menu" (click)="toggleNav()">
     <img class="hamburguesa" src="\assets\Hamburguesa.png" alt="Abrir" />
@@ -49,7 +49,7 @@
         <li>
             <button class="cart-btn btn-light d-flex align-items-center" routerLink="/cart">
                 <i class="fa-solid fa-cart-shopping fa-bounce" style="color: #000000;"></i>
-                <span class="number badge rounded-pill bg-primary">{{ productsInCart }}</span>
+                <span class="number badge rounded-pill" style="background-color: #4ca7bf;">{{ productsInCart }}</span>
             </button>
         </li>
         <li>

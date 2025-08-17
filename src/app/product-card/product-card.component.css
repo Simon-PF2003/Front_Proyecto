@@ -7,9 +7,41 @@
 .card {
   display: flex;
   flex-direction: column;
+  background-color: #F8F4EC;
 }
 
 .card .card-img-top {
   height: 200px;
   object-fit: cover;
+}
+
+.card-title {
+  text-align: center;
+  word-wrap: break-word;
+  white-space: normal;
+  min-height: 2.4em; 
+}
+
+.card-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+.text-danger {
+  font-size: small;
+}
+
+.btn {
+  background-color: #4CA7BF;
+  border: none;
+  width: 100%;
+  font-family: BlinkMacSystemFont, "Segoe UI";
 }

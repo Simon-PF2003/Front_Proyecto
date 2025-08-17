@@ -1,12 +1,17 @@
 <div class="card">
   <img class="card-img-top" [src]="'http://localhost:3000/' + product.image" alt="{{ product.name }}">
   <div class="card-body">
-    <h5 class="card-title truncate">{{ product.desc }}</h5>
-    <p class="card-text truncate">{{ product.desc }}</p>
-    <p class="card-text" *ngIf="discountPercentage === 0">Precio: {{ product.price | currency }}</p>
-                <p class="card-text" *ngIf="discountPercentage > 0 ">
-                  Precio: <span class="text-danger"><del>{{ product.price | currency }}</del></span> 
-                  <strong>     {{ product.price * (1 - (discountPercentage)) | currency }}</strong>
-                </p>
-    <button class="btn btn-primary" (click)="comprar()">Comprar</button>
+    <h5 class="card-title">{{ product.desc }}</h5>
+    <!-- <p class="card-text">{{ product.desc }}</p> -->
+    <p class="card-price" *ngIf="discountPercentage === 0">
+      {{ product.price | currency }}
+      <span class="text-danger" *ngIf="product.stock === 0"> 🔴 Agotado</span>
+    </p>
+
+    <p class="card-text" *ngIf="discountPercentage > 0">
+      Precio: <span class="text-danger"><del>{{ product.price | currency }}</del></span>
+      <strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong>
+      <span class="text-danger" *ngIf="product.stock === 0"> 🔴 Agotado</span>
+    </p>
+    <button class="btn btn-primary" style="font-family: 'Roboto', sans-serif;" (click)="comprar()"> Comprar</button>
   </div>

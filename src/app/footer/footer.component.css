@@ -1,0 +1,164 @@
+/* Reemplazando todo el CSS con colores personalizados y clases sin Bootstrap */
+/* Footer personalizado */
+.footer {
+  background-color: #f8f4ec;
+  color: #333;
+  text-align: center;
+  width: 100%;
+  bottom: 0;
+}
+
+/* Sección de redes sociales */
+.footer-social {
+  border-bottom: 1px solid #ddd;
+}
+
+.footer-social-text {
+  margin-right: 2rem;
+}
+
+.footer-social-text span {
+  color: #666;
+  font-weight: 500;
+}
+
+.footer-social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer-social-links a {
+  color: #4ca7bf;
+  text-decoration: none;
+  padding: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.footer-social-links a:hover {
+  color: #4ca7bf;
+}
+
+/* Contenido principal */
+.footer-content {
+  background-color: #f8f4ec;
+  padding: 3rem 0;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.footer-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.footer-col {
+  margin-bottom: 2rem;
+}
+
+.footer-col-center {
+  margin: 0 auto;
+}
+
+.footer-title {
+  text-transform: uppercase;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.footer-title i {
+  margin-right: 0.75rem;
+  color: #4ca7bf;
+}
+
+.footer-text {
+  margin-bottom: 0.5rem;
+  color: #666;
+  line-height: 1.6;
+}
+
+.footer-link {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #4ca7bf;
+}
+
+.footer-contact i {
+  margin-right: 0.75rem;
+  color: #4ca7bf;
+  width: 20px;
+  display: inline-block;
+}
+
+/* Copyright */
+.footer-copyright {
+  background-color: #4ca7bf;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+}
+
+.footer-copyright a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+.footer-copyright a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .footer-social {
+    justify-content: space-between;
+  }
+
+  .footer-social-text {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-social {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-social-text {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .footer-row {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footer-content {
+    padding: 2rem 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-social-links {
+    justify-content: center;
+  }
+
+  .footer-container {
+    padding: 0 0.5rem;
+  }
+}

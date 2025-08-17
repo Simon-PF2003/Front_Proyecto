@@ -1,13 +1,16 @@
 <app-nav-var></app-nav-var>
-
+<!--
 <div class="row">
   <div class="col-12 d-flex justify-content-end">
     <a href="/orders-retrieve-client" class="btn btn-primary mx-4 mt-2">Mis Pedidos</a>
   </div>
-</div>
+</div>-->
 
 
 <div class="container mt-5 container infoUser" *ngIf="userData">
+  <div class="col-12 d-flex justify-content-end">
+    <a href="/orders-retrieve-client" class="btn btn-primary mx-4 mt-2">Mis Pedidos</a>
+  </div>
   <div class="row justify-content-center align-items-center">
     <div class="col-md-4 text-center">
       <ng-container *ngIf="imageUrl">
@@ -22,7 +25,10 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Información del perfil</h4>
+          <div class="row card-title">
+            <h4 class="col-md-6">Información del perfil</h4>
+            <a href="/orders-retrieve-client" class="col-md-6 btn btn-primary">Mis Pedidos</a>
+          </div>
           <p class="card-text">Correo Electrónico: {{ userData.email }}</p>
           <p class="card-text">Cuit: {{ userData.cuit }}</p>
           <p class="card-text">Dirección: {{ userData.address }}</p>
@@ -37,9 +43,8 @@
         <div class="text-right"><button type="submit" class="btn btn-primary">Subir Imagen</button></div>
         
       </form>
+    </div>
   </div>
-  </div>
-
-<div class="container footerDiv">
-  <app-footer></app-footer>
 </div>
+
+<app-footer></app-footer>
