@@ -1,4 +1,3 @@
-<app-nav-var></app-nav-var>
 <!--
 <div class="row">
   <div class="col-12 d-flex justify-content-end">
@@ -7,10 +6,7 @@
 </div>-->
 
 
-<div class="container mt-5 container infoUser" *ngIf="userData">
-  <div class="col-12 d-flex justify-content-end">
-    <a href="/orders-retrieve-client" class="btn btn-primary mx-4 mt-2">Mis Pedidos</a>
-  </div>
+<div class="container mt-5 mb-5 container infoUser" *ngIf="userData">
   <div class="row justify-content-center align-items-center">
     <div class="col-md-4 text-center">
       <ng-container *ngIf="imageUrl">
@@ -27,7 +23,7 @@
         <div class="card-body">
           <div class="row card-title">
             <h4 class="col-md-6">Información del perfil</h4>
-            <a href="/orders-retrieve-client" class="col-md-6 btn btn-primary">Mis Pedidos</a>
+            <!--<a href="/orders-retrieve-client" class="col-md-6 btn btn-primary" style=" width: 20%; margin-right: 5px;">Mis Pedidos</a>-->
           </div>
           <p class="card-text">Correo Electrónico: {{ userData.email }}</p>
           <p class="card-text">Cuit: {{ userData.cuit }}</p>
@@ -46,5 +42,3 @@
     </div>
   </div>
 </div>
-
-<app-footer></app-footer>

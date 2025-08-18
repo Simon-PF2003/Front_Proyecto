@@ -1,0 +1,33 @@
+/* 1) Layout base a nivel app */
+html, body { height: 100%; margin: 0; }
+body { background: white; /* tu fondo */ }
+
+.btn-primary {
+  background-color: #4CA7BF;
+  border: 1px solid #CCC9C2;
+  color: white;
+}
+
+.card-header {
+  background-color: #F8F4EC;
+}
+/* app-root como contenedor flex vertical */
+app-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* El footer que sea HIJO DIRECTO de app-root se pega abajo */
+app-root > app-footer {
+  margin-top: auto;          /* empuja el footer al fondo */
+}
+
+/* Si hay footers adentro de componentes, ocultarlos globalmente */
+app-root app-footer { display: none; }   /* oculta todos los footers anidados */
+app-root > app-footer { display: block; }/* excepto el global */
+
+/* Si en algún lado tenías esto, quitalo porque rompe el scroll:
+   body { overflow: hidden; } 
+   Si lo necesitás, dejá sólo overflow-x: hidden;
+*/

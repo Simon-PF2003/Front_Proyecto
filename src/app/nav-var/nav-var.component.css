@@ -31,9 +31,22 @@ header {
 
 .nav-list li a {
   text-decoration: none;
-  
   color: #000000;
-  font-size: large;
+  font-size: larger;
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.search-group {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  transition: all 0.2s ease;
 }
 
 .abrir-menu {
@@ -50,20 +63,53 @@ header {
 }
 
 .busqueda {
-  background-color: #F8F4EC;
-  font-size: large;
-  border-color: black;
+  background-color: white;
+  font-size: larger;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  padding: 10px 16px;
+  outline: none;
+  height: 44px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.busqueda:focus {
+  border-color: #4ca7bf;
+  box-shadow: 0 0 0 3px rgba(76, 167, 191, 0.1);
 }
 
 .lupa {
-  border: none;
-  margin-top: 8px;
-  margin-left: 10px;
-  background-color: #F8F4EC;
+  border: 1px solid #ccc;
+  background-color: white;
+  margin-left: 8px;
+  padding: 10px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  height: 44px;
+  width: 44px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.lupa:hover {
+  background-color: #4ca7bf;
+  border-color: #4ca7bf;
+  box-shadow: 0 4px 8px rgba(76, 167, 191, 0.3);
+}
+
+.lupa:hover .lupita {
+  color: white !important;
 }
 
 .lupita {
-  font-size: x-large;
+  font-size: large;
+  transition: color 0.2s ease;
 }
 
 .cart-btn {
@@ -124,19 +170,42 @@ body {
     bottom: 0;
     background-color: #F8F4EC;
     padding: 2rem;
+    transition: visibility 0.2s ease, opacity 0.2s ease;
+    opacity: 0;
   }
 
   .nav.visible {
     visibility: visible;
+    opacity: 1;
   }
 
   .nav-list {
     flex-direction: column;
     align-items: end;
+    transition: all 0.2s ease;
   }
 
   .nav-list li a {
     text-decoration: none;
+  }
+
+  .search-group {
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s ease;
+  }
+
+  .search-container {
+    align-items: center;
+    transition: all 0.2s ease;
+  }
+
+  .busqueda {
+    transition: all 0.2s ease;
+  }
+
+  .lupa {
+    transition: all 0.2s ease;
   }
 
   .lupita {

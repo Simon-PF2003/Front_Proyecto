@@ -13,5 +13,5 @@
       <strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong>
       <span class="text-danger" *ngIf="product.stock === 0"> 🔴 Agotado</span>
     </p>
-    <button class="btn btn-primary" style="font-family: 'Roboto', sans-serif;" (click)="comprar()"> Comprar</button>
+    <button class="btn btn-primary" style="font-family: BlinkMacSystemFont, 'Segoe UI'; border: none; width: 100%;" (click)="comprar()"> Comprar</button>
   </div>

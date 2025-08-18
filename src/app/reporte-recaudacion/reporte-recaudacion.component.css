@@ -1,0 +1,24 @@
+/* Personalizar colores de la tabla striped */
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #F8F4EC !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: white !important;
+}
+
+/* Asegurar que el encabezado tenga fondo blanco */
+.table thead th {
+  background-color: white !important;
+  border-color: #dee2e6;
+}
+
+/* Personalizar bordes */
+.table-bordered {
+  border-color: #dee2e6;
+}
+
+.table-bordered td,
+.table-bordered th {
+  border-color: #dee2e6;
+}

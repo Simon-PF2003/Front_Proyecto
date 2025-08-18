@@ -12,6 +12,7 @@ import { SupplierService } from '../services/supplier.service';
 export class ProductCreateComponent implements OnInit {
   product = {
     desc: '',
+    brand: '',
     stock: '',
     price: '',
     cat: '',
@@ -51,6 +52,7 @@ export class ProductCreateComponent implements OnInit {
   createNewProduct() {
     const formData = new FormData();
     formData.append('desc', this.product.desc);
+    formData.append('brand', this.product.brand);
     formData.append('stock', this.product.stock);
     formData.append('price', this.product.price);
     formData.append('cat', this.product.cat);
@@ -116,6 +118,7 @@ export class ProductCreateComponent implements OnInit {
       );
 
     this.product.desc = '';
+    this.product.brand = '';
     this.product.price = '';
     this.product.stock = '';
     this.product.stockMin = '';

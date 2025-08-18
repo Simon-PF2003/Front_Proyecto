@@ -1,8 +1,7 @@
-<app-nav-var></app-nav-var>
 <div class="container">
     <h2 class="text-center my-4">Pedidos Terminados</h2>
 
-    <form (submit)="applyFilters()" class="p-3 border rounded bg-light">
+    <form (submit)="applyFilters()" class="p-3 border rounded" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;">
         <div class="row">
             <div class="col-md-3 mb-2">
                 <input [(ngModel)]="filters.orderId" name="orderId" placeholder="ID Pedido" class="form-control">
@@ -39,15 +38,16 @@
             <div *ngFor="let order of orders" class="card mb-2">
                 <div class="card-header" id="heading{{ order._id }}">
                     <h2 class="mb-0">
-                        <button class="btn btn-light w-100 text-left" type="button" data-toggle="collapse" 
-                                [attr.data-target]="'#collapse' + order._id" aria-expanded="true">
+                        <button class="btn w-100 text-left" type="button" data-bs-toggle="collapse" 
+                                [attr.data-bs-target]="'#collapse' + order._id" aria-expanded="false"
+                                [attr.aria-controls]="'collapse' + order._id">
                             <strong>Pedido ID:</strong> {{ order._id }} |
                             <strong>Cliente:</strong> {{ order.userId.businessName }} |
                             <strong>Fecha:</strong> {{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }} |
                             <strong>Total (sin IVA):</strong> {{ order.total | currency }}
                         </button>
                     </h2>
-                    <div [attr.id]="'collapse' + order._id" class="collapse" data-parent="#accordionExample">
+                    <div [attr.id]="'collapse' + order._id" class="collapse" data-bs-parent="#accordionExample">
                         <div class="card-body">
                             <ul class="list-group">
                                 <li *ngFor="let item of order.items" class="list-group-item">
@@ -71,16 +71,20 @@
 
 </div>
 <nav class="mt-4">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center"> 
       <li class="page-item" [class.disabled]="currentPage === 1">
-        <button class="page-link" (click)="changePage(currentPage - 1)">Anterior</button>
+        <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2" (click)="changePage(currentPage - 1)">Anterior</button>
       </li>
-      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [class.active]="currentPage === (i + 1)">
-        <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item">
+        <button 
+          class="page-link" 
+          [ngStyle]="currentPage === (i + 1) ? {'background-color': '#4CA7BF', 'border': '1px solid #CCC9C2', 'color': 'white'} : {'background-color': '#F8F4EC', 'border': '1px solid #CCC9C2'}"
+          (click)="changePage(i + 1)">
+          {{ i + 1 }}
+        </button>
       </li>
       <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <button class="page-link" (click)="changePage(currentPage + 1)">Siguiente</button>
+        <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" (click)="changePage(currentPage + 1)">Siguiente</button>
       </li>
     </ul>
-  </nav>
-<app-footer></app-footer>
+</nav>

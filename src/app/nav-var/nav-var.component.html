@@ -1,4 +1,3 @@
-
 <header>
 <a href="#">
     <img class="logo" src="\assets\prodBase.png" alt="logo">
@@ -27,24 +26,28 @@
         <li>
             <app-down-comp *ngIf="isProductosRoute()"></app-down-comp>
         </li>
-        <li class="col-auto d-flex" *ngIf="isProductosRoute() || isStockRoute() || isEditProductsRoute() || isProductCategoryRoute() || isChargeStockRoute()">
-            <input class="busqueda form-control" type="text" id="searchProduct" [(ngModel)]="searchTerm" (keyup.enter)="searchProducts()"
-                placeholder="Buscar producto">
-            <form class="form-inline" role="search">
-                <button class="lupa btn-light d-flex align-items-center" type="submit" (click)="searchProducts()">
-                    <i class="lupita fa-solid fa-magnifying-glass" style="color: #000000;"></i>
-                </button>
-            </form>
+        <li class="col-auto search-container" *ngIf="isProductosRoute() || isStockRoute() || isEditProductsRoute() || isProductCategoryRoute() || isChargeStockRoute()">
+            <div class="search-group">
+                <input class="busqueda form-control" type="text" id="searchProduct" [(ngModel)]="searchTerm" (keyup.enter)="searchProducts()"
+                    placeholder="Buscar producto">
+                <form class="form-inline" role="search">
+                    <button class="lupa btn-light d-flex align-items-center" type="submit" (click)="searchProducts()">
+                        <i class="lupita fa-solid fa-magnifying-glass" style="color: #000000;"></i>
+                    </button>
+                </form>
+            </div>
         </li>
-        <li class="col-auto d-flex"
+        <li class="col-auto search-container"
             *ngIf="isOrdersRoute()">
-            <input class="busqueda form-control" type="text" id="searchProduct" [(ngModel)]="searchTerm"
-                (keyup.enter)="searchOrders()" placeholder="Buscar pedido por cliente">
-            <form class="form-inline" role="search">
-                <button class="lupa btn-light d-flex align-items-center" type="submit" (click)="searchOrders()">
-                    <i class="lupita fa-solid fa-magnifying-glass" style="color: #000000;"></i>
-                </button>
-            </form>
+            <div class="search-group">
+                <input class="busqueda form-control" type="text" id="searchProduct" [(ngModel)]="searchTerm"
+                    (keyup.enter)="searchOrders()" placeholder="Buscar pedido por cliente">
+                <form class="form-inline" role="search">
+                    <button class="lupa btn-light d-flex align-items-center" type="submit" (click)="searchOrders()">
+                        <i class="lupita fa-solid fa-magnifying-glass" style="color: #000000;"></i>
+                    </button>
+                </form>
+            </div>
         </li>
         <li>
             <button class="cart-btn btn-light d-flex align-items-center" routerLink="/cart">

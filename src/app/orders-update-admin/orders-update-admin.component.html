@@ -1,5 +1,3 @@
-<app-nav-var></app-nav-var>
-
 <div class="container mt-3">
   <div class="row">
     <div class="col-12 text-center my-4">
@@ -36,11 +34,12 @@
   </div>
 </div>
 
-<div class="row mt-2">
-  <div class="col">
-    <div *ngFor="let pedido of paginatedPedidos" class="card mb-3">
-      <div class="card-header d-flex justify-content-between">
-        <div><strong>ID del Pedido:</strong> {{ pedido._id }}</div>
+<div class="container mt-2">
+  <div class="row">
+    <div class="col">
+      <div *ngFor="let pedido of paginatedPedidos" class="card mb-3">
+      <div class="card-header d-flex flex-wrap justify-content-between">
+        <div class="text-break"><strong>ID del Pedido:</strong> {{ pedido._id }}</div>
         <div><strong>Fecha:</strong> {{ pedido.createdAt | date:'dd/MM/yyyy - HH:mm' }}</div>
       </div>
 
@@ -55,21 +54,22 @@
           </li>
         </ul>
 
-        <div class="d-flex justify-content-between align-items-center mt-3">
-          <p><strong>Total:</strong> ${{ pedido.total }}</p>
-          <p [ngClass]="{ 'pendiente': pedido.status === 'Pendiente', 'en-curso': pedido.status === 'En curso', 'facturado': pedido.status === 'Facturado' }">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
+          <p class="mb-2"><strong>Total:</strong> ${{ pedido.total }}</p>
+          <p class="mb-2 text-break" [ngClass]="{ 'pendiente': pedido.status === 'Pendiente', 'en-curso': pedido.status === 'En curso', 'facturado': pedido.status === 'Facturado' }">
             <strong>Estado:</strong> {{ pedido.status }}
           </p>
-          <p><strong>Usuario ID:</strong> {{ pedido.userId }}</p>
-          <p><strong>Razón Social:</strong> {{ pedido.businessName }}</p>
-          <button class="btn btn-primary" (click)="openModal(pedido)">Cambiar Estado</button>
+          <p class="mb-2 text-break"><strong>Usuario ID:</strong> {{ pedido.userId }}</p>
+          <p class="mb-2 text-break"><strong>Razón Social:</strong> {{ pedido.businessName }}</p>
+          <button class="btn btn-primary mb-2" (click)="openModal(pedido)">Cambiar Estado</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'd-block': showModal }">
+<div class="container">
+  <div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'd-block': showModal }">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -81,27 +81,33 @@
       <div class="modal-body">
         <p>Seleccione el nuevo estado para el pedido:</p>
         <div class="text-center">
-          <button class="btn btn-warning mx-2" (click)="cambiarEstado(selectedPedido,'En curso')">En Curso</button>
-          <button class="btn btn-danger mx-2" (click)="cambiarEstado(selectedPedido, 'Cancelado')">Cancelado</button>
-          <button class="btn btn-success mx-2" (click)="cambiarEstado(selectedPedido, 'Terminado')">Terminado</button>
-          <button class="btn btn-info mx-2" (click)="cambiarEstado(selectedPedido, 'Entregado')">Entregado</button>
+          <button class="btn btn-warning mx-1 mb-2" (click)="cambiarEstado(selectedPedido,'En curso')">En Curso</button>
+          <button class="btn btn-danger mx-1 mb-2" (click)="cambiarEstado(selectedPedido, 'Cancelado')">Cancelado</button>
+          <button class="btn btn-success mx-1 mb-2" (click)="cambiarEstado(selectedPedido, 'Terminado')">Terminado</button>
+          <button class="btn btn-info mx-1 mb-2" (click)="cambiarEstado(selectedPedido, 'Entregado')">Entregado</button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<nav class="mt-4">
-  <ul class="pagination justify-content-center">
-    <li class="page-item" [class.disabled]="currentPage === 1">
-      <button class="page-link" (click)="changePage(currentPage - 1)">Anterior</button>
-    </li>
-    <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item" [class.active]="currentPage === (i + 1)">
-      <button class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</button>
-    </li>
-    <li class="page-item" [class.disabled]="currentPage === totalPages">
-      <button class="page-link" (click)="changePage(currentPage + 1)">Siguiente</button>
-    </li>
-  </ul>
-</nav>
-<app-footer></app-footer>
+<div class="container">
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center"> 
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2" (click)="changePage(currentPage - 1)">Anterior</button>
+          </li>
+          <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item">
+            <button 
+              class="page-link" 
+              [ngStyle]="currentPage === (i + 1) ? {'background-color': '#4CA7BF', 'border': '1px solid #CCC9C2', 'color': 'white'} : {'background-color': '#F8F4EC', 'border': '1px solid #CCC9C2'}"
+              (click)="changePage(i + 1)">
+              {{ i + 1 }}
+            </button>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" (click)="changePage(currentPage + 1)">Siguiente</button>
+          </li>
+      </ul>
+  </nav>
+</div>

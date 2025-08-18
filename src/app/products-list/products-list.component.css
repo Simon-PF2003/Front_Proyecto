@@ -4,30 +4,38 @@
   }
   
   .product-card .card {
-    flex: 1;
+    background-color: #F8F4EC;
   }
   
   .product-card .card-img-top {
     height: 200px;
-    object-fit: cover; /* Ajusta la imagen dentro del contenedor */
+    object-fit: cover;
   }
 
-  .truncate {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  .product-card .card-title {
+    text-align: center;
+    word-wrap: break-word;
+    white-space: normal;
+    min-height: 2.4em; 
   }
 
-  .btn-custom {
-    background-color: #ff5733; 
-    color: #ffffff;
-  }
-  
-  .btn-custom:hover {
-    background-color: #ff4500; 
-    color: #ffffff;
+  .product-card .card-text {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  .no-underline {
-    text-decoration: none;
+  .product-card .card-price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
   }
+
+  .product-card .text-danger {
+    font-size: small;
+  }
+
+.no-underline {
+  text-decoration: none;
+}

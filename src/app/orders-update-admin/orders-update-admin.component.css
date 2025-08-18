@@ -1,3 +1,33 @@
+/* Prevenir desbordamiento horizontal */
+.container {
+  overflow-x: hidden;
+}
+
+.card {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.text-break {
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Responsive flexbox */
+.d-flex.flex-wrap {
+  flex-wrap: wrap !important;
+}
+
+@media screen and (max-width: 768px) {
+  .d-flex.flex-wrap {
+    flex-direction: column !important;
+  }
+  
+  .d-flex.flex-wrap > * {
+    margin-bottom: 0.5rem;
+  }
+}
+
 @media screen and (max-width: 500px){
   .card-header {
     display: flex;
