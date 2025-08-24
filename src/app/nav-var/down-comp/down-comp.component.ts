@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CategorySelectionService } from 'src/app/services/category-selection-service.service';
+import { CategorySelectionService } from 'src/app/services/category.service';
 import { Router } from '@angular/router';
 
 @Component({

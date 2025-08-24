@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ProductService } from '../services/product.service';
-import { CategorySelectionService } from '../services/category-selection-service.service';
+import { CategorySelectionService } from '../services/category.service';
 
 @Component({
   selector: 'app-stock-ingreso',

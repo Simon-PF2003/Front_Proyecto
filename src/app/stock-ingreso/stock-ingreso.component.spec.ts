@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { NavVarComponent } from '../nav-var/nav-var.component';
 import { FooterComponent } from '../footer/footer.component';
 import { ProductService } from '../services/product.service';
-import { CategorySelectionService } from '../services/category-selection-service.service';
+import { CategorySelectionService } from '../services/category.service';
 
 describe('StockIngresoComponent', () => {
   let component: StockIngresoComponent;

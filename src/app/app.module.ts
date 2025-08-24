@@ -34,7 +34,7 @@ import { ProductUpdateModalComponent } from './products-list/product-update-moda
 import { ProductUpdateComponent } from './products-list/product-update/product-update.component';
 
 //Category
-import { CategorySelectionService } from './services/category-selection-service.service';
+import { CategorySelectionService } from './services/category.service';
 
 //Orders
 import { OrdersRetrieveClientComponent } from './orders-retrieve-client/orders-retrieve-client.component';

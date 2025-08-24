@@ -34,13 +34,14 @@
             </div>
             <div class="form-group">
               <label for="categoria">Categoría:</label>
-              <select class="form-control" id="categoria" [(ngModel)]="product.cat" name="categoria" required>
-                <!--<option value="Destacados">Destacados</option>-->
-                <option value="Perifericos">Perifericos</option>
-                <option value="Componentes">Componentes</option>
-                <option value="Impresoras">Impresoras</option>
+              <select class="form-control" id="categoria" name="categoria" [(ngModel)]="product.cat" required>
+                <option [ngValue]="''" disabled selected>Seleccione una categoría</option>
+                <option *ngFor="let c of categories" [ngValue]="c._id">
+                  {{ c.type }}
+                </option>
               </select>
             </div>
+
 
           <div class="form-group mb-3">
             <label for="supplier">Proveedor:</label>

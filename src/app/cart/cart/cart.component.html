@@ -10,7 +10,7 @@
         <tr>
           <th>Producto</th>
           <th>Cantidad</th>
-         <!-- <th>Precio Unitario</th>-->
+          <th>Precio Unitario</th>
           <th>Subtotal</th>
           <!--<th>Acciones</th>-->
         </tr>
@@ -29,7 +29,7 @@
               </button>
             </div>
           </td>
-          <!--<td>{{ item.price | currency }}</td>-->
+          <td>{{ item.price | currency }}</td>
           <td class="subtotal">
             <span>{{ item.price * item.quantity | currency }}</span>
             <button class="btn btn-danger" style="margin-left: 1rem;" (click)="removeFromCart(item._id)"><i
@@ -41,6 +41,6 @@
   </div>
   <div class="total col-12 text-right my-4">
     <p>Subtotal: {{ total | currency }}</p>
-    <!--<button class="btn btn-success" (click)="confirmarPedido()">Confirmar Pedido</button>-->
+    <button class="btn btn-success" (click)="confirmarPedido()">Confirmar Pedido</button>
   </div>
 </div>

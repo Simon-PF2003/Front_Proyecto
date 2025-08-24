@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { CategorySelectionService } from './category-selection-service.service';
+import { CategorySelectionService } from './category.service';
 
 describe('CategorySelectionServiceService', () => {
   let service: CategorySelectionService;
