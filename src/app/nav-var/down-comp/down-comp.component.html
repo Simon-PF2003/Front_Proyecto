@@ -3,10 +3,13 @@
     Categorías
   </a>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" style="color: #000000;">
-   <!-- <li><a class="dropdown-item cursor-pointer" (click)="selectCategory('Destacados')">Destacados</a></li>-->
-   <li><a class="dropdown-item cursor-pointer" (click)="selectCategory('Todos')">Todos</a></li>
-   <li><a class="dropdown-item cursor-pointer" (click)="selectCategory('Perifericos')">Periféricos</a></li>
-   <li><a class="dropdown-item cursor-pointer" (click)="selectCategory('Componentes')">Componentes</a></li>
-   <li><a class="dropdown-item cursor-pointer" (click)="selectCategory('Impresoras')">Impresoras</a></li>
+    <li>
+      <a class="dropdown-item cursor-pointer" (click)="selectCategory('all')">Todos</a>
+    </li>
+    <li *ngFor="let c of categories">
+      <a class="dropdown-item cursor-pointer" (click)="selectCategory(c._id)">
+        {{ c.type }}
+      </a>
+    </li>
   </ul>
 </div>

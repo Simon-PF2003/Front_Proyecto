@@ -1,26 +1,29 @@
-import { Component } from '@angular/core';
-import { CategorySelectionService } from 'src/app/services/category.service';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CategorySelectionService, Category } from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-down-comp',
   templateUrl: './down-comp.component.html',
   styleUrls: ['./down-comp.component.css']
 })
-export class DownCompComponent {
+export class DownCompComponent implements OnInit {
+  categories: Category[] = [];
+
   constructor(
     private categorySelectionService: CategorySelectionService,
     private router: Router
   ) {}
 
-  selectCategory(category: string) {
-    this.categorySelectionService.selectCategory(category);
-    console.log(category);
+  ngOnInit(): void {
+    this.categorySelectionService.getCategories().subscribe({
+      next: (cats) => this.categories = cats || [],
+      error: (e) => console.error('Error al cargar categorías en navbar:', e)
+    });
+  }
 
-    if (category === 'Todos') {
-      this.router.navigate(['/products-list'], { queryParams: { q: 'Todos' } });
-    } else {
-      this.router.navigate(['/products-list'], { queryParams: { q: category } });
-    }
+  selectCategory(id: string) {
+    this.categorySelectionService.selectCategory(id);
+    this.router.navigate(['/products-list']);
   }
 }
