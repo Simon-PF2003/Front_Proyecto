@@ -72,7 +72,7 @@ export class NavVarComponent implements OnInit {
 }
 
   isEditProductsRoute(): boolean {
-    return this.currentRoute.includes('/modificar-producto');
+    return this.currentRoute.includes('/product-update');
   }
 
   isProductCategoryRoute(): boolean {
@@ -100,8 +100,8 @@ searchProducts() {
       this.router.navigate(['/products-list'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     } else if (this.currentRoute.includes('/stock-ingreso')) {
       this.router.navigate(['/stock-ingreso'], { relativeTo: this.route, queryParams: { q: this.searchTerm } }); 
-    } else if (this.currentRoute.includes('/modificar-producto')) {
-      this.router.navigate(['/modificar-producto'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
+    } else if (this.currentRoute.includes('/product-update')) {
+      this.router.navigate(['/product-update'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     } else if (this.currentRoute.includes('/reporte-agrupar-productos')) {
       this.router.navigate(['/reporte-agrupar-productos'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     }
@@ -113,8 +113,8 @@ searchProducts() {
       this.router.navigate(['/products-list'], { relativeTo: this.route });
     } else if (this.currentRoute.includes('/stock-ingreso')) {
       this.router.navigate(['/stock-ingreso'], { relativeTo: this.route });
-    } else if (this.currentRoute.includes('/modificar-producto')) {
-      this.router.navigate(['/modificar-producto'], { relativeTo: this.route });
+    } else if (this.currentRoute.includes('/product-update')) {
+      this.router.navigate(['/product-update'], { relativeTo: this.route });
     } else if (this.currentRoute.includes('/reporte-agrupar-productos')) {
       this.router.navigate(['/reporte-agrupar-productos'], { relativeTo: this.route });
     } else if (this.currentRoute.includes('/cargar-stock')) {

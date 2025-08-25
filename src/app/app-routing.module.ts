@@ -11,6 +11,10 @@ import { ProductsListComponent } from './products-list/products-list.component';
 import { ProductRetrieveComponent } from './products-list/product-retrieve/product-retrieve.component';
 import { ProductUpdateComponent } from './products-list/product-update/product-update.component';
 
+//Categories
+import { CategoryCreateComponent } from './category-create/category-create.component';
+import { CategoryUpdateComponent } from './category-update/category-update.component';
+
 //Users
 import { UserCreateAcceptanceComponent } from './user-create-acceptance/user-create-acceptance.component';
 import { UserCreateManuallyComponent } from './user-update/user-create-manually/user-create-manually.component';
@@ -55,10 +59,14 @@ import { ReporteRecaudacionComponent } from './reporte-recaudacion/reporte-recau
 
 const routes: Routes = [
 //Products
-  { path: 'product-create', component: ProductCreateComponent },
+  { path: 'product-create', component: ProductCreateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' } },
   { path: 'products-list', component: ProductsListComponent },
-  { path: 'product-update', component: ProductUpdateComponent },
+  { path: 'product-update', component: ProductUpdateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' } },
   { path: 'product-retrieve/:id', component: ProductRetrieveComponent },
+
+//Categories
+  { path: 'category-create', component: CategoryCreateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  { path: 'category-update', component: CategoryUpdateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
 
 //Ingreso Stock
   { path: 'stock-ingreso', component: StockIngresoComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},

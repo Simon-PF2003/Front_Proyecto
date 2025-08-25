@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductService } from '../../services/product.service';
+import { CategorySelectionService } from 'src/app/services/category.service';
 import Swal from 'sweetalert2';
 import { SupplierService } from 'src/app/services/supplier.service';
 
@@ -12,16 +13,19 @@ import { SupplierService } from 'src/app/services/supplier.service';
 export class ProductUpdateModalComponent implements OnInit {
   @Input() editedProduct: any;
   suppliers: any[] = [];
+  categories: any[] = [];
   public value: string='';
 
   constructor(
     public activeModal: NgbActiveModal,
     private productService: ProductService,
-    private supplierService: SupplierService
+    private supplierService: SupplierService,
+    private categoryService: CategorySelectionService
   ) {}
 
   ngOnInit() {
     this.obtenerProveedores();
+    this.obtenerCategorias();
   }
 
   obtenerProveedores() {
@@ -33,6 +37,20 @@ export class ProductUpdateModalComponent implements OnInit {
         const supplierFound = this.suppliers.find(sup => sup._id === this.editedProduct.supplier);
         if(supplierFound) {
           this.editedProduct.supplier = supplierFound.businessName;
+        }
+      }
+    });
+  }
+
+  obtenerCategorias() {
+    this.categoryService.getCategories().subscribe((data: any) => {
+      this.categories = data;
+      console.log("categorías del modal", this.categories);
+
+      if (this.editedProduct.cat) {
+        const categoryFound = this.categories.find(cat => cat._id === this.editedProduct.cat);
+        if(categoryFound) {
+          this.editedProduct.cat = categoryFound.type;
         }
       }
     });

@@ -33,6 +33,10 @@ import { ProductRetrieveComponent } from './products-list/product-retrieve/produ
 import { ProductUpdateModalComponent } from './products-list/product-update-modal/product-update-modal.component';
 import { ProductUpdateComponent } from './products-list/product-update/product-update.component';
 
+//Categories
+import { CategoryCreateComponent } from './category-create/category-create.component';
+import { CategoryUpdateComponent } from './category-update/category-update.component';
+
 //Category
 import { CategorySelectionService } from './services/category.service';
 
@@ -82,6 +86,8 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 //Tasks
 import { TasksComponent } from './tasks/tasks.component';
 import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
+import { CategoryUpdateModalComponent } from './category-update/category-update-modal/category-update-modal.component';
+import { CategoryReassignModalComponent } from './category-update/category-reassign-modal/category-reassign-modal.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +107,11 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     ProductUpdateModalComponent,
     ProductUpdateComponent,
     
+    //Categories 
+    CategoryCreateComponent,
+    CategoryUpdateComponent,
+    CategoryUpdateModalComponent,
+
     //Institucional
     InstitucionalQuienesSomosComponent,
     InstitucionalContactoComponent,
@@ -146,6 +157,7 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     //Tasks
     TasksComponent,
     PrivateTasksComponent,
+    CategoryReassignModalComponent,
   ],
 
   imports: [
