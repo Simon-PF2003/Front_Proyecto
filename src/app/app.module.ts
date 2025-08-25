@@ -111,6 +111,7 @@ import { CategoryReassignModalComponent } from './category-update/category-reass
     CategoryCreateComponent,
     CategoryUpdateComponent,
     CategoryUpdateModalComponent,
+    CategoryReassignModalComponent,
 
     //Institucional
     InstitucionalQuienesSomosComponent,
@@ -157,7 +158,6 @@ import { CategoryReassignModalComponent } from './category-update/category-reass
     //Tasks
     TasksComponent,
     PrivateTasksComponent,
-    CategoryReassignModalComponent,
   ],
 
   imports: [

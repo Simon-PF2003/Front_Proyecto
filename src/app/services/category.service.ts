@@ -44,7 +44,6 @@ export class CategorySelectionService {
   }
 
   // DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE
-  // DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE
   deleteCategory(id: string, newCategoryId?: string): Observable<void> {
     return this.http.delete<void>(`${this.URL}/delete-categories/${id}`, {
       params: newCategoryId ? {reassignTo: newCategoryId} : {}
