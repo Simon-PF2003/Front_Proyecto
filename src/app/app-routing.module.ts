@@ -17,7 +17,7 @@ import { CategoryUpdateComponent } from './category-update/category-update.compo
 
 //Users
 import { UserCreateAcceptanceComponent } from './user-create-acceptance/user-create-acceptance.component';
-import { UserCreateManuallyComponent } from './user-update/user-create-manually/user-create-manually.component';
+import { UserCreateManuallyComponent } from './user-create-acceptance/user-create-manually/user-create-manually.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserUpdateComponent } from './user-update/user-update.component';
 

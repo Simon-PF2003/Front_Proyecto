@@ -16,8 +16,7 @@ describe('StockIngresoComponent', () => {
     // Mock del servicio ProductService
     const productServiceMock = {
       getNoStockProducts: () => of([]),
-      getProductsFiltered: (term: string) => of([]),
-      filterByCategory: (category: string) => of([]),
+      getProductsWithFilters: (searchTerm?: string, category?: string, hasStock?: boolean) => of([]),
       getProducts: () => of([]),
       updateProduct: (data: any, id: string) => of({ success: true })
     };

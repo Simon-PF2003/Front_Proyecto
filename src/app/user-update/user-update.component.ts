@@ -4,7 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UserUpdateModalComponent } from './user-update-modal/user-update-modal.component';
 import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { UserCreateManuallyComponent } from './user-create-manually/user-create-manually.component';
+
 
 @Component({
   selector: 'app-user-update',
@@ -84,15 +84,6 @@ export class UserUpdateComponent implements OnInit {
       this.currentPage = page;
       this.actualizarClientesMostrados();
     }
-  }
-
-  agregarCliente() {
-    const modalRef = this.modalService.open(UserCreateManuallyComponent, { centered: true });
-    modalRef.result.then((result) => {
-      if (result) {
-        this.obtenerClientes();
-      }
-    }, () => {});
   }
 
   modificarCliente(cliente: any) {

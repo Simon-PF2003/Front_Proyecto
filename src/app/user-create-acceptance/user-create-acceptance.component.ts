@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { AuthService } from "../services/auth.service";
 import { ActivatedRoute } from '@angular/router';
+import { UserCreateManuallyComponent } from './user-create-manually/user-create-manually.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import { UsersCountService } from '../services/users-count.service';
 
 @Component({
   selector: 'app-user-create-acceptance',
@@ -20,7 +23,9 @@ export class UserCreateAcceptanceComponent {
 
   constructor(
     private authService: AuthService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private modalService: NgbModal,
+    private usersCountService: UsersCountService
   ) {}
 
   async ngOnInit() {
@@ -72,6 +77,8 @@ export class UserCreateAcceptanceComponent {
         this.authService.rejectUser(userEmail).subscribe({
           next: res => {
             this.fetchUsers();
+            // Decrementar el contador de usuarios pendientes
+            this.usersCountService.decrementPendingUsersCount();
             Swal.fire({
               title: 'Usuario rechazado correctamente',
               text: `Se ha enviado un email a ${userEmail}`,
@@ -106,6 +113,8 @@ export class UserCreateAcceptanceComponent {
         this.authService.acceptUser(user._id, user.email, password).subscribe({
           next: (res: any) => {
             this.fetchUsers();
+            // Decrementar el contador de usuarios pendientes
+            this.usersCountService.decrementPendingUsersCount();
             Swal.fire({
               title: 'Usuario aceptado correctamente',
               text: `Se ha enviado un email a ${user.email} con la contraseña generada`,
@@ -135,5 +144,17 @@ export class UserCreateAcceptanceComponent {
       password += charset.charAt(at);
     }
     return password;
+  }
+
+  agregarCliente() {
+    const modalRef = this.modalService.open(UserCreateManuallyComponent, { centered: true });
+    modalRef.result.then((result) => {
+      if (result) {
+        // refrescar lista de pendientes (o usuarios en general si corresponde)
+        this.fetchUsers();
+        // Si se agregó un usuario manualmente, actualizar el contador
+        this.usersCountService.updatePendingUsersCount();
+      }
+    }, () => {});
   }
 }

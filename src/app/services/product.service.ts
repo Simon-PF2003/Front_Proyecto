@@ -47,15 +47,33 @@ export class ProductService {
     return this.http.get<any>(url);
   }
 
-  getProductsFiltered(searchTerm: string): Observable<any[]> {
-    console.log(searchTerm, 'service');
-    const url = `${this.URL}/searchProducts/${searchTerm}`;
-    console.log(url);
-    return this.http.get<any[]>(url);
-  }
+  // Método unificado para filtros combinados
+  getProductsWithFilters(searchTerm?: string, category?: string, hasStock?: boolean, minPrice?: number, maxPrice?: number): Observable<any[]> {
+    let url = `${this.URL}/products/filter?`;
+    const params: string[] = [];
 
-  filterByCategory(category: string): Observable<any[]> {
-    const url = `${this.URL}/category/${category}`;
+    if (searchTerm && searchTerm.trim() !== '') {
+      params.push(`search=${encodeURIComponent(searchTerm)}`);
+    }
+    
+    if (category && category !== 'all') {
+      params.push(`category=${encodeURIComponent(category)}`);
+    }
+    
+    if (hasStock !== undefined) {
+      params.push(`hasStock=${hasStock}`);
+    }
+
+    if (minPrice !== undefined && minPrice > 0) {
+      params.push(`minPrice=${minPrice}`);
+    }
+
+    if (maxPrice !== undefined && maxPrice > 0) {
+      params.push(`maxPrice=${maxPrice}`);
+    }
+
+    url += params.join('&');
+    console.log('URL del filtro combinado:', url);
     return this.http.get<any[]>(url);
   }
 

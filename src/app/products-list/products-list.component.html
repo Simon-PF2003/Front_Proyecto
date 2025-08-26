@@ -1,12 +1,88 @@
 <div class="container mt-4">
-  <div class="row mb-3">
-    <div class="col-md-3">
-      <label for="sortOrder" class="form-label">Ordenar por:</label>
-      <select id="sortOrder" class="form-select" [(ngModel)]="sortOrder" (change)="sortProducts()">
-        <option value="none">Ninguno</option>
-        <option value="asc">Precio: Menor a Mayor</option>
-        <option value="desc">Precio: Mayor a Menor</option>
-      </select>
+  <!-- Panel de Filtros Minimalista -->
+  <div class="filters-panel">
+    <div class="filters-header">
+      <h6 class="filters-title">
+        <i class="fas fa-filter me-2"></i>Filtros y Ordenamiento
+      </h6>
+    </div>
+    
+    <div class="row g-3 align-items-end">
+      <!-- Ordenamiento -->
+      <div class="col-lg-4 col-md-6">
+        <div class="filter-group">
+          <label for="sortOrder" class="filter-label">
+            <i class="fas fa-sort me-2"></i>Ordenar por
+          </label>
+          <select id="sortOrder" class="form-select elegant-select" [(ngModel)]="sortOrder" (change)="sortProducts()">
+            <option value="none">Sin orden</option>
+            <option value="asc">Precio: Menor a Mayor</option>
+            <option value="desc">Precio: Mayor a Menor</option>
+            <option value="name-asc">Nombre: A-Z</option>
+            <option value="name-desc">Nombre: Z-A</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Filtro de Precio -->
+      <div class="col-lg-4 col-md-6">
+        <div class="filter-group">
+          <label class="filter-label">
+            <i class="fas fa-dollar-sign me-2"></i>Rango de Precio
+          </label>
+          <div class="price-inputs">
+            <div class="price-input-wrapper">
+              <input type="number" 
+                     class="form-control price-input" 
+                     placeholder="Mínimo" 
+                     [(ngModel)]="minPrice" 
+                     (keydown.enter)="applyPriceFilter()"
+                     min="0">
+            </div>
+            <span class="price-separator">-</span>
+            <div class="price-input-wrapper">
+              <input type="number" 
+                     class="form-control price-input" 
+                     placeholder="Máximo" 
+                     [(ngModel)]="maxPrice" 
+                     (keydown.enter)="applyPriceFilter()"
+                     min="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stock y Acciones -->
+      <div class="col-lg-4 col-md-12">
+        <div class="filter-group">
+          <div class="stock-filter-container">
+            <div class="elegant-checkbox">
+              <input 
+                class="form-check-input" 
+                type="checkbox" 
+                id="stockFilter" 
+                [(ngModel)]="hasStockFilter" 
+                (ngModelChange)="fetchProducts()">
+              <label class="form-check-label" for="stockFilter">
+                <i class="fas fa-box me-2"></i>Solo con stock
+              </label>
+            </div>
+          </div>
+          
+          <div class="filter-actions">
+            <button type="button" 
+                    class="btn btn-soft-secondary" 
+                    (click)="clearAllFilters()">
+              <i class="fas fa-times me-1"></i>Limpiar
+            </button>
+            <button type="button" 
+                    class="btn btn-soft-primary" 
+                    (click)="applyAllFilters()">
+              <i class="fas fa-search me-1"></i>Aplicar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -19,7 +95,9 @@
               <img class="card-img-top" [src]="'http://localhost:3000/' + product.image"  alt="{{ product.name }}">
               <div class="card-body">
                 <h5 class="card-title truncate">{{ product.desc }}</h5>
-                <p class="card-text truncate">{{ product._id }}</p>
+                <p class="card-text truncate">Código del producto: {{ product.code }}</p>
+                <p class="card-text truncate">Marca: {{ product.brand }}</p>
+                <p class="card-text truncate">Categoría: {{ product.cat.type }}</p>
                 <p class="card-text">Stock: {{ product.stock }}</p>
                 <p class="card-price" *ngIf="discountPercentage === 0">
                   {{ product.price | currency }}

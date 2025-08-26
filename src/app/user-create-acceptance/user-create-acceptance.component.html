@@ -1,5 +1,19 @@
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Alta de Clientes</h2>
+<div class="container mt-4 position-relative">
+    <!-- Título centrado en toda la pantalla -->
+    <div class="text-center mb-4">
+      <h2 class="mb-0">Alta de Clientes</h2>
+    </div>
+    
+    <!-- Botón en la esquina superior derecha solo en pantallas grandes -->
+    <div class="d-none d-md-block position-absolute" style="top: 20px; right: 30px;">
+      <button class="btn btn-success" (click)="agregarCliente()">Agregar Cliente manualmente</button>
+    </div>
+    
+    <!-- Botón centrado en pantallas pequeñas -->
+    <div class="d-md-none text-center mb-3">
+      <button class="btn btn-success" (click)="agregarCliente()">Agregar Cliente</button>
+    </div>
+    
     <div class="alert alert-info text-center" *ngIf="users.length === 0"><strong>No hay clientes pendientes de aceptación</strong></div>
     <div class="container">
         <div class="row">

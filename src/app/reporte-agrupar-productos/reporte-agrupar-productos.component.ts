@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
+import { CategorySelectionService } from '../services/category.service';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -12,7 +13,6 @@ import { ActivatedRoute } from '@angular/router';
 export class ReporteAgruparProductosComponent implements OnInit {
   products: any[] = [];
   displayedProducts: any[] = [];
-  filteredProducts: any[] = [];
   selectedCategory: string = 'all';
   editingProduct: any = null;
   newCategory: string = '';
@@ -25,6 +25,7 @@ export class ReporteAgruparProductosComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private categorySelectionService: CategorySelectionService,
     private authService: AuthService,
     private route: ActivatedRoute
   ) {}
@@ -34,36 +35,35 @@ export class ReporteAgruparProductosComponent implements OnInit {
     this.route.queryParams.subscribe((queryParams) => {
       this.searchTerm = queryParams['q'] || '';
       this.fetchProducts();
-    }
-    );
+    });
+
+    this.categorySelectionService.categorySelected$.subscribe(async (category) => {
+      this.selectedCategory = category === 'all' ? 'all' : category;
+      this.fetchProducts();
+    });
   }
 
   async fetchProducts() {
     try {
-      // Fetch all products and categories
-      if (this.searchTerm === 'all' || !this.searchTerm) {
-        const data = await firstValueFrom(this.productService.getProducts());
-        this.products = data || [];
-      } else {
-        // Filter products by search term
-        const data = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
-        this.products = data || [];
-      }
-      this.filterByCategory(this.selectedCategory);
+      // Usar el método unificado de filtrado
+      const data = await firstValueFrom(
+        this.productService.getProductsWithFilters(
+          this.searchTerm, 
+          this.selectedCategory === 'all' ? '' : this.selectedCategory, 
+          undefined // hasStock = undefined para incluir todos los productos
+        )
+      );
+      this.products = data || [];
+      this.updatePagination();
     } catch (error) {
       console.error('Error fetching products:', error);
+      this.products = [];
+      this.updatePagination();
     }
   }
 
-  filterByCategory(category: string) {
-    this.selectedCategory = category;
-    if (category === 'all') {
-      this.filteredProducts = [...this.products];
-    } else {
-      this.filteredProducts = this.products.filter(product => product.cat === category);
-    }
-
-    this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
+  updatePagination() {
+    this.totalPages = Math.ceil(this.products.length / this.pageSize);
     this.currentPage = 1;
     this.updateDisplayedProducts();
   }
@@ -71,7 +71,7 @@ export class ReporteAgruparProductosComponent implements OnInit {
   updateDisplayedProducts() {
     const start = (this.currentPage - 1) * this.pageSize;
     const end = start + this.pageSize;
-    this.displayedProducts = this.filteredProducts.slice(start, end);
+    this.displayedProducts = this.products.slice(start, end);
   }
 
   changePage(page: number) {
@@ -79,6 +79,10 @@ export class ReporteAgruparProductosComponent implements OnInit {
       this.currentPage = page;
       this.updateDisplayedProducts();
     }
+  }
+
+  onCategoryChange(category: string) {
+    this.categorySelectionService.selectCategory(category);
   }
 
   editCategory(product: any) {
@@ -104,10 +108,8 @@ export class ReporteAgruparProductosComponent implements OnInit {
         this.editingProduct.cat = this.newCategory;
         await firstValueFrom(this.productService.updateProduct(this.editingProduct, this.editingProduct._id));
   
-        // Refresca los productos y aplica el filtro nuevamente
-        const data = await firstValueFrom(this.productService.getProducts());
-        this.products = data || [];
-        this.filterByCategory(this.selectedCategory);
+        // Refresca los productos usando el método unificado
+        this.fetchProducts();
   
         this.closeModal();
       } catch (error) {

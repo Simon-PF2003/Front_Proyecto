@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../../services/product.service';
+import { CategorySelectionService } from '../../services/category.service';
 import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
@@ -13,6 +14,7 @@ export class CargarStockComponent implements OnInit {
   products: any[] = [];
   displayedProducts: any[] = [];
   searchTerm: string = '';
+  selectedCategory: string = 'all';
 
   currentPage: number = 1;
   pageSize: number = 5;
@@ -20,6 +22,7 @@ export class CargarStockComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private categorySelectionService: CategorySelectionService,
     private route: ActivatedRoute
   ) {}
 
@@ -28,46 +31,35 @@ export class CargarStockComponent implements OnInit {
       this.searchTerm = queryParams['q'] || '';
       this.fetchProducts();
     });
+
+    this.categorySelectionService.categorySelected$.subscribe(async (category) => {
+      this.selectedCategory = category === 'all' ? 'all' : category;
+      this.fetchProducts();
+    });
   }
 
   async fetchProducts() {
     try {
-      const productsPending = await firstValueFrom(this.productService.getPendingStockProducts());
-      this.products = productsPending.filter(product => product.pending > 0);
-      
-      if (this.searchTerm) {
-        try {
-          const filteredData = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
-          const stockFilteredData = filteredData.filter(product => product.stock < product.stockMin);
+      // Primero obtener todos los productos con filtros aplicados
+      const filteredData = await firstValueFrom(
+        this.productService.getProductsWithFilters(
+          this.searchTerm, 
+          this.selectedCategory === 'all' ? '' : this.selectedCategory, 
+          undefined // hasStock = undefined para incluir todos los productos
+        )
+      );
 
-          if (stockFilteredData.length === 0) {
-            Swal.fire('Sin resultados', 'No hay productos que cumplan con la descripción ingresada', 'info');
-          }
+      // Luego filtrar solo los que tienen pending > 0
+      this.products = filteredData.filter(product => 
+        product.pending !== undefined && product.pending > 0
+      );
 
-          this.products = stockFilteredData;
-        } catch (error) {
-          if ((error as any).status === 400) {
-            this.products = [];
-          } else {
-            console.error('Error al buscar productos', error);
-          }
-        }
-      }
-
-      /*if (this.products.length === 0) {
-        Swal.fire({
-          title: 'Información',
-          text: 'No hay productos con stock pendiente.',
-          icon: 'info',
-          confirmButtonText: 'Aceptar'
-        });
-      } else {
-        this.products.forEach(product => product.quantityToAdd = product.pending);
-      }*/
       this.products.forEach(product => product.quantityToAdd = product.pending);
       this.updatePagination();
     } catch (error) {
       console.error('Error fetching pending stock products', error);
+      this.products = [];
+      this.updatePagination();
     }
   }
 

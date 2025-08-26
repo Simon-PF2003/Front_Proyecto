@@ -28,27 +28,37 @@ export class ProductUpdateModalComponent implements OnInit {
     this.obtenerCategorias();
   }
 
-  obtenerProveedores() {
+obtenerProveedores() {
     this.supplierService.obtenerSuppliers().subscribe((data: any) => {
       this.suppliers = data; 
       console.log("suppliers del modal", this.suppliers);
 
-      if (this.editedProduct.supplier) {
-        const supplierFound = this.suppliers.find(sup => sup._id === this.editedProduct.supplier);
+      if (this.editedProduct && this.editedProduct.supplier) {
+        // Si supplier es un objeto, extraer el ID
+        const supplierId = typeof this.editedProduct.supplier === 'object' 
+          ? this.editedProduct.supplier._id 
+          : this.editedProduct.supplier;
+          
+        const supplierFound = this.suppliers.find(sup => sup._id === supplierId);
         if(supplierFound) {
           this.editedProduct.supplier = supplierFound.businessName;
         }
       }
     });
   }
-
+  
   obtenerCategorias() {
     this.categoryService.getCategories().subscribe((data: any) => {
       this.categories = data;
       console.log("categorías del modal", this.categories);
 
-      if (this.editedProduct.cat) {
-        const categoryFound = this.categories.find(cat => cat._id === this.editedProduct.cat);
+      if (this.editedProduct && this.editedProduct.cat) {
+        // Si cat es un objeto, extraer el ID o tipo
+        const categoryId = typeof this.editedProduct.cat === 'object' 
+          ? this.editedProduct.cat._id 
+          : this.editedProduct.cat;
+          
+        const categoryFound = this.categories.find(cat => cat._id === categoryId);
         if(categoryFound) {
           this.editedProduct.cat = categoryFound.type;
         }

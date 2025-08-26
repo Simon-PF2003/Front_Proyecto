@@ -17,14 +17,17 @@
             <a class="nav-link active" aria-current="page" href="/products-list">Productos</a>
         </li>
         <li>
-            <a class="nav-link active" *ngIf="isUserRoleDefined() && userRole === 'Administrador'" aria-current="page"
-            href="/admin-panel">Admin Panel</a>
+            <a class="nav-link active position-relative" *ngIf="isUserRoleDefined() && userRole === 'Administrador'" aria-current="page"
+            href="/admin-panel">
+                Admin Panel
+                <i *ngIf="pendingUsersCount > 0" class="fa-solid fa-triangle-exclamation position-absolute notification-triangle" style="color: #dc3545;"></i>
+            </a>
         </li>
         <li>
             <a class="nav-link active" href="/institucional-contacto">Contacto</a>
         </li>
         <li>
-            <app-down-comp *ngIf="isProductosRoute()"></app-down-comp>
+            <app-down-comp *ngIf="isProductosRoute() || isEditProductsRoute() || isStockRoute() || isProductCategoryRoute() || isChargeStockRoute()"></app-down-comp>
         </li>
         <li class="col-auto search-container" *ngIf="isProductosRoute() || isStockRoute() || isEditProductsRoute() || isProductCategoryRoute() || isChargeStockRoute()">
             <div class="search-group">

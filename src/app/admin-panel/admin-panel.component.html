@@ -14,7 +14,13 @@
               <button class="btn btn-secondary botonNormal"><a class="nav-link active" aria-current="page" href="/product-update">Modificar Productos</a></button>
             </div>
             <div class="pannelBttn">
-              <button class="btn btn-primary botonNormal"><a class="nav-link active" aria-current="page" href="/user-create-acceptance">Alta Usuarios</a></button>
+              <button class="btn btn-primary botonNormal position-relative">
+                <a class="nav-link active" aria-current="page" href="/user-create-acceptance">Alta Usuarios</a>
+                <span *ngIf="pendingUsersCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge-admin">
+                  {{ pendingUsersCount }}
+                  <span class="visually-hidden">usuarios pendientes</span>
+                </span>
+              </button>
             </div>
             <div class="pannelBttn">
               <button class="btn btn-secondary botonNormal"><a class="nav-link active" aria-current="page" href="/user-update">Modificar Usuarios</a></button>

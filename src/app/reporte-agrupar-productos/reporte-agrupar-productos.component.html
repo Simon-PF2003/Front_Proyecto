@@ -2,7 +2,7 @@
   <div class="row mb-3">
     <div class="col-md-3">
       <label for="categoryFilter" class="form-label">Filtrar por Categoría:</label>
-      <select id="categoryFilter" class="form-select" [(ngModel)]="selectedCategory" (change)="filterByCategory(selectedCategory)">
+      <select id="categoryFilter" class="form-select" [(ngModel)]="selectedCategory" (change)="onCategoryChange(selectedCategory)">
         <option value="all">Todas</option>
         <option value="Perifericos">Periféricos</option>
         <option value="Componentes">Componentes</option>
@@ -23,7 +23,7 @@
               <p class="card-text truncate">{{ product.desc }}</p>
               <p class="card-text">Stock: {{ product.stock }}</p>
               <p class="card-text">Precio: {{ product.price }}</p>
-              <p class="card-text">Categoría: {{ product.cat }}</p>
+              <p class="card-text">Categoría: {{ product.cat.type }}</p>
               <button class="btn btn-primary btn-sm" (click)="openModal(product)">Modificar Categoría</button>
             </div>
           </div>

@@ -5,6 +5,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { countService } from '../services/count-cart.service';
 import { ActivatedRoute } from '@angular/router';
+import { UsersCountService } from '../services/users-count.service';
 
 
 @Component({
@@ -19,12 +20,14 @@ export class NavVarComponent implements OnInit {
   currentRoute: string = '';
   productsInCart: number = 0;
   productsInCartString: string = 'h';
+  pendingUsersCount: number = 0;
 
   constructor(
     private router: Router,
     public authService: AuthService,
     private countService: countService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private usersCountService: UsersCountService
   )
   
   {
@@ -41,9 +44,11 @@ export class NavVarComponent implements OnInit {
     this.countService.productsInCart$.subscribe(value => {
       this.productsInCart = value;
     });
+    
     const productsInCartString = localStorage.getItem('productsInCart');
-  if(productsInCartString != null) {
-    this.productsInCart = parseInt(productsInCartString);}
+    if(productsInCartString != null) {
+      this.productsInCart = parseInt(productsInCartString);
+    }
 
     const authToken = this.authService.getToken();
 
@@ -51,6 +56,15 @@ export class NavVarComponent implements OnInit {
       const decodedToken: any = jwt_decode(authToken);
       this.userRole = decodedToken.role;
       console.log(this.userRole);
+      
+      // Si es administrador, obtener conteo de usuarios pendientes
+      if (this.userRole === 'Administrador') {
+        this.usersCountService.pendingUsersCount$.subscribe(count => {
+          this.pendingUsersCount = count;
+        });
+        // Actualizar el conteo inicial
+        this.usersCountService.updatePendingUsersCount();
+      }
     }
   }
 

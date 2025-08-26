@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductUpdateModalComponent } from '../product-update-modal/product-update-modal.component';
 import { ProductService } from '../../services/product.service';
@@ -14,7 +15,6 @@ import Swal from 'sweetalert2';
   styleUrls: ['./product-update.component.css']
 })
 export class ProductUpdateComponent implements OnInit {
-  categories: Category[] = [];
   products: any[] = [];
   filteredProducts: any[] = [];
   displayedProducts: any[] = [];
@@ -22,6 +22,7 @@ export class ProductUpdateComponent implements OnInit {
   // ahora guarda el _id de la categoría (o 'all')
   selectedCategory: string = 'all';
   searchTerm: string = '';
+  hasStockFilter: boolean = false;
 
   // Paginación
   currentPage: number = 1;
@@ -32,6 +33,7 @@ export class ProductUpdateComponent implements OnInit {
     private modalService: NgbModal,
     private productService: ProductService,
     private route: ActivatedRoute,
+    private router: Router,
     private authService: AuthService,
     private categoryService: CategorySelectionService
   ) {}
@@ -42,14 +44,12 @@ export class ProductUpdateComponent implements OnInit {
     this.route.queryParams.subscribe((queryParams) => {
       this.searchTerm = queryParams['q'] || '';
       this.fetchProducts();
-      this.cargarCategorias();
     });
-  }
 
-  private cargarCategorias(): void {
-    this.categoryService.getCategories().subscribe({
-      next: (cats) => (this.categories = cats || []),
-      error: (e) => console.error('Error al cargar categorías', e),
+    // Escuchar selecciones de categoría desde la navbar
+    this.categoryService.categorySelected$.subscribe(async (category) => {
+      this.selectedCategory = category;
+      await this.fetchProducts();
     });
   }
 
@@ -57,20 +57,14 @@ export class ProductUpdateComponent implements OnInit {
     try {
       let data;
 
-      if (this.searchTerm === 'Todos' || !this.searchTerm) {
-        data = await firstValueFrom(this.productService.getProducts());
-      } else {
-        try {
-          data = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
-        } catch (error) {
-          if ((error as any).status === 400) {
-            data = [];
-            Swal.fire('Sin resultados', 'No hay productos que cumplan con la descripción ingresada', 'info');
-          } else {
-            console.error('Error al buscar productos:', error);
-          }
-        }
-      }
+      // Usar el nuevo método de filtros combinados
+      data = await firstValueFrom(
+        this.productService.getProductsWithFilters(
+          this.searchTerm, 
+          this.selectedCategory, 
+          this.hasStockFilter
+        )
+      );
 
       this.products = data || [];
       this.filteredProducts = [...this.products];
@@ -78,29 +72,18 @@ export class ProductUpdateComponent implements OnInit {
       this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
       this.updateDisplayedProducts();
     } catch (error) {
-      console.error('Error al obtener los productos:', error);
+      if ((error as any).status === 400) {
+        this.products = [];
+        this.filteredProducts = [];
+        Swal.fire('Sin resultados', 'No hay productos que cumplan con los filtros aplicados', 'info');
+      } else {
+        console.error('Error al obtener los productos:', error);
+        this.products = [];
+        this.filteredProducts = [];
+      }
+      this.totalPages = 1;
+      this.updateDisplayedProducts();
     }
-  }
-
-  filterByCategory(categoryId: string): void {
-    this.selectedCategory = categoryId;
-
-    if (categoryId === 'all') {
-      this.filteredProducts = [...this.products];
-    } else {
-      this.filteredProducts = this.products.filter((p) => this.getCatId(p) === categoryId);
-    }
-
-    this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
-    this.currentPage = 1;
-    this.updateDisplayedProducts();
-  }
-
-  private getCatId(p: any): string | null {
-    if (!p || !p.cat) return null;
-    if (typeof p.cat === 'string') return p.cat;
-    if (typeof p.cat === 'object' && p.cat._id) return p.cat._id;
-    return null;
   }
 
   updateDisplayedProducts() {
@@ -116,7 +99,7 @@ export class ProductUpdateComponent implements OnInit {
     }
   }
 
-  openEditModal(product: any): void {
+  modifyProduct(product: any): void {
     const modalRef = this.modalService.open(ProductUpdateModalComponent, { centered: true });
     modalRef.componentInstance.editedProduct = { ...product };
     modalRef.result
@@ -128,11 +111,36 @@ export class ProductUpdateComponent implements OnInit {
       .catch(() => {});
   }
 
+    deleteProduct(productId: string) {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción no se puede deshacer",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, confirmar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.productService.deleteProduct(productId).subscribe({
+            next: () => {
+              Swal.fire('Confirmado', 'La acción ha sido confirmada', 'success');
+              this.router.navigate(['/product-update']);
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          });       
+        }
+      });
+    }
+
   updateProductList(updatedProduct: any): void {
     const index = this.products.findIndex((p) => p._id === updatedProduct._id);
     if (index !== -1) {
       this.products[index] = updatedProduct;
-      this.filterByCategory(this.selectedCategory);
+      this.fetchProducts(); // Refrescar con todos los filtros aplicados
     }
   }
 }

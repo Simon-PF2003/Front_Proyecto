@@ -15,6 +15,7 @@ export class StockIngresoComponent implements OnInit {
   products: any[] = [];
   displayedProducts: any[] = [];
   searchTerm: string = '';
+  selectedCategory: string = 'all'; // Nueva propiedad
   selectedProducts: any[] = [];
 
   // Paginación
@@ -43,50 +44,42 @@ export class StockIngresoComponent implements OnInit {
     });
 
     this.categorySelectionService.categorySelected$.subscribe(async (category) => {
-      await this.filterByCategory(category);
+      this.selectedCategory = category;
+      await this.fetchProducts();
     });
   }
 
   async fetchProducts() {
     try {
-      const noStockData = await firstValueFrom(this.productService.getNoStockProducts());
-  
-      if (this.searchTerm) {
-        try {
-          const filteredData = await firstValueFrom(this.productService.getProductsFiltered(this.searchTerm));
-          const stockFilteredData = filteredData.filter(product => product.stock < product.stockMin);
-  
-          if (stockFilteredData.length === 0) {
-            Swal.fire('Sin resultados', 'No hay productos que cumplan con la descripción ingresada', 'info');
-          }
-  
-          this.products = stockFilteredData;
-        } catch (error) {
-          if ((error as any).status === 400) {
-            this.products = [];
-            Swal.fire('Sin resultados', 'No hay productos que cumplan con la descripción ingresada', 'info');
-          } else {
-            console.error('Error al buscar productos:', error);
-          }
-        }
-      } else {
-        this.products = noStockData;
+      let data;
+      
+      // Usar el nuevo método de filtros combinados
+      data = await firstValueFrom(
+        this.productService.getProductsWithFilters(
+          this.searchTerm, 
+          this.selectedCategory
+        )
+      );
+      
+      // Filtrar solo productos con stock bajo (stock < stockMin)
+      this.products = data.filter(product => product.stock < product.stockMin);
+      
+      if (this.products.length === 0 && this.searchTerm) {
+        Swal.fire('Sin resultados', 'No hay productos con stock bajo que cumplan con los filtros', 'info');
       }
-  
+      
+      // Inicializar quantityToBuy
       this.products.forEach(product => product.quantityToBuy = 0);
       this.updatePagination();
     } catch (error) {
-      console.error('Error al obtener productos:', error);
-    }
-  }
-  
-  async filterByCategory(category: string) {
-    try {
-      const data = await firstValueFrom(this.productService.filterByCategory(category));
-      this.products = data.filter(product => product.stock < product.stockMin);
+      if ((error as any).status === 400) {
+        this.products = [];
+        Swal.fire('Sin resultados', 'No hay productos que cumplan con los filtros aplicados', 'info');
+      } else {
+        console.error('Error al obtener los productos:', error);
+        this.products = [];
+      }
       this.updatePagination();
-    } catch (error) {
-      console.error('Error fetching products by category', error);
     }
   }
 

@@ -51,7 +51,7 @@ import { BillCreateComponent } from './bill-create/bill-create.component';
 //Users
 import { UserUpdateComponent } from './user-update/user-update.component';
 import { UserCreateAcceptanceComponent } from './user-create-acceptance/user-create-acceptance.component';
-import { UserCreateManuallyComponent } from './user-update/user-create-manually/user-create-manually.component';
+import { UserCreateManuallyComponent } from './user-create-acceptance/user-create-manually/user-create-manually.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { UserUpdateModalComponent } from './user-update/user-update-modal/user-update-modal.component';
 //import { AuthService } from './services/auth.service';
