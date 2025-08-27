@@ -9,3 +9,4 @@ Cambios realizados:
 - Inclusión de marca y categorías en product-card del home.
 - Inclusión ordenamiento por codigo 
 - Interfaz login, signup, retrievepassword
+- Cambios relacion producto a proveedores muchos a muchos
