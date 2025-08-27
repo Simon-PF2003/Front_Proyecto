@@ -13,7 +13,6 @@ export class SupplierCreateComponent {
     businessName: '',
     address: '',
     phoneNumber: '',
-    category: '',
   };
 
   constructor(private supplierService: SupplierService) {}
@@ -34,8 +33,7 @@ async createNewSupplier() {
     !this.supplier.cuit ||
     !this.supplier.businessName ||
     !this.supplier.address ||
-    !this.supplier.phoneNumber ||
-    !this.supplier.category
+    !this.supplier.phoneNumber
     ){
        Swal.fire({
         icon: 'error',
@@ -49,7 +47,6 @@ async createNewSupplier() {
     businessName: this.supplier.businessName,
     address: this.supplier.address,
     phoneNumber: this.supplier.phoneNumber,
-    category: this.supplier.category
                            }
     
     
@@ -98,7 +95,6 @@ async createNewSupplier() {
       businessName: '',
       address: '',
       phoneNumber: '',
-      category: '',
     };
   }
 

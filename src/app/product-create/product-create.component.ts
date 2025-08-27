@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { Router } from "@angular/router";
 import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 import { SupplierService } from '../services/supplier.service';
 import { CategorySelectionService, Category } from '../services/category.service';
+import { BrandSelectionService, Brand } from '../services/brand.service';
 
 @Component({
   selector: 'app-product-create',
@@ -13,6 +14,9 @@ import { CategorySelectionService, Category } from '../services/category.service
 })
 export class ProductCreateComponent implements OnInit {
   categories: Category[] = [];
+  suppliers: any[] = [];
+  brands: Brand[] = [];
+  isDropdownOpen: boolean = false;
 
   product = {
     desc: '',
@@ -22,30 +26,37 @@ export class ProductCreateComponent implements OnInit {
     cat: '',         
     stockMin: '',
     featured: false,
-    supplier: '',
+    suppliers: [] as string[],
     image: null as File | null
   }
-
-  suppliers: any[] = [];
 
   constructor(
     private productService: ProductService,
     private router: Router,
     private authService: AuthService,
     private supplierService: SupplierService,
-    private categoryService: CategorySelectionService
+    private categoryService: CategorySelectionService,
+    private brandService: BrandSelectionService
   ) {}
 
   ngOnInit(): void {
     this.authService.checkAuthAndRedirect();
     this.obtenerProveedores();
     this.cargarCategorias();
+    this.cargarMarcas();
   }
 
   private cargarCategorias(): void {
     this.categoryService.getCategories().subscribe({
       next: (cats) => this.categories = cats || [],
       error: (e) => console.error('Error al cargar categorías', e)
+    });
+  }
+
+  private cargarMarcas(): void {
+    this.brandService.getBrands().subscribe({
+      next: (brands) => this.brands = brands || [],
+      error: (e) => console.error('Error al cargar marcas', e)
     });
   }
 
@@ -63,6 +74,47 @@ export class ProductCreateComponent implements OnInit {
     }
   }
 
+  toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  isSupplierSelected(supplierName: string): boolean {
+    return this.product.suppliers.includes(supplierName);
+  }
+
+  onSupplierToggle(supplierName: string, event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      if (!this.product.suppliers.includes(supplierName)) {
+        this.product.suppliers.push(supplierName);
+      }
+    } else {
+      this.product.suppliers = this.product.suppliers.filter(s => s !== supplierName);
+    }
+  }
+
+  removeSupplier(supplierToRemove: string): void {
+    this.product.suppliers = this.product.suppliers.filter(supplier => supplier !== supplierToRemove);
+  }
+
+  selectAllSuppliers(): void {
+    this.product.suppliers = this.suppliers.map(supplier => supplier.businessName);
+  }
+
+  clearAllSuppliers(): void {
+    this.product.suppliers = [];
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    const target = event.target as HTMLElement;
+    const dropdownContainer = target.closest('.dropdown-container');
+    
+    if (!dropdownContainer) {
+      this.isDropdownOpen = false;
+    }
+  }
+
   createNewProduct(): void {
     if (!this.product.cat) {
       Swal.fire({ icon: 'warning', title: 'Falta la categoría', text: 'Seleccioná una categoría.' });
@@ -76,7 +128,7 @@ export class ProductCreateComponent implements OnInit {
     formData.append('price', this.product.price);
     formData.append('cat', this.product.cat); 
     formData.append('stockMin', this.product.stockMin);
-    formData.append('supplier', this.product.supplier);
+    formData.append('suppliers', JSON.stringify(this.product.suppliers));
     formData.append('featured', this.product.featured ? 'true' : 'false');
     if (this.product.image) {
       formData.append('image', this.product.image);
@@ -92,7 +144,7 @@ export class ProductCreateComponent implements OnInit {
         this.product.stock = '';
         this.product.stockMin = '';
         this.product.image = null;
-        this.product.supplier = '';
+        this.product.suppliers = [];
         this.product.featured = false;
         this.product.cat = '';
       },

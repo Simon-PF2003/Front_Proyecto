@@ -5,3 +5,173 @@
 .form-check-input{
   margin-top: 6.5px;
 }
+
+/* Dropdown personalizado */
+.dropdown-container {
+  position: relative;
+  width: 100%;
+}
+
+.dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  min-height: 38px;
+}
+
+.dropdown-header:hover {
+  border-color: #80bdff;
+}
+
+.dropdown-text {
+  flex: 1;
+  text-align: left;
+}
+
+.placeholder-text {
+  color: #6c757d;
+}
+
+.dropdown-arrow {
+  transition: transform 0.2s ease;
+  color: #6c757d;
+}
+
+.dropdown-arrow.rotated {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ced4da;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-actions {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #e9ecef;
+  background-color: #f8f9fa;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border: 1px solid #dee2e6;
+  background-color: #fff;
+  color: #495057;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-btn:hover:not(:disabled) {
+  background-color: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item input[type="checkbox"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  flex: 1;
+  cursor: pointer;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.checkbox-label small {
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+/* Proveedores seleccionados */
+.selected-suppliers {
+  margin-top: 8px;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.suppliers-tags {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.supplier-tag {
+  display: inline-flex;
+  align-items: center;
+  background-color: #007bff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  max-width: 200px;
+}
+
+.tag-remove {
+  background: none;
+  border: none;
+  color: white;
+  margin-left: 4px;
+  padding: 0;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1.1em;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.15s ease;
+}
+
+.tag-remove:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}

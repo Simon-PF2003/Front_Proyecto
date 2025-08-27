@@ -23,14 +23,11 @@ export class ProductsListComponent implements OnInit {
   sortOrder: string = 'none';
   discountPercentage: number = 0;
   
-  // Lista de marcas disponibles
   brands: any[] = [];
-  
-  // Filtros de precio
+
   minPrice: number | null = null;
   maxPrice: number | null = null;
   
-  // Paginación
   currentPage: number = 1;
   pageSize: number = 8;
   totalPages: number = 1;

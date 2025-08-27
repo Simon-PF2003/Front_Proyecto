@@ -13,7 +13,12 @@
             </div>
             <div class="form-group">
               <label for="marca">Marca:</label>
-              <input type="text" class="form-control" id="marca" [(ngModel)]="product.brand" name="marca" required>
+              <select class="form-control" id="marca" [(ngModel)]="product.brand" name="marca" required>
+                <option [ngValue]="''" disabled selected>Seleccione una marca</option>
+                <option *ngFor="let brand of brands" [ngValue]="brand.brand">
+                  {{ brand.brand }}
+                </option>
+              </select>
             </div>
             <div class="form-group">
               <label for="stock">Stock:</label>
@@ -44,11 +49,56 @@
 
 
           <div class="form-group mb-3">
-            <label for="supplier">Proveedor:</label>
-            <select class="form-control" id="supplier" [(ngModel)]="product.supplier" name="supplier">
-              <option disabled selected value="">Seleccione un proveedor</option>
-              <option *ngFor="let supplier of suppliers" [value]="supplier.businessName">{{ supplier.businessName }} - Rubro: {{ supplier.category }}</option>
-            </select>
+            <label for="supplier">Proveedores:</label>
+            <div class="dropdown-container">
+              <div class="dropdown-header" (click)="toggleDropdown()">
+                <span class="dropdown-text">
+                  <span *ngIf="product.suppliers.length === 0" class="placeholder-text">Seleccionar proveedores...</span>
+                  <span *ngIf="product.suppliers.length === 1">{{ product.suppliers.length }} proveedor seleccionado</span>
+                  <span *ngIf="product.suppliers.length > 1">{{ product.suppliers.length }} proveedores seleccionados</span>
+                </span>
+                <span class="dropdown-arrow" [class.rotated]="isDropdownOpen">▼</span>
+              </div>
+              
+              <div class="dropdown-menu" [class.show]="isDropdownOpen">
+                <!-- Acciones rápidas -->
+                <div class="dropdown-actions" *ngIf="suppliers.length > 0">
+                  <button type="button" class="action-btn" (click)="selectAllSuppliers()">
+                    Seleccionar todos
+                  </button>
+                  <button type="button" class="action-btn" (click)="clearAllSuppliers()" 
+                          [disabled]="product.suppliers.length === 0">
+                    Limpiar selección
+                  </button>
+                </div>
+                
+                <div class="dropdown-item" *ngFor="let supplier of suppliers">
+                  <input 
+                    type="checkbox" 
+                    [id]="'supplier-' + supplier._id" 
+                    [checked]="isSupplierSelected(supplier.businessName)"
+                    (change)="onSupplierToggle(supplier.businessName, $event)">
+                  <label [for]="'supplier-' + supplier._id" class="checkbox-label">
+                    {{ supplier.businessName }} 
+                  </label>
+                </div>
+                
+                <div *ngIf="suppliers.length === 0" class="dropdown-item text-muted">
+                  No hay proveedores disponibles
+                </div>
+              </div>
+            </div>
+            
+            <!-- Vista previa de proveedores seleccionados -->
+            <div *ngIf="product.suppliers.length > 0" class="selected-suppliers">
+              <small class="text-muted">Proveedores seleccionados:</small>
+              <div class="suppliers-tags">
+                <span *ngFor="let supplier of product.suppliers" class="supplier-tag">
+                  {{ supplier }}
+                  <button type="button" class="tag-remove" (click)="removeSupplier(supplier)">×</button>
+                </span>
+              </div>
+            </div>
           </div>
 
             <div class="form-group mb-3">
