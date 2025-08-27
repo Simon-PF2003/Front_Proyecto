@@ -6,7 +6,7 @@ import { ProductService } from '../../services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { CategorySelectionService, Category } from '../../services/category.service';
+import { CategorySelectionService } from '../../services/category.service';
 import Swal from 'sweetalert2';
 
 @Component({

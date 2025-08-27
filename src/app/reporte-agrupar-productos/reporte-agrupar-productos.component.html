@@ -23,7 +23,7 @@
               <p class="card-text truncate">{{ product.desc }}</p>
               <p class="card-text">Stock: {{ product.stock }}</p>
               <p class="card-text">Precio: {{ product.price }}</p>
-              <p class="card-text">Categoría: {{ product.cat.type }}</p>
+              <p class="card-text">Categoría: {{ product.cat?.type || 'Sin categoría' }}</p>
               <button class="btn btn-primary btn-sm" (click)="openModal(product)">Modificar Categoría</button>
             </div>
           </div>

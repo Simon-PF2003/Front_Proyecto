@@ -96,8 +96,8 @@
               <div class="card-body">
                 <h5 class="card-title truncate">{{ product.desc }}</h5>
                 <p class="card-text truncate">Código del producto: {{ product.code }}</p>
-                <p class="card-text truncate">Marca: {{ product.brand }}</p>
-                <p class="card-text truncate">Categoría: {{ product.cat.type }}</p>
+                <p class="card-text truncate">Marca: {{ product.brand?.brand || '' }}</p>
+                <p class="card-text truncate">Categoría: {{ product.cat?.type || ''}}</p>
                 <p class="card-text">Stock: {{ product.stock }}</p>
                 <p class="card-price" *ngIf="discountPercentage === 0">
                   {{ product.price | currency }}

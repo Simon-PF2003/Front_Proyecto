@@ -1,0 +1,18 @@
+<!--<div class="modal-dialog" role="document">-->
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title" id="editProductModalLabel">Editar Categoría</h5>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="editedBrand">
+      <div class="form-group">
+        <label for="brandType">Descripción:</label>
+        <input type="text" class="form-control" id="brandType" [(ngModel)]="editedBrand.brand" name="brand">
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
+    <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
+  </div>
+</div>

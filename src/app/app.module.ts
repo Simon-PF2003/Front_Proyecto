@@ -36,9 +36,14 @@ import { ProductUpdateComponent } from './products-list/product-update/product-u
 //Categories
 import { CategoryCreateComponent } from './category-create/category-create.component';
 import { CategoryUpdateComponent } from './category-update/category-update.component';
-
-//Category
 import { CategorySelectionService } from './services/category.service';
+import { CategoryUpdateModalComponent } from './category-update/category-update-modal/category-update-modal.component';
+import { CategoryReassignModalComponent } from './category-update/category-reassign-modal/category-reassign-modal.component';
+
+//Brands 
+import { BrandSelectionService } from './services/brand.service';
+import { BrandUpdateComponent } from './brand-update/brand-update.component';
+import { BrandCreateComponent } from './brand-create/brand-create.component';
 
 //Orders
 import { OrdersRetrieveClientComponent } from './orders-retrieve-client/orders-retrieve-client.component';
@@ -86,8 +91,7 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 //Tasks
 import { TasksComponent } from './tasks/tasks.component';
 import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
-import { CategoryUpdateModalComponent } from './category-update/category-update-modal/category-update-modal.component';
-import { CategoryReassignModalComponent } from './category-update/category-reassign-modal/category-reassign-modal.component';
+import { BrandUpdateModalComponent } from './brand-update/brand-update-modal/brand-update-modal.component';
 
 @NgModule({
   declarations: [
@@ -112,6 +116,10 @@ import { CategoryReassignModalComponent } from './category-update/category-reass
     CategoryUpdateComponent,
     CategoryUpdateModalComponent,
     CategoryReassignModalComponent,
+
+    //Brands
+    BrandCreateComponent,
+    BrandUpdateComponent,
 
     //Institucional
     InstitucionalQuienesSomosComponent,
@@ -158,6 +166,7 @@ import { CategoryReassignModalComponent } from './category-update/category-reass
     //Tasks
     TasksComponent,
     PrivateTasksComponent,
+    BrandUpdateModalComponent,
   ],
 
   imports: [

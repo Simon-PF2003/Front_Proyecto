@@ -23,7 +23,8 @@
         <button class="btn btn-notify" *ngIf="productStock === 0" (click)="notifyMe()">
            Notificarme cuando haya stock
         </button>
-        <h4>Detalles del producto</h4>
-        <span>{{ productDetails.data.desc }}</span>
+        <h4 class="mt-3">Detalles del producto</h4>
+        <p><strong>Marca:</strong> <span>{{ productDetails.data.brand.brand }}</span></p>
+        <p><strong>Categoría:</strong> <span>{{ productDetails.data.cat.type }}</span></p>
     </div>
 </section>

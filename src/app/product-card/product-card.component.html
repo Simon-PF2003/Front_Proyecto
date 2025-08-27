@@ -3,6 +3,8 @@
   <div class="card-body">
     <h5 class="card-title">{{ product.desc }}</h5>
     <!-- <p class="card-text">{{ product.desc }}</p> -->
+    <p class="card-text">Marca: {{ product.brand?.brand || 'Sin marca' }}</p>
+    <p class="card-text">Categoría: {{ product.cat?.type || 'Sin categoría' }}</p>
     <p class="card-price" *ngIf="discountPercentage === 0">
       {{ product.price | currency }}
       <span class="text-danger" *ngIf="product.stock === 0"> 🔴 Agotado</span>

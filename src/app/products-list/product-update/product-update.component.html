@@ -26,10 +26,10 @@
             <div class="card-body">
               <h5 class="card-title truncate">{{ product.desc }}</h5>
               <p class="card-text truncate">Código del producto: {{ product.code }}</p>
-              <p class="card-text truncate">Marca: {{ product.brand }}</p>
+              <p class="card-text truncate">Marca: {{ product.brand?.brand || 'Sin marca' }}</p>
               <p class="card-text">Stock: {{ product.stock }}</p>
               <p class="card-text">Stock mínimo: {{ product.stockMin }}</p>
-              <p class="card-text">Categoría: {{ product.cat.type }}</p>
+              <p class="card-text">Categoría: {{ product.cat?.type || 'Sin categoría' }}</p>
               <p class="card-text card-price">Precio: {{ product.price | currency }}</p>
               <div class="d-flex justify-content-between mt-2">
                 <button class="btn btn-warning" (click)="modifyProduct(product)">Modificar</button>

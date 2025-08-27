@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProductService } from '../../services/product.service';
+import { BrandSelectionService } from 'src/app/services/brand.service';
 import { CategorySelectionService } from 'src/app/services/category.service';
 import Swal from 'sweetalert2';
 import { SupplierService } from 'src/app/services/supplier.service';
@@ -14,19 +15,43 @@ export class ProductUpdateModalComponent implements OnInit {
   @Input() editedProduct: any;
   suppliers: any[] = [];
   categories: any[] = [];
+  brands: any[] = [];
   public value: string='';
 
   constructor(
     public activeModal: NgbActiveModal,
     private productService: ProductService,
     private supplierService: SupplierService,
-    private categoryService: CategorySelectionService
+    private categoryService: CategorySelectionService,
+    private brandService: BrandSelectionService
   ) {}
 
   ngOnInit() {
     this.obtenerProveedores();
     this.obtenerCategorias();
+    this.obtenerMarcas();
   }
+
+obtenerMarcas() {
+  this.brandService.getBrands().subscribe((data: any) => {
+    this.brands = data;
+    console.log("marcas del modal", this.brands);
+
+    if (this.editedProduct && this.editedProduct.brand) {
+      const brandId = typeof this.editedProduct.brand === 'object' 
+        ? this.editedProduct.brand._id 
+        : this.editedProduct.brand;
+
+      const brandFound = this.brands.find(brand => brand._id === brandId);
+      if(brandFound) {
+        this.editedProduct.brand = brandFound.brand;
+      }
+    }
+    else {
+      this.editedProduct.brand = '';
+    }
+  });
+}
 
 obtenerProveedores() {
     this.supplierService.obtenerSuppliers().subscribe((data: any) => {

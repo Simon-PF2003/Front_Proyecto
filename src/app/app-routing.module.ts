@@ -15,6 +15,10 @@ import { ProductUpdateComponent } from './products-list/product-update/product-u
 import { CategoryCreateComponent } from './category-create/category-create.component';
 import { CategoryUpdateComponent } from './category-update/category-update.component';
 
+//Brands
+import { BrandCreateComponent } from './brand-create/brand-create.component';
+import { BrandUpdateComponent } from './brand-update/brand-update.component';
+
 //Users
 import { UserCreateAcceptanceComponent } from './user-create-acceptance/user-create-acceptance.component';
 import { UserCreateManuallyComponent } from './user-create-acceptance/user-create-manually/user-create-manually.component';
@@ -67,6 +71,10 @@ const routes: Routes = [
 //Categories
   { path: 'category-create', component: CategoryCreateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
   { path: 'category-update', component: CategoryUpdateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+
+//Brands
+  { path: 'brand-create', component: BrandCreateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  { path: 'brand-update', component: BrandUpdateComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
 
 //Ingreso Stock
   { path: 'stock-ingreso', component: StockIngresoComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
