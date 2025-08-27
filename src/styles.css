@@ -1,5 +1,12 @@
+/* You can add global styles to this file, and also import other style files */
+
 /* 1) Layout base a nivel app */
-html, body { height: 100%; margin: 0; }
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  overflow-y: auto; /* Allow vertical scroll */
+}
 body { background: white; /* tu fondo */ }
 
 .btn-primary {

@@ -1,0 +1,235 @@
+/* 
+  Shared authentication background styles
+  IronPeaks Tech - Auth Background Theme
+*/
+
+.auth-background {
+  background-color: hsl(218, 41%, 15%);
+  background-image: 
+      /* Gradient overlay for better text readability and depth */
+      linear-gradient(135deg, rgba(13, 25, 43, 0.85), rgba(27, 39, 51, 0.65)),
+      /* Main background image */
+      url('../assets/Background/background.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* Improved glass morphism card */
+.auth-glass-card {
+  background: rgba(248, 244, 236, 0.95);
+  backdrop-filter: saturate(200%) blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.37),
+    0 2px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.auth-glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(31, 38, 135, 0.45),
+    0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Decorative shapes with colors that blend with the background */
+.auth-shape-1 {
+  height: 220px;
+  width: 220px;
+  top: -60px;
+  left: -130px;
+  background: radial-gradient(circle, rgba(76, 167, 191, 0.4), rgba(27, 39, 51, 0.3));
+  overflow: hidden;
+  z-index: 1;
+  position: absolute;
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
+}
+
+.auth-shape-2 {
+  border-radius: 38% 62% 63% 37% / 70% 33% 67% 30%;
+  bottom: -60px;
+  right: -110px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(76, 167, 191, 0.4), rgba(27, 39, 51, 0.3));
+  overflow: hidden;
+  z-index: 1;
+  position: absolute;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+/* Floating animation for decorative elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+}
+
+/* Text contrast improvements */
+.auth-title {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+}
+
+.auth-subtitle {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive optimizations with different background images */
+@media (max-width: 768px) {
+  .auth-background {
+    background-attachment: scroll;
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    overflow-y: auto;
+    background-image: 
+        /* Gradient overlay for better text readability and depth */
+        linear-gradient(135deg, rgba(13, 25, 43, 0.85), rgba(27, 39, 51, 0.65)),
+        /* Responsive background image for mobile */
+        url('../assets/Background/responsivebackground.png');
+  }
+  
+  .auth-shape-1,
+  .auth-shape-2 {
+    opacity: 0.5;
+    animation: none;
+  }
+
+  /* Reduce container padding and margins for mobile */
+  .container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Reduce spacing for mobile */
+  .row {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Optimize title spacing for mobile */
+  .auth-title {
+    margin-top: 1rem !important;
+    margin-bottom: 1rem !important;
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-shape-1,
+  .auth-shape-2 {
+    display: none;
+  }
+  
+  .auth-glass-card {
+    margin: 15px;
+    backdrop-filter: saturate(200%) blur(15px);
+    border-radius: 12px;
+  }
+
+  .card-body {
+    padding: 1.5rem !important;
+  }
+
+  /* Further reduce spacing for small screens */
+  .container {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* Keep titles but make them more compact */
+  .auth-title {
+    margin-bottom: 0.8rem !important;
+    margin-top: 0.5rem !important;
+    font-size: 1.4rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .auth-subtitle {
+    font-size: 0.85rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Reduce form spacing */
+  .form-outline {
+    margin-bottom: 1rem !important;
+  }
+
+  .btn-block {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Optimize text spacing */
+  p {
+    margin-bottom: 0.5rem !important;
+    font-size: 0.9rem;
+  }
+  
+  .auth-background {
+    background-size: cover;
+    background-position: center center;
+    min-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    background-image: 
+        linear-gradient(135deg, rgba(13, 25, 43, 0.85), rgba(27, 39, 51, 0.65)),
+        url('../assets/Background/responsivebackground.png');
+  }
+}
+
+/* High-resolution display optimization */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .auth-background {
+    background-image: 
+        linear-gradient(135deg, rgba(13, 25, 43, 0.85), rgba(27, 39, 51, 0.65)),
+        url('../assets/Background/background.png');
+  }
+}
+
+/* Dark mode support (if needed in the future) */
+@media (prefers-color-scheme: dark) {
+  .auth-glass-card {
+    background: rgba(30, 30, 30, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .auth-shape-1,
+  .auth-shape-2 {
+    animation: none;
+  }
+  
+  .auth-glass-card {
+    transition: none;
+  }
+}
+
+/* Loading state for background image */
+.auth-background::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, hsl(218, 41%, 15%), hsl(218, 41%, 25%));
+  z-index: -1;
+}

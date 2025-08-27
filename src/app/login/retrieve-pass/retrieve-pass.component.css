@@ -1,26 +1,71 @@
+/* Retrieve Password Component Styles - IronPeaks Tech */
+
 .background-radial-gradient {
   min-height: 100vh;
   width: 100%;
   margin: 0;
   padding: 0;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: hsl(218, 41%, 15%);
-  background-image: radial-gradient(650px circle at 0% 0%,
-      hsl(218, 41%, 35%) 15%,
-      hsl(218, 41%, 30%) 35%,
-      hsl(218, 41%, 20%) 75%,
-      hsl(218, 41%, 19%) 80%,
-      transparent 100%),
-    radial-gradient(1250px circle at 100% 100%,
-      hsl(218, 41%, 45%) 15%,
-      hsl(218, 41%, 30%) 35%,
-      hsl(218, 41%, 20%) 75%,
-      hsl(218, 41%, 19%) 80%,
-      transparent 100%);
+  background-image: 
+      /* Overlay for better readability */
+      linear-gradient(135deg, rgba(13, 25, 43, 0.8), rgba(27, 39, 51, 0.6)),
+      /* Main background image */
+      url('../../../assets/Background/background.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Media query for mobile devices to improve performance */
+@media (max-width: 768px) {
+  .background-radial-gradient {
+    background-attachment: scroll;
+    background-size: cover;
+    min-height: 100vh;
+    height: 100vh;
+    position: fixed;
+    overflow-y: auto;
+    background-image: 
+        /* Overlay for better readability */
+        linear-gradient(135deg, rgba(13, 25, 43, 0.8), rgba(27, 39, 51, 0.6)),
+        /* Responsive background image for mobile */
+        url('../../../assets/Background/responsivebackground.png');
+  }
+
+  /* Reduce container padding and margins for mobile */
+  .container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Reduce spacing for mobile */
+  .todo.row.gx-lg-5.align-items-center.mb-5 {
+    margin-bottom: 1rem !important;
+    min-height: 100vh;
+    align-items: flex-start !important;
+    padding-top: 2rem;
+  }
+
+  /* Optimize form container for mobile */
+  .cuadrito.col-lg-6.mb-5.mb-lg-0.position-relative {
+    margin-bottom: 1rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .cuadrito h1 {
+    margin-bottom: 1rem !important;
+    margin-top: 0.5rem !important;
+    font-size: 1.5rem !important;
+  }
 }
 
 #radius-shape-1 {
@@ -28,8 +73,12 @@
   width: 220px;
   top: -60px;
   left: -130px;
-  background: radial-gradient(#44006b, #ad1fff);
+  background: radial-gradient(circle, rgba(76, 167, 191, 0.4), rgba(27, 39, 51, 0.3));
   overflow: hidden;
+  z-index: 1;
+  position: absolute;
+  border-radius: 50%;
+  animation: float 6s ease-in-out infinite;
 }
 
 #radius-shape-2 {
@@ -38,23 +87,174 @@
   right: -110px;
   width: 300px;
   height: 300px;
-  background: radial-gradient(#44006b, #ad1fff);
+  background: radial-gradient(circle, rgba(76, 167, 191, 0.4), rgba(27, 39, 51, 0.3));
   overflow: hidden;
+  z-index: 1;
+  position: absolute;
+  animation: float 8s ease-in-out infinite reverse;
+}
+
+/* Floating animation for decorative elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
 }
 
 .bg-glass {
-  background-color: #F8F4EC !important;
+  background-color: rgba(248, 244, 236, 0.95) !important;
   backdrop-filter: saturate(200%) blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(31, 38, 135, 0.37),
+    0 2px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.bg-glass:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 40px rgba(31, 38, 135, 0.45),
+    0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Enhanced responsiveness */
+@media (max-width: 768px) {
+  #radius-shape-1,
+  #radius-shape-2 {
+    opacity: 0.5;
+    animation: none;
+  }
+}
+
+@media (max-width: 576px) {
+  #radius-shape-1,
+  #radius-shape-2 {
+    display: none;
+  }
+  
+  .bg-glass {
+    margin: 10px;
+    backdrop-filter: saturate(200%) blur(15px);
+    border-radius: 12px;
+  }
+
+  .card-body {
+    padding: 1.5rem !important;
+  }
+
+  /* Further reduce spacing for small screens */
+  .container {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+  }
+
+  /* Optimize the main container for better spacing */
+  .todo.row.gx-lg-5.align-items-center.mb-5 {
+    margin-bottom: 0 !important;
+    min-height: 100vh;
+    align-items: flex-start !important;
+    padding-top: 1rem;
+    justify-content: center;
+  }
+
+  /* Center the form and optimize space */
+  .cuadrito.col-lg-6.mb-5.mb-lg-0.position-relative {
+    margin-bottom: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: none !important;
+  }
+
+  .cuadrito h1 {
+    margin-bottom: 0.8rem !important;
+    margin-top: 0.3rem !important;
+    font-size: 1.4rem !important;
+  }
+
+  /* Reduce form spacing */
+  .form-outline {
+    margin-bottom: 1rem !important;
+  }
+
+  .btn-block {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Optimize text spacing */
+  .container.text-center p {
+    margin-bottom: 0.5rem !important;
+    font-size: 0.9rem;
+  }
+  
+  .background-radial-gradient {
+    background-size: cover;
+    background-position: center center;
+    min-height: 100vh;
+    height: 100vh;
+    position: fixed;
+    overflow-y: auto;
+    background-image: 
+        linear-gradient(135deg, rgba(13, 25, 43, 0.8), rgba(27, 39, 51, 0.6)),
+        url('../../../assets/Background/responsivebackground.png');
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  #radius-shape-1,
+  #radius-shape-2 {
+    animation: none;
+  }
+  
+  .bg-glass {
+    transition: none;
+  }
 }
 
 .link {
   color: rgb(0, 102, 255);
   text-decoration: underline;
   cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.link:hover {
+  color: rgb(0, 122, 255);
+  text-shadow: 0 2px 4px rgba(0, 102, 255, 0.3);
 }
 
 .todo {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  padding: 20px 0;
+}
+
+/* Text improvements for better contrast */
+h1, h2, h3 {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
+}
+
+/* Form enhancements */
+.form-control:focus {
+  border-color: rgba(76, 167, 191, 0.5);
+  box-shadow: 0 0 0 0.2rem rgba(76, 167, 191, 0.25);
+}
+
+.btn-primary {
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 167, 191, 0.4);
 }
