@@ -18,6 +18,10 @@ body { background: white; /* tu fondo */ }
 .card-header {
   background-color: #F8F4EC;
 }
+
+.supplier-tag {
+  color: #4CA7BF;
+}
 /* app-root como contenedor flex vertical */
 app-root {
   min-height: 100vh;
