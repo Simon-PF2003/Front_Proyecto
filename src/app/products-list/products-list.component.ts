@@ -174,8 +174,20 @@ export class ProductsListComponent implements OnInit {
       productsToSort.sort((a, b) => a.desc.localeCompare(b.desc));
     } else if (this.sortOrder === 'name-desc') {
       productsToSort.sort((a, b) => b.desc.localeCompare(a.desc));
+    } else if (this.sortOrder === 'code-asc') {
+      productsToSort.sort((a, b) => {
+        const codeA = Number(a.code);
+        const codeB = Number(b.code);
+        return codeA - codeB;
+      });
+    } else if (this.sortOrder === 'code-desc') {
+      productsToSort.sort((a, b) => {
+        const codeA = Number(a.code);
+        const codeB = Number(b.code);
+        return codeB - codeA;
+      });
     }
-    
+
     if (this.filteredProducts.length > 0) {
       this.filteredProducts = productsToSort;
     } else {
