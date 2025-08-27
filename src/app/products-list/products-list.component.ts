@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import { CategorySelectionService } from '../services/category.service';
+import { BrandSelectionService } from '../services/brand.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
@@ -17,9 +18,13 @@ export class ProductsListComponent implements OnInit {
   filteredProducts: any[] = [];
   searchTerm: string = '';
   selectedCategory: string = 'all';
+  selectedBrand: string = 'all';
   hasStockFilter: boolean = false;
   sortOrder: string = 'none';
   discountPercentage: number = 0;
+  
+  // Lista de marcas disponibles
+  brands: any[] = [];
   
   // Filtros de precio
   minPrice: number | null = null;
@@ -34,7 +39,8 @@ export class ProductsListComponent implements OnInit {
     private productService: ProductService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private categorySelectionService: CategorySelectionService
+    private categorySelectionService: CategorySelectionService,
+    private brandService: BrandSelectionService
   ) {
     this.filteredProducts = [];
   }
@@ -43,6 +49,7 @@ export class ProductsListComponent implements OnInit {
     this.authService.checkAuthAndRedirect();
 
     await this.fetchUserDiscount();
+    await this.loadBrands();
     await this.fetchProducts();
 
     this.route.queryParams.subscribe((queryParams) => {
@@ -56,6 +63,15 @@ export class ProductsListComponent implements OnInit {
     });
   }
 
+
+  async loadBrands() {
+    try {
+      this.brands = await firstValueFrom(this.brandService.getBrands());
+    } catch (error) {
+      console.error('Error loading brands:', error);
+      this.brands = [];
+    }
+  }
 
   async fetchUserDiscount() {
     try {
@@ -77,11 +93,12 @@ export class ProductsListComponent implements OnInit {
     try {
       let data;
   
-      // Usar el nuevo método de filtros combinados con filtros de precio
+      // Usar el nuevo método de filtros combinados con filtros de precio y marca
       data = await firstValueFrom(
         this.productService.getProductsWithFilters(
           this.searchTerm, 
-          this.selectedCategory, 
+          this.selectedCategory,
+          this.selectedBrand,
           this.hasStockFilter,
           this.minPrice || undefined,
           this.maxPrice || undefined
@@ -137,6 +154,7 @@ export class ProductsListComponent implements OnInit {
     this.minPrice = null;
     this.maxPrice = null;
     this.hasStockFilter = false;
+    this.selectedBrand = 'all';
     this.sortOrder = 'none';
     this.fetchProducts();
   }

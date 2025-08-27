@@ -27,6 +27,10 @@ export class ProductUpdateModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (!this.editedProduct) {
+      this.editedProduct = {};
+    }
+    
     this.obtenerProveedores();
     this.obtenerCategorias();
     this.obtenerMarcas();
@@ -37,18 +41,21 @@ obtenerMarcas() {
     this.brands = data;
     console.log("marcas del modal", this.brands);
 
-    if (this.editedProduct && this.editedProduct.brand) {
-      const brandId = typeof this.editedProduct.brand === 'object' 
-        ? this.editedProduct.brand._id 
-        : this.editedProduct.brand;
+    if (this.editedProduct) {
+      if (this.editedProduct.brand) {
+        const brandId = typeof this.editedProduct.brand === 'object' 
+          ? this.editedProduct.brand._id 
+          : this.editedProduct.brand;
 
-      const brandFound = this.brands.find(brand => brand._id === brandId);
-      if(brandFound) {
-        this.editedProduct.brand = brandFound.brand;
+        const brandFound = this.brands.find(brand => brand._id === brandId);
+        if(brandFound) {
+          this.editedProduct.brand = brandFound.brand;
+        } else {
+          this.editedProduct.brand = '';
+        }
+      } else {
+        this.editedProduct.brand = '';
       }
-    }
-    else {
-      this.editedProduct.brand = '';
     }
   });
 }
@@ -58,15 +65,20 @@ obtenerProveedores() {
       this.suppliers = data; 
       console.log("suppliers del modal", this.suppliers);
 
-      if (this.editedProduct && this.editedProduct.supplier) {
-        // Si supplier es un objeto, extraer el ID
-        const supplierId = typeof this.editedProduct.supplier === 'object' 
-          ? this.editedProduct.supplier._id 
-          : this.editedProduct.supplier;
-          
-        const supplierFound = this.suppliers.find(sup => sup._id === supplierId);
-        if(supplierFound) {
-          this.editedProduct.supplier = supplierFound.businessName;
+      if (this.editedProduct) {
+        if (this.editedProduct.supplier) {
+          const supplierId = typeof this.editedProduct.supplier === 'object' 
+            ? this.editedProduct.supplier._id 
+            : this.editedProduct.supplier;
+            
+          const supplierFound = this.suppliers.find(sup => sup._id === supplierId);
+          if(supplierFound) {
+            this.editedProduct.supplier = supplierFound.businessName;
+          } else {
+            this.editedProduct.supplier = '';
+          }
+        } else {
+          this.editedProduct.supplier = '';
         }
       }
     });
@@ -77,15 +89,20 @@ obtenerProveedores() {
       this.categories = data;
       console.log("categorías del modal", this.categories);
 
-      if (this.editedProduct && this.editedProduct.cat) {
-        // Si cat es un objeto, extraer el ID o tipo
-        const categoryId = typeof this.editedProduct.cat === 'object' 
-          ? this.editedProduct.cat._id 
-          : this.editedProduct.cat;
-          
-        const categoryFound = this.categories.find(cat => cat._id === categoryId);
-        if(categoryFound) {
-          this.editedProduct.cat = categoryFound.type;
+      if (this.editedProduct) {
+        if (this.editedProduct.cat) {
+          const categoryId = typeof this.editedProduct.cat === 'object' 
+            ? this.editedProduct.cat._id 
+            : this.editedProduct.cat;
+            
+          const categoryFound = this.categories.find(cat => cat._id === categoryId);
+          if(categoryFound) {
+            this.editedProduct.cat = categoryFound.type;
+          } else {
+            this.editedProduct.cat = '';
+          }
+        } else {
+          this.editedProduct.cat = '';
         }
       }
     });

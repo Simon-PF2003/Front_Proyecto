@@ -57,7 +57,9 @@ export class StockIngresoComponent implements OnInit {
       data = await firstValueFrom(
         this.productService.getProductsWithFilters(
           this.searchTerm, 
-          this.selectedCategory
+          this.selectedCategory, 
+          undefined, 
+          undefined  
         )
       );
       

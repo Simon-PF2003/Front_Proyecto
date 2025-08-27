@@ -57,11 +57,11 @@ export class ProductUpdateComponent implements OnInit {
     try {
       let data;
 
-      // Usar el nuevo método de filtros combinados
       data = await firstValueFrom(
         this.productService.getProductsWithFilters(
           this.searchTerm, 
           this.selectedCategory, 
+          undefined,
           this.hasStockFilter
         )
       );

@@ -48,7 +48,7 @@ export class ProductService {
   }
 
   // Método unificado para filtros combinados
-  getProductsWithFilters(searchTerm?: string, category?: string, hasStock?: boolean, minPrice?: number, maxPrice?: number): Observable<any[]> {
+  getProductsWithFilters(searchTerm?: string, category?: string, brand?: string, hasStock?: boolean, minPrice?: number, maxPrice?: number): Observable<any[]> {
     let url = `${this.URL}/products/filter?`;
     const params: string[] = [];
 
@@ -58,6 +58,10 @@ export class ProductService {
     
     if (category && category !== 'all') {
       params.push(`category=${encodeURIComponent(category)}`);
+    }
+
+    if (brand && brand !== 'all') {
+      params.push(`brand=${encodeURIComponent(brand)}`);
     }
     
     if (hasStock !== undefined) {

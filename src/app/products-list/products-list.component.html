@@ -9,7 +9,7 @@
     
     <div class="row g-3 align-items-end">
       <!-- Ordenamiento -->
-      <div class="col-lg-4 col-md-6">
+      <div class="col-lg-3 col-md-6">
         <div class="filter-group">
           <label for="sortOrder" class="filter-label">
             <i class="fas fa-sort me-2"></i>Ordenar por
@@ -25,7 +25,7 @@
       </div>
 
       <!-- Filtro de Precio -->
-      <div class="col-lg-4 col-md-6">
+      <div class="col-lg-3 col-md-6">
         <div class="filter-group">
           <label class="filter-label">
             <i class="fas fa-dollar-sign me-2"></i>Rango de Precio
@@ -52,8 +52,21 @@
         </div>
       </div>
 
+      <!-- Filtro de Marca -->
+      <div class="col-lg-3 col-md-6">
+        <div class="filter-group">
+          <label for="brandFilter" class="filter-label">
+            <i class="fas fa-tag me-2"></i>Marca
+          </label>
+          <select id="brandFilter" class="form-select elegant-select" [(ngModel)]="selectedBrand" (change)="fetchProducts()">
+            <option value="all">Todas las marcas</option>
+            <option *ngFor="let brand of brands" [value]="brand.brand">{{ brand.brand }}</option>
+          </select>
+        </div>
+      </div>
+
       <!-- Stock y Acciones -->
-      <div class="col-lg-4 col-md-12">
+      <div class="col-lg-3 col-md-12">
         <div class="filter-group">
           <div class="stock-filter-container">
             <div class="elegant-checkbox">

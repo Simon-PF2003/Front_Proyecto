@@ -45,7 +45,8 @@ export class CargarStockComponent implements OnInit {
         this.productService.getProductsWithFilters(
           this.searchTerm, 
           this.selectedCategory === 'all' ? '' : this.selectedCategory, 
-          undefined // hasStock = undefined para incluir todos los productos
+          undefined, 
+          undefined  
         )
       );
 

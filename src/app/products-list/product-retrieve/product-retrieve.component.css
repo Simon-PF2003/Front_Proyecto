@@ -2,41 +2,74 @@
     padding: 10px 80px;
 }
 
+/* Contenedor de controles de compra */
+.purchase-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+    width: fit-content;
+}
+
+.purchase-controls input {
+    width: 75px;
+    height: 40px;
+    padding: 0 10px;
+    font-size: 17px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.purchase-controls input:focus {
+    outline: none;
+    border-color: #4CA7BF;
+}
+
+.purchase-controls button {
+    width: 150px;
+    height: 40px;
+}
+
 .btn-notify {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 20px;
+    background-color: white;
+    color: #D97B7B;
+    border: 1px solid #D97B7B;
+    border-radius: 4px;
+    padding: 8px 16px;
     font-size: 14px;
-    font-weight: 600;
-    margin-top: 10px;
+    font-weight: 500;
+    margin-top: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    transition: all 0.2s ease;
+    display: block;
+    width: 235px; /* 75px + 10px + 150px = ancho total del contenedor */
+    text-align: center;
     text-decoration: none;
-    position: relative;
-    overflow: hidden;
+    outline: none;
+    height: fit-content;
+    line-height: 24px;
 }
 
 .btn-notify::before {
     content: '🔔';
-    font-size: 16px;
+    font-size: 14px;
+    margin-right: 6px;
 }
 
 .btn-notify:hover {
-    background: linear-gradient(135deg, #5a6fd8 0%, #6a4c93 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    background-color: #ec5959;
     color: white;
+    border-color: #E8A5A5;
 }
 
 .btn-notify:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    background-color: #C66565;
+    border-color: #C66565;
+    color: white;
+}
+
+.btn-notify:focus {
+    box-shadow: 0 0 0 2px rgba(217, 123, 123, 0.2);
 }
 
 #productDetails {
@@ -57,22 +90,6 @@
     font-size: 26px;
 }
 
-#productDetails .product-retrieve-details input {
-    width: 75px;
-    height: 40px;
-    padding-left: 10px ;
-    font-size: 17px;
-    margin-right: 10px;
-}
-
-#productDetails .product-retrieve-details input :focus {
-    outline: none;
-}
-
-#productDetails .product-retrieve-details button {
-    width: 150px;
-}
-
 #productDetails .product-retrieve-image {
     width: 50%;
     margin-right: 50px;
@@ -86,15 +103,159 @@
 
 
 .product-retrieve-image {
-    text-align: center; /* Centra la imagen horizontalmente */
+    text-align: center;
 }
 
 .product-retrieve-image img { 
-    max-width: 130%; /* Ajusta el ancho máximo de la imagen al contenedor */
-    max-height: 300px; /* Ajusta la altura máxima de la imagen */
-    display: block; /* Elimina cualquier espacio adicional debajo de la imagen */
-    margin: 0 auto; /* Centra la imagen horizontalmente en el contenedor */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Agrega una sombra suave a la imagen */
-    border: 1px solid #ccc; /* Agrega un borde alrededor de la imagen */
-    border-radius: 5px; /* Agrega bordes redondeados a la imagen */
+    max-width: 100%;
+    max-height: 300px;
+    width: auto;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    object-fit: contain;
+}
+
+@media (max-width: 1024px) {
+    .section-p1 {
+        padding: 10px 40px;
+    }
+    
+    #productDetails .product-retrieve-image {
+        margin-right: 30px;
+    }
+    
+    .product-retrieve-image img {
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-p1 {
+        padding: 15px 20px;
+    }
+    
+    #productDetails {
+        flex-direction: column;
+        gap: 25px;
+    }
+    
+    #productDetails .product-retrieve-details,
+    #productDetails .product-retrieve-image {
+        width: 100%;
+        margin-right: 0;
+    }
+    
+    .product-retrieve-image img {
+        max-height: 200px;
+        max-width: 90%;
+    }
+    
+    #productDetails .product-retrieve-details h4 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    #productDetails .product-retrieve-details h2 {
+        font-size: 1.75rem;
+        margin-bottom: 20px;
+    }
+    
+    .purchase-controls {
+        flex-direction: row;
+        gap: 12px;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .purchase-controls input {
+        width: 80px;
+        flex-shrink: 0;
+    }
+    
+    .purchase-controls button {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .btn-notify {
+        width: 100%;
+        max-width: 100%;
+        margin-top: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .section-p1 {
+        padding: 10px 15px;
+    }
+    
+    #productDetails {
+        gap: 20px;
+    }
+    
+    .product-retrieve-image img {
+        max-height: 150px;
+        max-width: 95%;
+    }
+    
+    #productDetails .product-retrieve-details h4 {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+    }
+    
+    #productDetails .product-retrieve-details h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .purchase-controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .purchase-controls input {
+        width: 100%;
+        height: 44px;
+        font-size: 16px;
+    }
+    
+    .purchase-controls button {
+        width: 100%;
+        height: 44px;
+        font-size: 15px;
+    }
+    
+    .btn-notify {
+        padding: 12px 16px;
+        font-size: 14px;
+        height: 44px;
+        line-height: 20px;
+    }
+    
+    .btn-notify::before {
+        font-size: 14px;
+        margin-right: 6px;
+    }
+}
+
+@media (max-width: 320px) {
+    .section-p1 {
+        padding: 8px 10px;
+    }
+    
+    .product-retrieve-image img {
+        max-height: 120px;
+    }
+    
+    #productDetails .product-retrieve-details h4 {
+        font-size: 1.1rem;
+    }
+    
+    #productDetails .product-retrieve-details h2 {
+        font-size: 1.3rem;
+    }
 }
