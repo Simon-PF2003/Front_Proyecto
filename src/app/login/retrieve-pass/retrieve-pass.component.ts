@@ -9,112 +9,75 @@ import { Router } from "@angular/router";
   styleUrls: ['./retrieve-pass.component.css']
 })
 export class RetrievePassComponent {
-  email:string='';
+  email: string = '';
   showVerificationForm: boolean = false;
   verificationCode: string = '';
   setPassword: boolean = false;
   newPassword: string = '';
   newPassword2: string = '';
 
-
-   constructor(
+  constructor(
     public authService: AuthService,
     private router: Router
-   ){}
+  ){}
 
-   ngOnInit(): void {}
+  ngOnInit(): void {}
 
-   async getUser(email:string){
-    try{
-      const cliente = await this.authService.getClientByEmail(this.email);
-      console.log(cliente);
-      if(cliente) {
-        this.showVerificationForm = true;
-        this.generateAndSendCode();
-      }
-      else {
-      Swal.fire(
-      'Denegado',
-      'No se encontraron clientes',
-      'warning',
-    );}
-   } 
-   catch (error) {
-    Swal.fire(
-      'Denegado',
-      'Error al buscar los clientes',
-      'warning',
-    );
-    console.error('Error al buscar los clientes', error);
-  }
-  };
-
-  private generateAndSendCode() {
-    const generatedCode = this.generateRandomCode();
-    this.authService.sendVerificationCodeByEmail(this.email, generatedCode)
-      .then(() => {
-        console.log('Código enviado exitosamente al correo electrónico.');
-      })
-      .catch((error) => {
-        console.error('Error al enviar el código por correo electrónico:', error);
-      });
-  }
-
-  private generateRandomCode(): string {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const codeLength = 6;
-
-    let result = '';
-    for (let i = 0; i < codeLength; i++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-  }
-
-  async verifyCode(code:string) {
+  async getUser(email: string) {
     try {
+      await this.authService.sendVerificationCodeByEmail(this.email);
+      this.showVerificationForm = true;
+      Swal.fire('Listo', 'Si el email existe, te enviaremos un código', 'success');
+    } catch (error) {
+      Swal.fire('Denegado','Error al solicitar el código','warning');
+      console.error('Error al solicitar código', error);
+    }
+  }
+
+  async verifyCode(code: string): Promise<void> {
+  try {
     await this.authService.compareCode(this.email, code);
-    console.log('Código verificado exitosamente.');
-    this.setPassword = true;
-  } catch (error) {
+    this.setPassword = true; // OK verificado
+  } catch (error: any) {
     console.error('Error al verificar el código:', error);
-    Swal.fire(
-      'Denegado',
-      'Código incorrecto',
-      'error',
-    );
-  }
-  }
 
-  async getNewPassword() {
-    try {
-      if(this.newPassword === this.newPassword2) {
-      await this.authService.setNewPassword(this.email, this.newPassword);
-      await Swal.fire({
-            icon: 'success',
-            title: 'Contraseña modificada',
-            text: '',
-           })
-           this.router.navigate(['/login']);
+    const status = error?.status;
+    const serverMsg = error?.error?.message ?? error?.message ?? 'No se pudo verificar el código.';
+
+    // Si quedó inutilizado (vencido o máximo de intentos), volvemos al paso de pedir código
+    if (status === 410 || status === 429) {
+      this.reloadPage();
     }
-    else {
-       Swal.fire(
-      'Denegado',
-      'Las contraseñas no coinciden',
-      'error',)
-    }
-   }
-    catch (error) {
-    console.error('Error al cambiar la contraseña:', error);
-    Swal.fire(
-      'Denegado',
-      'La contraseña debe poseer al menos 8 caracteres y uno especial',
-      'error',
-    );
+
+    await Swal.fire('Denegado', serverMsg, 'error');
   }
+}
+
+  async getNewPassword(): Promise<void> {
+    try {
+      if (this.newPassword !== this.newPassword2) {
+        await Swal.fire('Denegado','Las contraseñas no coinciden','error');
+        return; // importante para no llamar al back
+      }
+
+      await this.authService.setNewPassword(this.email, this.newPassword);
+
+      await Swal.fire({ icon: 'success', title: 'Contraseña modificada', text: '' });
+      this.router.navigate(['/login']);
+    } catch (error: any) {
+      console.error('Error al cambiar la contraseña:', error);
+      const msg =
+        error?.error?.mensaje ||  
+        error?.error?.message ||
+        error?.message ||
+        'No se pudo cambiar la contraseña.';
+      await Swal.fire('Denegado', msg, 'error');
+    }
   }
 
   reloadPage() {
     this.showVerificationForm = false;
+    this.setPassword = false;
+    this.verificationCode = '';
   }
 }

@@ -58,53 +58,27 @@ export class AuthService {
     );
   }
     //Estos dos son para recuperar la contraseña
-  sendVerificationCodeByEmail(email: string, code: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    const requestBody = { email, code }; // Crear el cuerpo de la solicitud con el email y el código
+// ... imports y @Injectable como ya lo tengas ...
+// this.URL debe apuntar a tu backend
 
-    this.http.post<any>(this.URL + '/sendCode', requestBody).subscribe(
-      {
-        next: response => {
-          if (response) {
-            console.log('Código enviado correctamente:', response);
-            resolve(response);
-          } else {
-            console.log('No se recibió una respuesta válida del servidor');
-            reject('No se recibió una respuesta válida del servidor');
-          }
-        },
-        error: error => {
-          console.error('Error en la solicitud HTTP', error);
-          reject(error);
+  sendVerificationCodeByEmail(email: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post<any>(this.URL + '/sendCode', { email }).subscribe(
+        { next: resp => resolve(resp), error: err => reject(err) }
+      );
+    });
+  }
+
+  compareCode(email: string, code: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.http.post<any>(this.URL + '/compareCode', { email, code }).subscribe(
+        {
+          next: resp => resolve(resp),       // ✅ resolvemos con cualquier 200 OK
+          error: err => reject(err)          // ❌ solo rechazamos si el back manda error
         }
-      }
-    );
-  });
-}
-
-compareCode(email:string, code: string): Promise<any> {
-  return new Promise((resolve, reject) => {
-    const requestBody = { email, code };
-
-    this.http.post<any>(this.URL + '/compareCode', requestBody).subscribe(
-      {
-        next: response => {
-          if (response) {
-            console.log('Código ingresado correctamente:', response);
-            resolve(response);
-          } else {
-            console.log('No se recibió una respuesta válida del servidor');
-            reject('No se recibió una respuesta válida del servidor');
-          }
-        },
-        error: error => {
-          console.error('Error en la solicitud HTTP', error);
-          reject(error);
-        }
-      }
-    );
-  });
-}
+      );
+    });
+  }
 
   //GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS 
     //recupera usuarios para aceptarlos o rechazarlos.
@@ -350,7 +324,7 @@ async getClienteEmail(cuit: string, authToken: string): Promise<any> {
     const url = `${this.URL}/modifyStatus/${userId}`;
     return this.http.patch(url, { status: newStatus });
   }
-
+/*
   setNewPassword(email:string, password: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const requestBody = { email, password }; 
@@ -373,7 +347,18 @@ async getClienteEmail(cuit: string, authToken: string): Promise<any> {
         }
       );
     });
-  }
+  }*/
+
+    setNewPassword(email: string, password: string): Promise<any> {
+      return new Promise((resolve, reject) => {
+        this.http.patch<any>(this.URL + '/newPassword', { email, password }).subscribe(
+          {
+            next: resp => resp ? resolve(resp) : reject({ status: 502, error: { mensaje: 'Respuesta inválida del servidor' } }),
+            error: err => reject(err)
+          }
+        );
+      });
+    }
 
 //DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE DELETE 
   deleteCliente(userId:string){ 

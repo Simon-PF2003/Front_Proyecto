@@ -26,9 +26,9 @@ export class LoginComponent implements OnInit {
     const token = localStorage.getItem('token');
     
     }
-sanitizeInput(input: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(input);
-  }
+  sanitizeInput(input: string): SafeHtml {
+      return this.sanitizer.bypassSecurityTrustHtml(input);
+    }
   logIn () {
     //this.user.email = this.sanitizeInput(this.user.email) as string;
     // this.user.password = this.sanitizeInput(this.user.password) as string;
