@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
-import { CategorySelectionService } from '../services/category.service';
+import { CategorySelectionService, Category } from '../services/category.service';
+import { Router } from '@angular/router';
 import { BrandSelectionService } from '../services/brand.service';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
@@ -22,8 +23,11 @@ export class ProductsListComponent implements OnInit {
   hasStockFilter: boolean = false;
   sortOrder: string = 'none';
   discountPercentage: number = 0;
-  
+  categories: Category[] = [];
   brands: any[] = [];
+
+  selectedBrands: string[] = [];
+  selectedCategories: string[] = [];
 
   minPrice: number | null = null;
   maxPrice: number | null = null;
@@ -37,7 +41,8 @@ export class ProductsListComponent implements OnInit {
     private route: ActivatedRoute,
     private authService: AuthService,
     private categorySelectionService: CategorySelectionService,
-    private brandService: BrandSelectionService
+    private brandService: BrandSelectionService,
+    private router: Router
   ) {
     this.filteredProducts = [];
   }
@@ -54,9 +59,9 @@ export class ProductsListComponent implements OnInit {
       this.fetchProducts();
     });
 
-    this.categorySelectionService.categorySelected$.subscribe(async (category) => {
-      this.selectedCategory = category;
-      await this.fetchProducts();
+    this.categorySelectionService.getCategories().subscribe({
+      next: (cats) => this.categories = cats || [],
+      error: (e) => console.error('Error al cargar categorías en navbar:', e)
     });
   }
 
@@ -137,6 +142,32 @@ export class ProductsListComponent implements OnInit {
   applyLocalFilters() {
     let filtered = [...this.products];
 
+    // 🔹 Filtrado local por CATEGORÍAS (multi)
+    if (this.selectedCategories.length) {
+      filtered = filtered.filter(p => {
+        const pid = p?.cat?._id ?? p?.cat;
+        return pid ? this.selectedCategories.includes(pid) : false;
+      });
+    } else if (this.selectedCategory && this.selectedCategory !== 'all') {
+      filtered = filtered.filter(p => {
+        const pid = p?.cat?._id ?? p?.cat;
+        return pid === this.selectedCategory;
+      });
+    }
+
+    // 🔹 Filtrado local por MARCAS (multi)
+    if (this.selectedBrands.length) {
+      filtered = filtered.filter(p => {
+        const name = p?.brand?.brand ?? p?.brand;
+        return name ? this.selectedBrands.includes(name) : false;
+      });
+    } else if (this.selectedBrand && this.selectedBrand !== 'all') {
+      filtered = filtered.filter(p => {
+        const name = p?.brand?.brand ?? p?.brand;
+        return name === this.selectedBrand;
+      });
+    }
+
     this.filteredProducts = filtered;
     this.sortProducts();
     this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
@@ -154,6 +185,8 @@ export class ProductsListComponent implements OnInit {
     this.selectedBrand = 'all';
     this.sortOrder = 'none';
     this.fetchProducts();
+    this.selectedBrands = [];
+    this.selectedCategories = [];
   }
 
   applyAllFilters() {
@@ -206,6 +239,78 @@ export class ProductsListComponent implements OnInit {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
       this.updateDisplayedProducts();
+    }
+  }
+  // Este quilombo es para que el filtro puedas agregar y sacar y tener multiples marcas / categorias
+  // Marcar / desmarcar MARCA (desktop + mobile)
+  toggleBrand(brandName: string, checked: boolean): void {
+    const i = this.selectedBrands.indexOf(brandName);
+    if (checked && i === -1) this.selectedBrands.push(brandName);
+    if (!checked && i !== -1) this.selectedBrands.splice(i, 1);
+
+    // Al usar multi, dejamos el filtro simple en 'all' para que el backend no restrinja
+    this.selectedBrand = 'all';
+    this.currentPage = 1;
+    this.fetchProducts(); // reutilizamos tu flujo
+  }
+
+  // Marcar / desmarcar CATEGORÍA (desktop + mobile)
+  toggleCategory(catId: string, checked: boolean): void {
+    const i = this.selectedCategories.indexOf(catId);
+    if (checked && i === -1) this.selectedCategories.push(catId);
+    if (!checked && i !== -1) this.selectedCategories.splice(i, 1);
+
+    this.selectedCategory = 'all';
+    this.currentPage = 1;
+    this.fetchProducts(); // reutilizamos tu flujo
+  }
+
+  // Quitar desde chip
+  removeBrand(brandName: string): void {
+    this.selectedBrands = this.selectedBrands.filter(b => b !== brandName);
+    this.currentPage = 1;
+    this.fetchProducts();
+  }
+
+  removeCategory(catId: string): void {
+    this.selectedCategories = this.selectedCategories.filter(c => c !== catId);
+    this.currentPage = 1;
+    this.fetchProducts();
+  }
+
+  // --- NUEVO: toggles estilo checkbox pero sin inputs, para listas interactivas ---
+  toggleCategoryItem(catId: string): void {
+    const nextChecked = !this.selectedCategories.includes(catId);
+    this.toggleCategory(catId, nextChecked); // reutiliza tu método actual
+  }
+
+  toggleBrandItem(brandName: string): void {
+    const nextChecked = !this.selectedBrands.includes(brandName);
+    this.toggleBrand(brandName, nextChecked); // reutiliza tu método actual
+  }
+
+  // Este es del filtro de arriba (en los chips)
+  getCategoryName(id: string): string {
+    if (!id || !this.categories || !this.categories.length) return id;
+    const cat = this.categories.find((x: any) => x && x._id === id);
+    return cat?.type ?? id;
+  }
+
+  selectCategory(id: string) {
+    this.categorySelectionService.selectCategory(id);
+    
+    // Navegar a la ruta actual manteniendo la funcionalidad en cada sección
+    const currentUrl = this.router.url;
+    if (currentUrl.includes('/product-update')) {
+      this.router.navigate(['/product-update']);
+    } else if (currentUrl.includes('/stock-ingreso')) {
+      this.router.navigate(['/stock-ingreso']);
+    } else if (currentUrl.includes('/cargar-stock')) {
+      this.router.navigate(['/cargar-stock']);
+    } else if (currentUrl.includes('/reporte-agrupar-productos')) {
+      this.router.navigate(['/reporte-agrupar-productos']);
+    } else {
+      this.router.navigate(['/products-list']);
     }
   }
 }

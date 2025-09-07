@@ -1,89 +1,82 @@
-/* Estilos de productos existentes */
+/* =========================================================
+   TARJETAS DE PRODUCTO — UNIFICADO (tus estilos + mejoras)
+   ========================================================= */
+
+/* Contenedor card */
 .product-card {
   display: flex;
   flex-direction: column;
 }
 
 .product-card .card {
-  background-color: #F8F4EC;
+  background-color: #F8F4EC;        /* tu fondo */
+  border: 1px solid #e9e9e9;        /* borde sutil */
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+.product-card .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
 }
 
+/* Imagen */
 .product-card .card-img-top {
   height: 200px;
   object-fit: cover;
 }
 
+/* Título y textos */
 .product-card .card-title {
   text-align: center;
   word-wrap: break-word;
   white-space: normal;
-  min-height: 2.4em; 
+  min-height: 2.4em;
 }
-
 .product-card .card-text {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+/* Precio + “Agotado” */
 .product-card .card-price {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: bold;
 }
-
 .product-card .text-danger {
-  font-size: small;
+  font-size: small; /* tu tamaño reducido para “Agotado” */
 }
 
-.no-underline {
-  text-decoration: none;
-}
+/* Utilitarios */
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.no-underline { text-decoration: none; color: inherit; }
 
-/* Estilos minimalistas para el panel de filtros */
-.filters-panel {
-  background-color: #F8F4EC;
-  border: 1px solid #CCC9C2;
-  border-radius: 8px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-}
+/* =========================================================
+   SIDEBAR DE FILTROS — estilo tipo marketplace
+   ========================================================= */
 
-.filters-header {
-  margin-bottom: 1rem;
+.filters-sidebar .card-header {
+  background: #f6f6f6;
+  font-weight: 600;
 }
+.filters-sidebar .accordion-button { font-size: 0.95rem; }
 
-.filters-title {
-  color: #333;
-  font-weight: 500;
-  font-size: 1rem;
-  margin: 0;
-  display: flex;
+/* Chips de filtros activos */
+.filter-chip {
+  display: inline-flex;
   align-items: center;
+  gap: .25rem;
+  padding: .35rem .6rem;
+  border-radius: 999px;
+  background: #4CA7BF;
+  color: #fff;
+  font-size: .85rem;
 }
 
-.filters-title i {
-  color: #4CA7BF;
-}
-
-.filter-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.filter-label {
-  color: #555;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-}
-
-.filter-label i {
-  color: #4CA7BF;
-}
+/* =========================================================
+   CONTROLES (selects, inputs, checkboxes) — tus estilos
+   ========================================================= */
 
 .elegant-select {
   border: 1px solid #CCC9C2;
@@ -93,23 +86,14 @@
   background-color: white;
   color: #333;
 }
-
 .elegant-select:focus {
   border-color: #4CA7BF;
   outline: none;
   box-shadow: 0 0 0 2px rgba(76, 167, 191, 0.1);
 }
 
-.price-inputs {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.price-input-wrapper {
-  flex: 1;
-}
-
+.price-inputs { display: flex; gap: 0.5rem; align-items: center; }
+.price-input-wrapper { flex: 1; }
 .price-input {
   border: 1px solid #CCC9C2;
   border-radius: 4px;
@@ -118,22 +102,14 @@
   background-color: white;
   width: 100%;
 }
-
 .price-input:focus {
   border-color: #4CA7BF;
   outline: none;
   box-shadow: 0 0 0 2px rgba(76, 167, 191, 0.1);
 }
+.price-separator { color: #666; font-size: 0.9rem; }
 
-.price-separator {
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.stock-filter-container {
-  margin-bottom: 0.75rem;
-}
-
+.stock-filter-container { margin-bottom: 0.75rem; }
 .elegant-checkbox {
   background-color: white;
   padding: 0.75rem;
@@ -142,39 +118,19 @@
   display: flex;
   align-items: center;
 }
-
-.elegant-checkbox:hover {
-  border-color: #4CA7BF;
-}
-
-.elegant-checkbox .form-check-input {
-  margin-right: 0.5rem;
-}
-
-.elegant-checkbox .form-check-input:checked {
-  background-color: #4CA7BF;
-  border-color: #4CA7BF;
-}
-
+.elegant-checkbox:hover { border-color: #4CA7BF; }
+.elegant-checkbox .form-check-input { margin-right: 0.5rem; }
+.elegant-checkbox .form-check-input:checked { background-color: #4CA7BF; border-color: #4CA7BF; }
 .elegant-checkbox .form-check-label {
-  color: #333;
-  font-weight: 400;
-  cursor: pointer;
-  font-size: 0.9rem;
-  margin: 0;
+  color: #333; font-weight: 400; cursor: pointer; font-size: 0.9rem; margin: 0;
 }
+.elegant-checkbox .form-check-label i { color: #4CA7BF; }
 
-.elegant-checkbox .form-check-label i {
-  color: #4CA7BF;
-}
+.filter-actions { display: flex; gap: 0.5rem; }
 
-.filter-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
+/* Boton resetear abajo lista */
 .btn-soft-secondary {
-  background-color: white;
+  background-color: #F8F4EC;
   border: 1px solid #CCC9C2;
   color: #666;
   border-radius: 4px;
@@ -182,13 +138,11 @@
   font-size: 0.9rem;
   flex: 1;
 }
-
 .btn-soft-secondary:hover {
-  background-color: #f5f5f5;
-  border-color: #999;
-  color: #333;
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+  color: #F8F4EC;
 }
-
 .btn-soft-primary {
   background-color: #4CA7BF;
   border: 1px solid #4CA7BF;
@@ -198,30 +152,128 @@
   font-size: 0.9rem;
   flex: 1;
 }
-
 .btn-soft-primary:hover {
-  background-color: #3a8aa0;
-  border-color: #3a8aa0;
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+}
+/* Boton resetear de los chips */
+.btn-outline-secondary {
+  background-color: #F8F4EC;
+  border: 1px solid #CCC9C2;
+  color: #666;
+}
+.btn-outline-secondary:hover {
+  background-color: #ff6961;
+  border-color: #ff6961;
 }
 
-/* Responsive */
+/* =========================================================
+   SLIDER DE PRECIO (ngx-slider) — overrides con tu paleta
+   =========================================================
+   Si importaste el theme por defecto de ngx-slider en styles.css,
+   estos estilos lo “tunean” al look&feel de la tienda.
+   Documentación y API del componente: angular-slider.github.io/ngx-slider
+   ========================================================= */
+
+:host ::ng-deep ngx-slider { display: block; margin: 4px 6px 10px; }
+
+/* barra base y selección */
+:host ::ng-deep .ngx-slider .ngx-slider-bar { background-color: #E6E2DA; }  /* tono del #F8F4EC */
+:host ::ng-deep .ngx-slider .ngx-slider-selection { background-color: #4CA7BF; } /* tu celeste */
+
+/* manijas */
+:host ::ng-deep .ngx-slider .ngx-slider-pointer {
+  background-color: #4CA7BF;
+  border: 1px solid #3a8aa0;
+  width: 16px; height: 16px;
+  box-shadow: 0 0 0 2px rgba(76,167,191,0.15);
+}
+:host ::ng-deep .ngx-slider .ngx-slider-pointer:hover {
+  box-shadow: 0 0 0 4px rgba(76,167,191,0.18);
+}
+
+/* etiquetas / burbujas */
+:host ::ng-deep .ngx-slider .ngx-slider-bubble { color: #333; font-size: 0.8rem; }
+:host ::ng-deep .ngx-slider .ngx-slider-limit { color: #999; }
+
+/* ticks opcionales */
+:host ::ng-deep .ngx-slider .ngx-slider-tick { background: #CCC9C2; }
+:host ::ng-deep .ngx-slider .ngx-slider-tick.ngx-slider-selected { background: #4CA7BF; }
+
+/* =========================================================
+   PANEL DE FILTROS (LEGACY) — se mantiene por compatibilidad
+   ========================================================= */
+
+.filters-panel {
+  background-color: #F8F4EC;
+  border: 1px solid #CCC9C2;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+.filters-header { margin-bottom: 1rem; }
+.filters-title {
+  color: #333; font-weight: 500; font-size: 1rem; margin: 0; display: flex; align-items: center;
+}
+.filters-title i { color: #4CA7BF; }
+.filter-group { display: flex; flex-direction: column; }
+.filter-label {
+  color: #555; font-weight: 500; margin-bottom: 0.5rem; font-size: 0.9rem; display: flex; align-items: center;
+}
+.filter-label i { color: #4CA7BF; }
+
+/* ====== LISTA INTERACTIVA CON LOOK DE "SELECT" (no rompe tus selects reales) ====== */
+/* Lista interactiva con look de "dropdown" */
+.elegant-select-list {
+  background-color: #F8F4EC;;
+  border: 1px solid #CCC9C2;
+  border-radius: 4px;
+  padding: 0.5rem;
+  /* Máximo ~5 ítems visibles, luego scroll */
+  max-height: 200px;            /* ~5 filas (ajustá si querés) */
+  overflow-y: auto;
+}
+
+.elegant-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  margin: 0 0 6px 0;
+  border: 1px solid #CCC9C2;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .08s ease, background-color .08s ease, color .08s ease, box-shadow .08s ease;
+  min-height: 38px;             /* alto consistente por fila */
+}
+
+.elegant-option:last-child { margin-bottom: 0; }
+.elegant-option:hover { border-color: #4CA7BF; }
+.elegant-option.active {
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(76, 167, 191, 0.1);
+}
+
+/* Esto es del filtro de rango prcio para ponerlo cremita*/
+.input-group-text { 
+  background-color: #F8F4EC;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
 @media (max-width: 992px) {
-  .price-inputs {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  
-  .price-separator {
-    display: none;
-  }
+  .price-inputs { flex-direction: column; gap: 0.25rem; }
+  .price-separator { display: none; }
 }
 
 @media (max-width: 768px) {
-  .filters-panel {
-    padding: 1rem;
-  }
-  
-  .filter-actions {
-    flex-direction: column;
-  }
+  .filters-panel { padding: 1rem; }
+  .filter-actions { flex-direction: column; }
 }
