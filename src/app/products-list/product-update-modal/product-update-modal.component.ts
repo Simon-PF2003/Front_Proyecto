@@ -16,6 +16,7 @@ export class ProductUpdateModalComponent implements OnInit {
   suppliers: any[] = [];
   categories: any[] = [];
   brands: any[] = [];
+  selectedCategory: any = null;
   isDropdownOpen: boolean = false;
   public value: string='';
 
@@ -30,6 +31,11 @@ export class ProductUpdateModalComponent implements OnInit {
   ngOnInit() {
     if (!this.editedProduct) {
       this.editedProduct = {};
+    }
+    
+    // Asegurar que categoryAttributes existe
+    if (!this.editedProduct.categoryAttributes) {
+      this.editedProduct.categoryAttributes = {};
     }
     
     this.obtenerProveedores();
@@ -136,9 +142,11 @@ obtenerProveedores() {
             ? this.editedProduct.cat._id 
             : this.editedProduct.cat;
             
-          const categoryFound = this.categories.find(cat => cat._id === categoryId);
-          if(categoryFound) {
-            this.editedProduct.cat = categoryFound.type;
+          this.selectedCategory = this.categories.find(cat => cat._id === categoryId);
+          if(this.selectedCategory) {
+            this.editedProduct.cat = this.selectedCategory._id;
+            // Cargar los atributos de la categoría seleccionada sin limpiar los existentes
+            this.loadCategoryAttributesOnInit();
           } else {
             this.editedProduct.cat = '';
           }
@@ -147,6 +155,94 @@ obtenerProveedores() {
         }
       }
     });
+  }
+
+  private loadCategoryAttributesOnInit(): void {
+    // Método especial para la carga inicial que no limpia atributos existentes
+    if (this.selectedCategory && this.selectedCategory.attributes) {
+      this.selectedCategory.attributes.forEach((attr: any) => {
+        // Solo inicializar si no existe el atributo
+        if (!(attr.key in this.editedProduct.categoryAttributes)) {
+          switch (attr.type) {
+            case 'string':
+              this.editedProduct.categoryAttributes[attr.key] = '';
+              break;
+            case 'number':
+              this.editedProduct.categoryAttributes[attr.key] = null;
+              break;
+            case 'boolean':
+              this.editedProduct.categoryAttributes[attr.key] = false;
+              break;
+            case 'date':
+              this.editedProduct.categoryAttributes[attr.key] = '';
+              break;
+            default:
+              this.editedProduct.categoryAttributes[attr.key] = '';
+          }
+        }
+      });
+    }
+  }
+
+  onCategoryChange(): void {
+    // Verificar si hay atributos ya completados
+    const hasExistingAttributes = Object.keys(this.editedProduct.categoryAttributes || {}).some(key => {
+      const value = this.editedProduct.categoryAttributes[key];
+      return value !== null && value !== undefined && value !== '' && value !== false;
+    });
+
+    // Si hay atributos completados, mostrar confirmación
+    if (hasExistingAttributes) {
+      Swal.fire({
+        title: '¿Cambiar categoría?',
+        html: 'Si modifica la categoría, <strong>todas las características específicas</strong> del producto serán eliminadas.<br><br>¿Desea continuar?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cambiar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.applyCategoryChange();
+        } else {
+          // Revertir la selección de categoría
+          const previousCategory = this.selectedCategory ? this.selectedCategory._id : '';
+          this.editedProduct.cat = previousCategory;
+        }
+      });
+    } else {
+      this.applyCategoryChange();
+    }
+  }
+
+  private applyCategoryChange(): void {
+    this.selectedCategory = this.categories.find(cat => cat._id === this.editedProduct.cat) || null;
+    
+    // Limpiar atributos existentes cuando se cambia la categoría
+    this.editedProduct.categoryAttributes = {};
+    
+    // Inicializar atributos de la nueva categoría
+    if (this.selectedCategory && this.selectedCategory.attributes) {
+      this.selectedCategory.attributes.forEach((attr: any) => {
+        switch (attr.type) {
+          case 'string':
+            this.editedProduct.categoryAttributes[attr.key] = '';
+            break;
+          case 'number':
+            this.editedProduct.categoryAttributes[attr.key] = null;
+            break;
+          case 'boolean':
+            this.editedProduct.categoryAttributes[attr.key] = false;
+            break;
+          case 'date':
+            this.editedProduct.categoryAttributes[attr.key] = '';
+            break;
+          default:
+            this.editedProduct.categoryAttributes[attr.key] = '';
+        }
+      });
+    }
   }
 
   onImageSelected(event: Event) {
@@ -208,7 +304,7 @@ obtenerProveedores() {
   
     // Agregar todos los campos del producto al FormData
     for (const key in this.editedProduct) {
-      if (key !== 'image' && key !== 'suppliers') { // La imagen y suppliers se añaden por separado
+      if (key !== 'image' && key !== 'suppliers' && key !== 'categoryAttributes') { // Estos se añaden por separado
         formData.append(key, this.editedProduct[key]);
       }
     }
@@ -216,6 +312,11 @@ obtenerProveedores() {
     // Agregar suppliers como JSON string
     if (this.editedProduct.suppliers) {
       formData.append('suppliers', JSON.stringify(this.editedProduct.suppliers));
+    }
+
+    // Agregar categoryAttributes como JSON string
+    if (this.editedProduct.categoryAttributes) {
+      formData.append('categoryAttributes', JSON.stringify(this.editedProduct.categoryAttributes));
     }
   
     // Agregar la imagen solo si existe
@@ -237,8 +338,12 @@ obtenerProveedores() {
           // Si el error es 400, mostrar mensaje específico para proveedores
           if (err.status === 400) {
             errorMessage = 'Debe seleccionar al menos a un proveedor';
+          } else if (err.status === 401) {
+            errorMessage = 'La marca ingresada no es válida.';
           } else if (err.status === 402) {
             errorMessage = 'Debe proporcionar una categoría';
+          } else if (err.status === 403) {
+            errorMessage = 'Error en la validación de los atributos de la categoría.';
           }
 
           Swal.fire({

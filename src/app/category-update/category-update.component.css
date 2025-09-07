@@ -1,0 +1,46 @@
+.card {
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge {
+  font-size: 0.7rem;
+  margin-right: 0.25rem;
+}
+
+.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+.text-white {
+  color: #fff !important;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+.me-1 {
+  margin-right: 0.25rem !important;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem !important;
+}
+
+.card-title {
+  color: #495057;
+  font-weight: 600;
+}
+
+.btn {
+  font-size: 0.875rem;
+}
+
+.btn i {
+  margin-right: 0.25rem;
+}

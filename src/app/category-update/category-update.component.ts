@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategorySelectionService } from '../services/category.service';
 import { CategoryUpdateModalComponent } from './category-update-modal/category-update-modal.component';
-import { CategoryReassignModalComponent } from './category-reassign-modal/category-reassign-modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 
@@ -95,19 +94,39 @@ export class CategoryUpdateComponent implements OnInit {
       return;
     }
 
-    // Obtener todas las categorías excepto la que se quiere eliminar
-    const availableCategories = this.foundCategories.filter(c => c._id !== categoryId);
-
-    const modalRef = this.modalService.open(CategoryReassignModalComponent, { centered: true });
-    modalRef.componentInstance.categoryToDelete = categoryToDelete;
-    modalRef.componentInstance.availableCategories = availableCategories;
-
-    modalRef.result.then((result) => {
-      if (result && result.deleted) {
-        this.obtenerCategorias(); // Recargar la lista de categorías
+    // Mostrar confirmación de eliminación
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: `¿Deseas eliminar la categoría "${categoryToDelete.type}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Proceder con la eliminación
+        this.categoryService.deleteCategory(categoryId).subscribe({
+          next: () => {
+            Swal.fire('Eliminada', 'La categoría ha sido eliminada correctamente', 'success');
+            this.obtenerCategorias(); // Recargar la lista de categorías
+          },
+          error: (err) => {
+            console.error('Error al eliminar categoría:', err);
+            if (err?.status === 400) {
+              Swal.fire(
+                'No se puede eliminar', 
+                'Esta categoría tiene productos asociados. No es posible eliminarla.', 
+                'error'
+              );
+            } else {
+              const msg = err?.error?.message || 'Error al eliminar la categoría';
+              Swal.fire('Error', msg, 'error');
+            }
+          }
+        });
       }
-    }).catch(() => {
-      // El usuario cerró el modal sin confirmar
     });
   }
 }

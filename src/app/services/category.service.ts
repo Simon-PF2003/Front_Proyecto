@@ -2,9 +2,23 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
+export interface CategoryAttribute {
+  key: string;
+  label: string;
+  type: 'string' | 'number' | 'boolean' | 'date';
+  enum?: any[];
+  unit?: string;
+  min?: number;
+  max?: number;
+  required: boolean;
+  description?: string;
+}
+
 export interface Category {
   _id: string;
   type: string;
+  slug?: string;
+  attributes?: CategoryAttribute[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -20,8 +34,8 @@ export class CategorySelectionService {
   constructor(private http: HttpClient) {}
 
   //POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST 
-  createNewCategory(type: string): Observable<Category> {
-    return this.http.post<Category>(`${this.URL}/categories`, { type });
+  createNewCategory(categoryData: { type: string; attributes?: CategoryAttribute[] }): Observable<Category> {
+    return this.http.post<Category>(`${this.URL}/categories`, categoryData);
   }
 
   selectCategory(id: string) {

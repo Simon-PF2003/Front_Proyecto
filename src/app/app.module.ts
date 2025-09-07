@@ -38,7 +38,6 @@ import { CategoryCreateComponent } from './category-create/category-create.compo
 import { CategoryUpdateComponent } from './category-update/category-update.component';
 import { CategorySelectionService } from './services/category.service';
 import { CategoryUpdateModalComponent } from './category-update/category-update-modal/category-update-modal.component';
-import { CategoryReassignModalComponent } from './category-update/category-reassign-modal/category-reassign-modal.component';
 
 //Brands 
 import { BrandSelectionService } from './services/brand.service';
@@ -115,7 +114,6 @@ import { BrandUpdateModalComponent } from './brand-update/brand-update-modal/bra
     CategoryCreateComponent,
     CategoryUpdateComponent,
     CategoryUpdateModalComponent,
-    CategoryReassignModalComponent,
 
     //Brands
     BrandCreateComponent,

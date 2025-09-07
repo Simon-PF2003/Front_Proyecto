@@ -1,13 +1,131 @@
 <!--<div class="modal-dialog" role="document">-->
-    <div class="modal-content">
+    <div class="modal-content" style="min-width: 700px;">
         <div class="modal-header">
           <h5 class="modal-title" id="editProductModalLabel">Editar Categoría</h5>
         </div>
         <div class="modal-body">
           <form *ngIf="editedCategory">
-            <div class="form-group">
-                <label for="categoryType">Descripción:</label>
-                <input type="text" class="form-control" id="categoryType" [(ngModel)]="editedCategory.type" name="type">
+            <!-- Información básica de la categoría -->
+            <div class="form-group mb-3">
+                <label for="categoryType">Nombre de la Categoría:</label>
+                <input type="text" class="form-control" id="categoryType" [(ngModel)]="editedCategory.type" name="type" required>
+            </div>
+
+            <!-- Sección de atributos dinámicos -->
+            <div class="card mb-3">
+              <div class="card-header">
+                <h6 class="mb-0">Atributos Dinámicos</h6>
+                <small class="text-muted">Características específicas de los productos de esta categoría</small>
+              </div>
+              <div class="card-body">
+                <!-- Lista de atributos existentes -->
+                <div *ngIf="editedCategory.attributes && editedCategory.attributes.length > 0" class="mb-3">
+                  <h6>Atributos definidos:</h6>
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th>Etiqueta</th>
+                          <th>Clave</th>
+                          <th>Tipo</th>
+                          <th>Unidad</th>
+                          <th>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let attr of editedCategory.attributes; let i = index">
+                          <td>{{ attr.label }}</td>
+                          <td><code>{{ attr.key }}</code></td>
+                          <td>
+                            <span class="badge bg-info text-white">
+                              {{ getAttributeTypeLabel(attr.type) }}
+                            </span>
+                          </td>
+                          <td>{{ attr.unit || '-' }}</td>
+                          <td>
+                            <button type="button" class="btn btn-sm btn-danger" (click)="removeAttribute(i)">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Formulario para agregar nuevo atributo -->
+                <div class="border p-3 bg-light rounded">
+                  <h6>Agregar nuevo atributo:</h6>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group mb-2">
+                        <label for="attrLabel" class="form-label-sm">Etiqueta:</label>
+                        <input type="text" class="form-control form-control-sm" id="attrLabel" 
+                               [(ngModel)]="newAttribute.label" name="attrLabel" 
+                               placeholder="ej: Capacidad (GB)">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group mb-2">
+                        <label for="attrKey" class="form-label-sm">Clave:</label>
+                        <input type="text" class="form-control form-control-sm" id="attrKey" 
+                               [(ngModel)]="newAttribute.key" name="attrKey" 
+                               placeholder="ej: capacity_gb">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group mb-2">
+                        <label for="attrType" class="form-label-sm">Tipo:</label>
+                        <select class="form-control form-control-sm" id="attrType" 
+                                [(ngModel)]="newAttribute.type" name="attrType">
+                          <option *ngFor="let type of attributeTypes" [value]="type.value">
+                            {{ type.label }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group mb-2">
+                        <label for="attrUnit" class="form-label-sm">Unidad:</label>
+                        <input type="text" class="form-control form-control-sm" id="attrUnit" 
+                               [(ngModel)]="newAttribute.unit" name="attrUnit" 
+                               placeholder="GB, MHz, etc.">
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Campos adicionales para tipo número -->
+                  <div *ngIf="newAttribute.type === 'number'" class="row">
+                    <div class="col-md-6">
+                      <div class="form-group mb-2">
+                        <label for="attrMin" class="form-label-sm">Valor mínimo:</label>
+                        <input type="number" class="form-control form-control-sm" id="attrMin" 
+                               [(ngModel)]="newAttribute.min" name="attrMin">
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group mb-2">
+                        <label for="attrMax" class="form-label-sm">Valor máximo:</label>
+                        <input type="number" class="form-control form-control-sm" id="attrMax" 
+                               [(ngModel)]="newAttribute.max" name="attrMax">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group mb-2">
+                    <label for="attrDescription" class="form-label-sm">Descripción:</label>
+                    <textarea class="form-control form-control-sm" id="attrDescription" 
+                              [(ngModel)]="newAttribute.description" name="attrDescription" 
+                              rows="2" placeholder="Descripción del atributo..."></textarea>
+                  </div>
+
+                  <button type="button" class="btn btn-sm btn-success" (click)="addAttribute()">
+                    <i class="fas fa-plus"></i> Agregar Atributo
+                  </button>
+                </div>
+              </div>
             </div>
           </form>
         </div>

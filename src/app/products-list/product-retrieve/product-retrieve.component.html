@@ -26,7 +26,30 @@
            Notificarme cuando haya stock
         </button>
         <h4 class="mt-3">Detalles del producto</h4>
-        <p><strong>Marca: </strong> <span>{{ productDetails.data.brand?.brand || 'Sin marca' }}</span></p>
-        <p><strong>Categoría: </strong> <span>{{ productDetails.data.cat?.type || 'Sin categoría' }}</span></p>
+        <div class="product-details-table">
+          <div class="detail-row">
+            <div class="detail-label">Marca</div>
+            <div class="detail-value">{{ productDetails.data.brand?.brand || 'Sin marca' }}</div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-label">Categoría</div>
+            <div class="detail-value">{{ productDetails.data.cat?.type || 'Sin categoría' }}</div>
+          </div>
+          
+          <!-- Atributos dinámicos integrados -->
+          <div *ngFor="let attr of getValidAttributes()" class="detail-row">
+            <div class="detail-label">
+              {{ attr.label }}
+            </div>
+            <div class="detail-value">
+              <span *ngIf="attr.type !== 'boolean'">{{ formatAttributeValue(attr) }}</span>
+              <span *ngIf="attr.type === 'boolean'" class="boolean-badge" 
+                    [class.boolean-yes]="productDetails.data.categoryAttributes[attr.key] === true"
+                    [class.boolean-no]="productDetails.data.categoryAttributes[attr.key] === false">
+                {{ productDetails.data.categoryAttributes[attr.key] === true ? 'Sí' : 'No' }}
+              </span>
+            </div>
+          </div>
+        </div>
     </div>
 </section>

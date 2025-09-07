@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import jwt_decode from 'jwt-decode';
 import { countService } from 'src/app/services/count-cart.service';
 import { firstValueFrom } from 'rxjs';
+import { CategorySelectionService } from 'src/app/services/category.service';
 
 @Component({
   selector: 'app-product-retrieve',
@@ -28,6 +29,8 @@ export class ProductRetrieveComponent implements OnInit {
   productsInCart: number = 0;
   discountPercentage: number = 0;
   discountedPrice: number = 0;
+  categories: any[] = [];
+  selectedCategoryAttributes: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +40,7 @@ export class ProductRetrieveComponent implements OnInit {
     private cartService: CartServiceService,
     private authService: AuthService,
     private countService: countService,
+    private categoryService: CategorySelectionService
   ) {}
 
   async ngOnInit() {
@@ -71,6 +75,8 @@ export class ProductRetrieveComponent implements OnInit {
         this.productDetails = { data: data };
         this.productStock = this.productDetails.data.stock;
         this.applyDiscountToProducts();
+        // Cargar atributos de categoría si el producto tiene categoría
+        this.loadCategoryAttributes();
       });
     }
   }
@@ -174,5 +180,47 @@ export class ProductRetrieveComponent implements OnInit {
     this.productService.notifyMe(this.productId, this.userId).subscribe(() => {
       Swal.fire({ title: 'Notificación de stock', text: 'Te notificaremos por mail cuando tengamos este producto en stock', icon: 'info' });
     });
+  }
+
+  loadCategoryAttributes() {
+    if (this.productDetails?.data?.cat?._id) {
+      this.categoryService.getCategories().subscribe((categories: any[]) => {
+        const category = categories.find(cat => cat._id === this.productDetails.data.cat._id);
+        if (category && category.attributes) {
+          this.selectedCategoryAttributes = category.attributes;
+        }
+      });
+    }
+  }
+
+  getValidAttributes(): any[] {
+    if (!this.selectedCategoryAttributes || !this.productDetails?.data?.categoryAttributes) {
+      return [];
+    }
+    
+    return this.selectedCategoryAttributes.filter(attr => {
+      const value = this.productDetails.data.categoryAttributes[attr.key];
+      return value !== null && value !== undefined && value !== '' && 
+             (attr.type !== 'boolean' || value === true || value === false);
+    });
+  }
+
+  formatAttributeValue(attr: any): string {
+    const value = this.productDetails.data.categoryAttributes[attr.key];
+    
+    if (value === null || value === undefined || value === '') {
+      return 'No especificado';
+    }
+    
+    switch (attr.type) {
+      case 'string':
+        return value;
+      case 'number':
+        return attr.unit ? `${value} ${attr.unit}` : value.toString();
+      case 'date':
+        return new Date(value).toLocaleDateString();
+      default:
+        return value.toString();
+    }
   }
 }

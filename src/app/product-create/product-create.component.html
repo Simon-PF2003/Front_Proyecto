@@ -39,12 +39,67 @@
             </div>
             <div class="form-group">
               <label for="categoria">Categoría:</label>
-              <select class="form-control" id="categoria" name="categoria" [(ngModel)]="product.cat" required>
+              <select class="form-control" id="categoria" name="categoria" [(ngModel)]="product.cat" (ngModelChange)="onCategoryChange()" required>
                 <option [ngValue]="''" disabled selected>Seleccione una categoría</option>
                 <option *ngFor="let c of categories" [ngValue]="c._id">
                   {{ c.type }}
                 </option>
               </select>
+            </div>
+
+            <div *ngIf="selectedCategory && selectedCategory.attributes && selectedCategory.attributes.length > 0" class="card mb-3 mt-3">
+              <div class="card-header">
+                <h6 class="mb-0">Características Específicas (opcionales)</h6>
+                <small class="text-muted">Información adicional para productos de tipo "{{ selectedCategory.type }}"</small>
+              </div>
+              <div class="card-body">
+                <div *ngFor="let attr of selectedCategory.attributes" class="form-group mb-3">
+                  <label [for]="'attr-' + attr.key">
+                    {{ attr.label }}
+                    <span *ngIf="attr.unit" class="text-muted">({{ attr.unit }})</span>
+                  </label>
+                  
+                  <input *ngIf="attr.type === 'string'" 
+                         type="text" 
+                         class="form-control" 
+                         [id]="'attr-' + attr.key"
+                         [(ngModel)]="product.categoryAttributes[attr.key]" 
+                         [name]="'attr-' + attr.key"
+                         [placeholder]="attr.description || 'Ingrese ' + attr.label.toLowerCase()">
+                  
+                  <input *ngIf="attr.type === 'number'" 
+                         type="number" 
+                         class="form-control" 
+                         [id]="'attr-' + attr.key"
+                         [(ngModel)]="product.categoryAttributes[attr.key]" 
+                         [name]="'attr-' + attr.key"
+                         [min]="attr.min || null"
+                         [max]="attr.max || null"
+                         [placeholder]="attr.description || 'Ingrese ' + attr.label.toLowerCase()">
+                  
+                  <div *ngIf="attr.type === 'boolean'" class="form-check">
+                    <input class="form-check-input" 
+                           type="checkbox" 
+                           [id]="'attr-' + attr.key"
+                           [(ngModel)]="product.categoryAttributes[attr.key]" 
+                           [name]="'attr-' + attr.key">
+                    <label class="form-check-label" [for]="'attr-' + attr.key">
+                      {{ attr.description || attr.label }}
+                    </label>
+                  </div>
+                  
+                  <input *ngIf="attr.type === 'date'" 
+                         type="date" 
+                         class="form-control" 
+                         [id]="'attr-' + attr.key"
+                         [(ngModel)]="product.categoryAttributes[attr.key]" 
+                         [name]="'attr-' + attr.key">
+                  
+                  <small *ngIf="attr.description && attr.type !== 'boolean'" class="form-text text-muted">
+                    {{ attr.description }}
+                  </small>
+                </div>
+              </div>
             </div>
 
 

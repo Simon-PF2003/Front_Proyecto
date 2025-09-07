@@ -16,6 +16,7 @@ export class ProductCreateComponent implements OnInit {
   categories: Category[] = [];
   suppliers: any[] = [];
   brands: Brand[] = [];
+  selectedCategory: Category | null = null;
   isDropdownOpen: boolean = false;
 
   product = {
@@ -27,7 +28,8 @@ export class ProductCreateComponent implements OnInit {
     stockMin: '',
     featured: false,
     suppliers: [] as string[],
-    image: null as File | null
+    image: null as File | null,
+    categoryAttributes: {} as any
   }
 
   constructor(
@@ -58,6 +60,35 @@ export class ProductCreateComponent implements OnInit {
       next: (brands) => this.brands = brands || [],
       error: (e) => console.error('Error al cargar marcas', e)
     });
+  }
+
+  onCategoryChange(): void {
+    this.selectedCategory = this.categories.find(cat => cat._id === this.product.cat) || null;
+    // Limpiar atributos anteriores
+    this.product.categoryAttributes = {};
+    
+    // Inicializar atributos de la nueva categoría
+    if (this.selectedCategory && this.selectedCategory.attributes) {
+      this.selectedCategory.attributes.forEach(attr => {
+        // Inicializar con valores por defecto según el tipo
+        switch (attr.type) {
+          case 'string':
+            this.product.categoryAttributes[attr.key] = '';
+            break;
+          case 'number':
+            this.product.categoryAttributes[attr.key] = null;
+            break;
+          case 'boolean':
+            this.product.categoryAttributes[attr.key] = false;
+            break;
+          case 'date':
+            this.product.categoryAttributes[attr.key] = '';
+            break;
+          default:
+            this.product.categoryAttributes[attr.key] = '';
+        }
+      });
+    }
   }
 
   obtenerProveedores(): void {
@@ -130,6 +161,7 @@ export class ProductCreateComponent implements OnInit {
     formData.append('stockMin', this.product.stockMin);
     formData.append('suppliers', JSON.stringify(this.product.suppliers));
     formData.append('featured', this.product.featured ? 'true' : 'false');
+    formData.append('categoryAttributes', JSON.stringify(this.product.categoryAttributes));
     if (this.product.image) {
       formData.append('image', this.product.image);
     }
@@ -147,6 +179,8 @@ export class ProductCreateComponent implements OnInit {
         this.product.suppliers = [];
         this.product.featured = false;
         this.product.cat = '';
+        this.product.categoryAttributes = {};
+        this.selectedCategory = null;
       },
       error: (err) => {
         console.log(err);
