@@ -27,7 +27,7 @@
             <a class="nav-link active" href="/institucional-contacto">Contacto</a>
         </li>
         <li>
-            <app-down-comp *ngIf="isProductosRoute() || isEditProductsRoute() || isStockRoute() || isProductCategoryRoute() || isChargeStockRoute()"></app-down-comp>
+            <app-down-comp *ngIf="isEditProductsRoute() || isStockRoute() || isProductCategoryRoute() || isChargeStockRoute()"></app-down-comp>
         </li>
         <li class="col-auto search-container" *ngIf="isProductosRoute() || isStockRoute() || isEditProductsRoute() || isProductCategoryRoute() || isChargeStockRoute()">
             <div class="search-group">
