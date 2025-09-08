@@ -109,6 +109,19 @@
 }
 .price-separator { color: #666; font-size: 0.9rem; }
 
+/* Ocultar las flechitas (spinners) de los inputs type="number" */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 .stock-filter-container { margin-bottom: 0.75rem; }
 .elegant-checkbox {
   background-color: white;
