@@ -67,19 +67,98 @@
           <h2>Orden de Compra - {{ selectedSupplier.businessName }}</h2>
           <p class="text-muted mb-0">CUIT: {{ selectedSupplier.cuit }} | Teléfono: {{ selectedSupplier.phoneNumber }}</p>
         </div>
-        <button class="btn btn-secondary" (click)="backToSuppliers()">
-          <i class="fas fa-arrow-left me-2"></i>Volver a Proveedores
-        </button>
+        <div class="d-flex gap-2">
+          <button class="btn btn-secondary" (click)="backToSuppliers()">
+            <i class="fas fa-arrow-left me-2"></i>Volver a Proveedores
+          </button>
+          <button class="btn btn-outline-primary position-relative" (click)="toggleCartVisibility()">
+            <i class="fas fa-shopping-cart me-2"></i>
+            Carrito
+            <span *ngIf="getCartItemsCount() > 0" 
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ getCartItemsCount() }}
+            </span>
+          </button>
+        </div>
       </div>
 
-      <!-- Botones de acción -->
-      <div class="d-flex justify-content-end mb-3" *ngIf="products.length > 0">
-        <button class="btn btn-success me-2" (click)="ingresarStock()">
-          <i class="fas fa-plus me-2"></i>Ingresar Stock
-        </button>
-        <button class="btn btn-primary" (click)="generarOrdenDeCompra()">
-          <i class="fas fa-file-invoice me-2"></i>Generar Orden de Compra
-        </button>
+      <!-- CARRITO LATERAL -->
+      <div *ngIf="isCartVisible" class="cart-sidebar card mb-4" 
+           [ngClass]="{'cart-empty': cartItems.length === 0}">
+        <div class="card-header d-flex justify-content-between align-items-center" 
+             style="background-color: #e3f2fd;">
+          <h5 class="mb-0">
+            <i class="fas fa-shopping-cart me-2"></i>
+            Carrito de Orden
+            <span *ngIf="cartItems.length > 0" class="badge bg-primary ms-2">
+              {{ cartItems.length }} productos
+            </span>
+          </h5>
+          <div class="d-flex gap-2">
+            <button *ngIf="cartItems.length > 0" class="btn btn-sm btn-outline-danger" 
+                    (click)="clearCart()">
+              <i class="fas fa-trash me-1"></i>Vaciar
+            </button>
+            <button class="btn-close" (click)="toggleCartVisibility()"></button>
+          </div>
+        </div>
+        
+        <div class="card-body">
+          <!-- Carrito vacío -->
+          <div *ngIf="cartItems.length === 0" class="text-center text-muted py-4">
+            <i class="fas fa-shopping-cart fa-3x mb-3 text-muted"></i>
+            <p class="mb-0">El carrito está vacío</p>
+            <small>Agregue productos usando los botones de "Agregar al carrito"</small>
+          </div>
+          
+          <!-- Items del carrito -->
+          <div *ngIf="cartItems.length > 0">
+            <div class="cart-item border-bottom pb-2 mb-2" *ngFor="let item of cartItems">
+              <div class="row align-items-center">
+                <div class="col-8">
+                  <h6 class="mb-1">{{ item.desc }}</h6>
+                  <small class="text-muted">Código: {{ item.code }}</small>
+                </div>
+                <div class="col-4">
+                  <div class="d-flex align-items-center justify-content-end">
+                    <button class="btn btn-sm btn-outline-secondary me-1" 
+                            (click)="updateCartQuantity(item._id, item.quantityToBuy - 1)">
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input type="number" class="form-control form-control-sm text-center" 
+                           style="width: 60px;" min="1"
+                           [(ngModel)]="item.quantityToBuy" 
+                           (ngModelChange)="updateCartQuantity(item._id, item.quantityToBuy)">
+                    <button class="btn btn-sm btn-outline-secondary ms-1" 
+                            (click)="updateCartQuantity(item._id, item.quantityToBuy + 1)">
+                      <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger ms-2" 
+                            (click)="removeFromCart(item._id)">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Resumen simple sin precios -->
+            <div class="mt-3 pt-2 border-top text-center">
+              <div class="text-muted d-flex justify-content-between align-items-center">
+                <div>
+                  <i class="fas fa-box me-1"></i>
+                  {{ cartItems.length }} productos 
+                  • {{ getCartItemsCount() }} unidades
+                </div>
+                <button class="btn btn-primary" (click)="generarOrdenDeCompra()" 
+                        [disabled]="cartItems.length === 0">
+                  <i class="fas fa-file-invoice me-2"></i>
+                  Generar Orden de Compra
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Botón de filtros para móvil -->
@@ -108,7 +187,7 @@
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingPrice">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
-                      <i class="fas fa-dollar-sign me-2"></i>Rango de Precio
+                      <i class="fas fa-dollar-sign me-2"></i>Rango de Precio (venta)
                     </button>
                   </h2>
                   <div id="collapsePrice" class="accordion-collapse collapse">
@@ -219,8 +298,8 @@
               <select id="sortOrder" class="form-select form-select-sm elegant-select" style="min-width: 200px"
                       [(ngModel)]="sortOrder" (change)="sortProducts()">
                 <option value="none">Sin orden</option>
-                <option value="asc">Precio: Menor a Mayor</option>
-                <option value="desc">Precio: Mayor a Menor</option>
+                <option value="asc">Precio (venta): Menor a Mayor</option>
+                <option value="desc">Precio (venta): Mayor a Menor</option>
                 <option value="name-asc">Nombre: A-Z</option>
                 <option value="name-desc">Nombre: Z-A</option>
                 <option value="stock-asc">Stock: Menor a Mayor</option>
@@ -247,7 +326,7 @@
 
             <!-- Precio -->
             <span *ngIf="minPrice !== null || maxPrice !== null" class="filter-chip">
-              Precio: {{ (minPrice || 0) | currency }} - {{ maxPrice !== null ? (maxPrice | currency) : '∞' }}
+              Precio (venta): {{ (minPrice || 0) | currency }} - {{ maxPrice !== null ? (maxPrice | currency) : '∞' }}
               <button type="button" class="btn-close btn-close-white btn-close-sm ms-2"
                       (click)="minPrice=null; maxPrice=null; applyPriceFilter()"></button>
             </span>
@@ -268,7 +347,7 @@
             <!-- Reset si hay cualquier filtro activo -->
             <button *ngIf="selectedCategories.length || selectedBrands.length || minPrice !== null || maxPrice !== null || hasStockFilter || noStockFilter"
                     class="btn btn-sm btn-outline-secondary" (click)="clearAllFilters()">
-              Resetear todos
+              <i class="fas fa-times me-1"></i>Resetear todos
             </button>
           </div>
 
@@ -287,17 +366,35 @@
         <!-- GRID de productos -->
         <div class="row" *ngIf="displayedProducts.length > 0">
           <div class="col-md-6 col-lg-4 col-xl-3 mt-4" *ngFor="let product of displayedProducts">
-            <div class="product-card" [ngClass]="{'low-stock': product.isLowStock && !product.isNoStock, 'no-stock': product.isNoStock}">
+            <div class="product-card" 
+                 [ngClass]="{
+                   'low-stock': product.isLowStock && !product.isNoStock, 
+                   'no-stock': product.isNoStock,
+                   'in-cart': product.inCart
+                 }">
               <div class="card h-100">
                 <div class="position-relative">
                   <img class="card-img-top" [src]="'http://localhost:3000/' + product.image" alt="{{ product.desc }}">
+                  
                   <!-- Badge de stock bajo -->
-                  <div *ngIf="product.isLowStock && !product.isNoStock" class="position-absolute top-0 end-0 m-2">
-                    <span class="badge bg-warning text-dark">Stock Bajo</span>
+                  <div *ngIf="product.isLowStock && !product.isNoStock" class="position-absolute top-0 start-0 m-2">
+                    <span class="badge bg-warning text-dark">
+                      <i class="fas fa-exclamation-triangle me-1"></i>Stock Bajo
+                    </span>
                   </div>
+                  
                   <!-- Badge de sin stock -->
-                  <div *ngIf="product.isNoStock" class="position-absolute top-0 end-0 m-2">
-                    <span class="badge bg-danger text-white">Sin Stock</span>
+                  <div *ngIf="product.isNoStock" class="position-absolute top-0 start-0 m-2">
+                    <span class="badge bg-danger text-white">
+                      <i class="fas fa-times-circle me-1"></i>Sin Stock
+                    </span>
+                  </div>
+                  
+                  <!-- Badge de en carrito -->
+                  <div *ngIf="product.inCart" class="position-absolute top-0 end-0 m-2">
+                    <span class="badge bg-success text-white">
+                      <i class="fas fa-check-circle me-1"></i>En Carrito ({{ getProductCartQuantity(product._id) }})
+                    </span>
                   </div>
                 </div>
                 
@@ -308,20 +405,55 @@
                   <p class="card-text truncate">Categoría: {{ product.cat?.type || '' }}</p>
                   
                   <!-- Stock con colores -->
-                  <p class="card-text" [ngClass]="product.isNoStock ? 'text-danger' : (product.isLowStock ? 'text-warning' : '')">
-                    Stock: {{ product.stock }}
-                    <span class="small text-muted">(Mín: {{ product.stockMin }})</span>
+                  <p class="card-text d-flex justify-content-between" [ngClass]="product.isNoStock ? 'text-danger' : (product.isLowStock ? 'text-warning' : '')">
+                    <span>
+                      <i class="fas fa-boxes me-1"></i>Stock: {{ product.stock }}
+                    </span>
+                    <span class="small text-muted">
+                      (Mín: {{ product.stockMin }})
+                    </span>
                   </p>
 
                   <div class="mt-auto">
-                    <p class="card-price mb-2">{{ product.price | currency }}</p>
+                    <p class="card-price mb-3">Precio (venta): {{ product.price | currency }}</p>
+
+                    <!-- Sistema de carrito mejorado -->
+                    <div *ngIf="!product.inCart" class="cart-controls">
+                      <div class="input-group mb-2">
+                        <input type="number" class="form-control" 
+                               [(ngModel)]="product.tempQuantity" 
+                               min="1" max="999" placeholder="Cantidad">
+                        <button class="btn btn-primary" 
+                                [disabled]="!product.tempQuantity || product.tempQuantity <= 0"
+                                (click)="addToCart(product, product.tempQuantity)">
+                          <i class="fas fa-cart-plus me-1"></i>Agregar
+                        </button>
+                      </div>
+                    </div>
                     
-                    <!-- Input cantidad -->
-                    <div class="form-group">
-                      <label for="stockInput{{ product._id }}" class="form-label small">Cantidad a solicitar:</label>
-                      <input type="number" id="stockInput{{ product._id }}" 
-                             class="form-control form-control-sm"
-                             [(ngModel)]="product.quantityToBuy" min="0" placeholder="0">
+                    <!-- Controles cuando está en carrito -->
+                    <div *ngIf="product.inCart" class="cart-controls-active">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="small text-success fw-bold">
+                          <i class="fas fa-check-circle me-1"></i>En carrito: {{ getProductCartQuantity(product._id) }}
+                        </span>
+                        <button class="btn btn-sm btn-outline-danger" 
+                                (click)="removeFromCart(product._id)">
+                          <i class="fas fa-trash"></i>
+                        </button>
+                      </div>
+                      
+                      <div class="input-group input-group-sm">
+                        <button class="btn btn-outline-secondary" 
+                                (click)="updateCartQuantity(product._id, getProductCartQuantity(product._id) - 1)">
+                          <i class="fas fa-minus"></i>
+                        </button>
+                        <span class="form-control text-center">{{ getProductCartQuantity(product._id) }}</span>
+                        <button class="btn btn-outline-secondary" 
+                                (click)="updateCartQuantity(product._id, getProductCartQuantity(product._id) + 1)">
+                          <i class="fas fa-plus"></i>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -368,7 +500,7 @@
               <button class="accordion-button collapsed" type="button"
                       data-bs-toggle="collapse" data-bs-target="#collapsePriceMobile"
                       aria-expanded="false" aria-controls="collapsePriceMobile">
-                <i class="fas fa-dollar-sign me-2"></i>Rango de Precio
+                <i class="fas fa-dollar-sign me-2"></i>Rango de Precio (venta)
               </button>
             </h2>
             <div id="collapsePriceMobile" class="accordion-collapse collapse" aria-labelledby="headingPriceMobile">

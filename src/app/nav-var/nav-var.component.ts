@@ -125,7 +125,7 @@ export class NavVarComponent implements OnInit {
   }
 
   isChargeStockRoute(): boolean {
-    return this.currentRoute.includes('/cargar-stock');
+    return this.currentRoute.includes('/stock-cargar');
   }
 
   isUserRoleDefined(): boolean {
@@ -146,8 +146,8 @@ searchProducts() {
     } else if (this.currentRoute.includes('/reporte-agrupar-productos')) {
       this.router.navigate(['/reporte-agrupar-productos'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     }
-    else if (this.currentRoute.includes('/cargar-stock')) {
-      this.router.navigate(['/cargar-stock'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
+    else if (this.currentRoute.includes('/stock-cargar')) {
+      this.router.navigate(['/stock-cargar'], { relativeTo: this.route, queryParams: { q: this.searchTerm } });
     }
   } else {
     if (this.currentRoute.includes('/products-list')) {
@@ -158,8 +158,8 @@ searchProducts() {
       this.router.navigate(['/product-update'], { relativeTo: this.route });
     } else if (this.currentRoute.includes('/reporte-agrupar-productos')) {
       this.router.navigate(['/reporte-agrupar-productos'], { relativeTo: this.route });
-    } else if (this.currentRoute.includes('/cargar-stock')) {
-      this.router.navigate(['/cargar-stock'], { relativeTo: this.route });
+    } else if (this.currentRoute.includes('/stock-cargar')) {
+      this.router.navigate(['/stock-cargar'], { relativeTo: this.route });
     } else {
 
       console.warn('No matching route found for search.');

@@ -37,7 +37,7 @@ import { CartComponent } from './cart/cart/cart.component';
 
 //Stock
 import { StockIngresoComponent } from './stock-ingreso/stock-ingreso.component';
-import { CargarStockComponent } from './stock-ingreso/cargar-stock/cargar-stock.component';
+import { StockCargarComponent } from './stock-cargar/stock-cargar.component';
 
 //Institucional
 import { InstitucionalQuienesSomosComponent } from './institucional-quienes-somos/institucional-quienes-somos.component';
@@ -78,7 +78,7 @@ const routes: Routes = [
 
 //Ingreso Stock
   { path: 'stock-ingreso', component: StockIngresoComponent,canActivate: [AuthGuard], data: { expectedRole: 'Administrador'}},
-  { path: 'cargar-stock', component: CargarStockComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
+  { path: 'stock-cargar', component: StockCargarComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
 
 //Users
   { path: 'user-create-acceptance', component: UserCreateAcceptanceComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},

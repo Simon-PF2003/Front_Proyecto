@@ -42,6 +42,7 @@ import { CategoryUpdateModalComponent } from './category-update/category-update-
 //Brands 
 import { BrandSelectionService } from './services/brand.service';
 import { BrandUpdateComponent } from './brand-update/brand-update.component';
+import { BrandUpdateModalComponent } from './brand-update/brand-update-modal/brand-update-modal.component';
 import { BrandCreateComponent } from './brand-create/brand-create.component';
 
 //Orders
@@ -82,7 +83,7 @@ import { ReporteRecaudacionComponent } from './reporte-recaudacion/reporte-recau
 
 //Stock
 import { StockIngresoComponent } from './stock-ingreso/stock-ingreso.component';
-import { CargarStockComponent } from './stock-ingreso/cargar-stock/cargar-stock.component';
+import { StockCargarComponent } from './stock-cargar/stock-cargar.component';
 
 //Admin
 import { AdminPanelComponent } from './admin-panel/admin-panel.component';
@@ -90,7 +91,7 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 //Tasks
 import { TasksComponent } from './tasks/tasks.component';
 import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
-import { BrandUpdateModalComponent } from './brand-update/brand-update-modal/brand-update-modal.component';
+
 
 @NgModule({
   declarations: [
@@ -118,6 +119,7 @@ import { BrandUpdateModalComponent } from './brand-update/brand-update-modal/bra
     //Brands
     BrandCreateComponent,
     BrandUpdateComponent,
+    BrandUpdateModalComponent,
 
     //Institucional
     InstitucionalQuienesSomosComponent,
@@ -156,15 +158,14 @@ import { BrandUpdateModalComponent } from './brand-update/brand-update-modal/bra
     
     //Stock
     StockIngresoComponent,
-    CargarStockComponent,
-    
+    StockCargarComponent,
+
     //Admin
     AdminPanelComponent,
     
     //Tasks
     TasksComponent,
     PrivateTasksComponent,
-    BrandUpdateModalComponent,
   ],
 
   imports: [

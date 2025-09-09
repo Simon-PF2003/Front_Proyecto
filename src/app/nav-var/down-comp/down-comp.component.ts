@@ -31,8 +31,8 @@ export class DownCompComponent implements OnInit {
       this.router.navigate(['/product-update']);
     } else if (currentUrl.includes('/stock-ingreso')) {
       this.router.navigate(['/stock-ingreso']);
-    } else if (currentUrl.includes('/cargar-stock')) {
-      this.router.navigate(['/cargar-stock']);
+    } else if (currentUrl.includes('/stock-cargar')) {
+      this.router.navigate(['/stock-cargar']);
     } else if (currentUrl.includes('/reporte-agrupar-productos')) {
       this.router.navigate(['/reporte-agrupar-productos']);
     } else {

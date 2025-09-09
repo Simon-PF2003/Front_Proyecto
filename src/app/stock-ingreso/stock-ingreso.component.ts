@@ -4,10 +4,12 @@ import Swal from 'sweetalert2';
 import { Router, ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ProductService } from '../services/product.service';
+import { PurchaseOrderService } from '../services/purchase-order.service';
 import { CategorySelectionService, Category } from '../services/category.service';
 import { BrandSelectionService } from '../services/brand.service';
 import { SupplierService } from '../services/supplier.service';
 import { StockViewService } from '../services/stock-view.service';
+import { StockCartService } from '../services/stock-cart.service';
 
 @Component({
   selector: 'app-stock-ingreso',
@@ -31,13 +33,17 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
   searchTerm: string = '';
   selectedProducts: any[] = [];
 
+  // Carrito
+  cartItems: any[] = [];
+  isCartVisible: boolean = false;
+
   // Filtros - replicados de product-list
   selectedCategory: string = 'all';
   selectedBrand: string = 'all';
   selectedCategories: string[] = [];
   selectedBrands: string[] = [];
   hasStockFilter: boolean = false;
-  noStockFilter: boolean = false; // Nuevo filtro para productos sin stock
+  noStockFilter: boolean = false; 
   minPrice: number | null = null;
   maxPrice: number | null = null;
   sortOrder: string = 'none';
@@ -56,22 +62,18 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
   pageSize: number = 8;
   totalPages: number = 1;
 
-  // Número de orden de compra
-  orderNumber: number;
-
   constructor(
     public authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private productService: ProductService,
+    private purchaseOrderService: PurchaseOrderService,
     private categorySelectionService: CategorySelectionService,
     private brandService: BrandSelectionService,
     private supplierService: SupplierService,
-    private stockViewService: StockViewService
-  ) {
-    // Cargar el número de orden desde localStorage o inicializarlo en 1243
-    this.orderNumber = parseInt(localStorage.getItem('orderNumber') || '1243', 10);
-  }
+    private stockViewService: StockViewService,
+    private stockCartService: StockCartService
+  ) {}
 
   ngOnInit(): void {
     // Cargar proveedores inicialmente
@@ -144,7 +146,24 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
     this.currentView = 'products';
     // Notificar al servicio del cambio de vista
     this.stockViewService.setCurrentView(this.currentView);
+
+    const supplierId = supplier._id || supplier.id;
+    this.stockCartService.setCurrentSupplier(supplierId);
+    this.subscribeCartForSupplier(supplierId);
+
     this.fetchProductsBySupplier();
+  }
+
+  private subscribeCartForSupplier(supplierId: string) {
+     this.stockCartService.cartForSupplier$(supplierId).subscribe(items => {
+      this.cartItems = items;
+      // Actualizar badges "inCart" y cantidades de los productos cargados
+      this.products.forEach(p => {
+        p.inCart = this.isProductInCart(p._id);
+        p.quantityToBuy = this.getProductCartQuantity(p._id);
+      });
+      this.updateDisplayedProducts();
+    });
   }
 
   backToSuppliers() {
@@ -154,6 +173,8 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
     this.selectedSupplier = null;
     this.products = [];
     this.displayedProducts = [];
+    this.clearCart(); // Limpiar carrito al volver a proveedores
+    this.isCartVisible = false; // Ocultar carrito
   }
 
   // Métodos para manejar productos del proveedor seleccionado
@@ -191,9 +212,12 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
       this.products = (data as any[]) || [];
       this.filteredProducts = [...this.products]; // Ya vienen filtrados desde BD
       
-      // Inicializar quantityToBuy y marcar productos con stock bajo/sin stock
+      const supplierId = this.selectedSupplier._id || this.selectedSupplier.id;
+      // Inicializar propiedades para el carrito y marcar productos con stock bajo/sin stock
       this.products.forEach(product => {
-        product.quantityToBuy = 0;
+        product.quantityToBuy = this.getProductCartQuantity(product._id);
+        product.inCart = this.isProductInCart(product._id);
+        product.tempQuantity = 0; // Para el input temporal
         product.isLowStock = product.stock < product.stockMin;
         product.isNoStock = product.stock === 0;
       });
@@ -385,65 +409,185 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
     this.fetchProductsBySupplier();
   }
 
-  generarOrdenDeCompra() {
-    this.selectedProducts = this.products.filter(product => product.quantityToBuy > 0);
-    if (this.selectedProducts.length === 0) {
-      Swal.fire('Error', 'No ha seleccionado ninguna cantidad para comprar', 'error');
+  // Métodos para manejar el carrito
+  addToCart(product: any, quantity: number = 1) {
+     if (!this.selectedSupplier) return;
+    if (quantity <= 0) return;
+    const supplierId = this.selectedSupplier._id || this.selectedSupplier.id;
+
+    this.stockCartService.addItem(supplierId, {
+      ...product,
+      // Aseguramos los campos mínimos
+      _id: product._id,
+      code: product.code,
+      desc: product.desc,
+    }, quantity);
+
+    // El subscribe de cartForSupplier$ actualizará product.inCart / quantityToBuy
+    product.tempQuantity = 0;
+  }
+
+  removeFromCart(productId: string) {
+    if (!this.selectedSupplier) return;
+    const supplierId = this.selectedSupplier._id || this.selectedSupplier.id;
+    this.stockCartService.removeItem(supplierId, productId);
+
+    const originalProduct = this.products.find(p => p._id === productId);
+    if (originalProduct) {
+      originalProduct.quantityToBuy = 0;
+      originalProduct.inCart = false;
+      originalProduct.tempQuantity = 0;
+    }
+  }
+
+  updateCartQuantity(productId: string, newQuantity: number) {
+    if (newQuantity <= 0) {
+      this.removeFromCart(productId);
       return;
     }
 
-    let orderSummary = '<ul>';
-    this.selectedProducts.forEach(product => {
-      orderSummary += `<li>${product.desc} - Cantidad: ${product.quantityToBuy} - Precio: ${product.price}</li>`;
+    const cartItem = this.cartItems.find(item => item._id === productId);
+    if (cartItem) {
+      cartItem.quantityToBuy = newQuantity;
+      
+      // Sincronizar con la lista principal
+      const originalProduct = this.products.find(p => p._id === productId);
+      if (originalProduct) {
+        originalProduct.quantityToBuy = newQuantity;
+      }
+    }
+  }
+
+  getProductCartQuantity(productId: string): number {
+    if (!this.selectedSupplier) return 0;
+    const supplierId = this.selectedSupplier._id || this.selectedSupplier.id;
+    return this.stockCartService.getQuantity(supplierId, productId);
+  }
+
+  isProductInCart(productId: string): boolean {
+    return this.getProductCartQuantity(productId) > 0;
+  }
+
+  getCartItemsCount(): number {
+    if (!this.selectedSupplier) return 0;
+    const supplierId = this.selectedSupplier._id || this.selectedSupplier.id;
+    return this.stockCartService.getTotalUnits(supplierId);
+  }
+
+  clearCart() {
+    if (!this.selectedSupplier) return;
+    const supplierId = this.selectedSupplier._id || this.selectedSupplier.id;
+    this.stockCartService.clearCart(supplierId);
+
+    this.products.forEach(product => {
+      product.quantityToBuy = 0;
+      product.inCart = false;
+      product.tempQuantity = 0;
+    });
+  }
+
+
+  toggleCartVisibility() {
+    this.isCartVisible = !this.isCartVisible;
+  }
+
+  generarOrdenDeCompra() {
+    if (!this.selectedSupplier) return;
+
+    const supplierId = this.selectedSupplier._id || this.selectedSupplier.id;
+    const currentCart = this.stockCartService.getCartItems(supplierId);
+    if (currentCart.length === 0) {
+      Swal.fire('Error', 'No ha agregado productos al carrito para generar la orden', 'error');
+      return;
+    }
+
+    // Usamos currentCart en lugar de this.cartItems (ambos están en sync)
+    let orderSummary = '<ul class="text-start">';
+    currentCart.forEach(item => {
+      orderSummary += `<li><strong>${item.desc}</strong> (Código: ${item.code})<br>
+                       Cantidad solicitada: <strong>${item.quantityToBuy}</strong></li>`;
     });
     orderSummary += '</ul>';
-    
+
     const currentDate = new Date().toLocaleDateString();
-    const orderNum = this.orderNumber;
 
     Swal.fire({
-      title: 'Orden de Compra',
-      html: `Proveedor: ${this.selectedSupplier.businessName} <br> CUIT: ${this.selectedSupplier.cuit} <br> Número: ${orderNum} <br> Fecha: ${currentDate} <br> Estos son los productos que va a solicitar:<br>${orderSummary}`,
-      icon: 'info',
+      title: 'Confirmar Orden de Compra',
+      html: `
+        <div class="text-start">
+          <p><strong>Proveedor:</strong> ${this.selectedSupplier.businessName}</p>
+          <p><strong>CUIT:</strong> ${this.selectedSupplier.cuit}</p>
+          <p><strong>Fecha:</strong> ${currentDate}</p>
+          <hr>
+          <p><strong>Productos solicitados:</strong></p>
+          ${orderSummary}
+          <hr>
+          <p class="text-muted">Total de productos: <strong>${currentCart.length}</strong></p>
+          <p class="text-muted">Total de unidades: <strong>${this.getCartItemsCount()}</strong></p>
+        </div>
+      `,
+      icon: 'question',
       showCancelButton: true,
-      confirmButtonText: 'Confirmar',
-      cancelButtonText: 'Cancelar'
+      confirmButtonText: 'Confirmar Orden',
+      cancelButtonText: 'Cancelar',
+      width: 600,
+      customClass: { popup: 'text-center' }
     }).then((result) => {
       if (result.isConfirmed) {
-        this.solicitarStock();
-        this.orderNumber++; // Incrementar el número de orden
-        localStorage.setItem('orderNumber', this.orderNumber.toString()); // Guardar en localStorage
+        this.crearOrdenDeCompra();
       }
     });
   }
 
-  solicitarStock() {
-    const productsToRequest = this.products
-      .filter(product => product.quantityToBuy > 0)
-      .map(product => ({
-        _id: product._id,
-        quantityToBuy: product.quantityToBuy
-      }));
-  
-    if (productsToRequest.length === 0) {
-      Swal.fire('Error', 'No ha seleccionado ninguna cantidad para solicitar', 'error');
+  crearOrdenDeCompra() {
+    if (!this.selectedSupplier) return;
+    const supplierId = this.selectedSupplier._id || this.selectedSupplier.id;
+    const currentCart = this.stockCartService.getCartItems(supplierId);
+
+    if (currentCart.length === 0) {
+      Swal.fire('Error', 'No hay productos en el carrito para crear la orden', 'error');
       return;
     }
-  
-    this.productService.requestStock(productsToRequest).subscribe(
-      () => {
-        Swal.fire('Orden de Compra Registrada', 'Se ha solicitado stock de los productos seleccionados', 'success');
-        this.fetchProductsBySupplier(); // Recargar productos para actualizar el stock pendiente en la UI
-      },
-      (error) => {
-        console.error('Error al solicitar stock:', error);
-        Swal.fire('Error', 'Hubo un problema al solicitar stock', 'error');
-      }
-    );
-  }
 
-  ingresarStock() {
-    this.router.navigate(['/cargar-stock']);
+    const purchaseOrderData = {
+      supplierId,
+      products: currentCart.map(item => ({
+        productId: item._id,
+        quantity: item.quantityToBuy
+      })),
+    };
+
+    this.purchaseOrderService.createPurchaseOrder(purchaseOrderData).subscribe({
+      next: (response) => {
+        console.log('Orden de compra creada exitosamente:', response);
+        Swal.fire(
+          'Orden de Compra Creada',
+          `Se ha creado la orden de compra con ${currentCart.length} productos distintos y ${this.getCartItemsCount()} unidades totales`,
+          'success'
+        );
+
+        // Limpiar SOLO el carrito de ese proveedor (los demás proveedores siguen intactos)
+        this.stockCartService.clearCart(supplierId);
+
+        // Refrescar flags visuales
+        this.products.forEach(p => {
+          p.quantityToBuy = 0;
+          p.inCart = false;
+          p.tempQuantity = 0;
+        });
+
+        this.fetchProductsBySupplier();
+      },
+      error: (error) => {
+        console.error('Error al crear la orden de compra:', error);
+        let errorMessage = 'Hubo un problema al crear la orden de compra';
+        if (error.status === 404) errorMessage = 'No se encontró el proveedor seleccionado';
+        else if (error.status === 400) errorMessage = 'Los datos de la orden no son válidos';
+        else if (error.status === 500) errorMessage = 'Error interno del servidor. Intente nuevamente';
+
+        Swal.fire('Error', errorMessage, 'error');
+      }
+    });
   }
 
   // Métodos de paginación para proveedores
@@ -528,5 +672,6 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Resetear la vista a 'suppliers' al destruir el componente
     this.stockViewService.setCurrentView('suppliers');
+    this.stockCartService.setCurrentSupplier(null);
   }
 }

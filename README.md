@@ -2,8 +2,7 @@
 Parte Front del TP
 
 Cambios realizados:
-- Interfaz inicial solicitar stock
-- Mejora filtros: combinados y desde el backend. 
-- Pasaje de algunos estilos de product-list a styles.css.
-- Cambios esteticos sobre carteles de modificaciones para mantener identidad.
-- Servicio nuevo para que aparezca la busqueda en los productos de la OC pero no en los proveedores
+- Funcionalidad solicitar stock (creación OC).
+- Renombre y reubicación de cargar-stock --> stock-cargar
+- Creación de servicios de purchase orders y stockcart.
+- Guardado en memoria de los carritos de orden de compra.
