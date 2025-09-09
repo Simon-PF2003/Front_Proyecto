@@ -42,3 +42,245 @@ app-root > app-footer { display: block; }/* excepto el global */
    body { overflow: hidden; } 
    Si lo necesitás, dejá sólo overflow-x: hidden;
 */
+
+
+/* =========================================================
+   TARJETAS DE PRODUCTO — UNIFICADO CON PRODUCT-LIST
+   ========================================================= */
+
+/* Contenedor card */
+.product-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card .card {
+  background-color: #F8F4EC;        /* Fondo beige consistente */
+  border: 1px solid #e9e9e9;        /* Borde sutil */
+  transition: transform .08s ease, box-shadow .08s ease;
+}
+
+.product-card .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+}
+
+/* Imagen */
+.product-card .card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Título y textos */
+.product-card .card-title {
+  text-align: center;
+  word-wrap: break-word;
+  white-space: normal;
+  min-height: 2.4em;
+}
+
+.product-card .card-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Precio */
+.product-card .card-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* Utilitarios */
+.truncate { 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+}
+
+/* =========================================================
+   SIDEBAR DE FILTROS — ESTILO CONSISTENTE
+   ========================================================= */
+
+.filters-sidebar .card-header {
+  background: #f6f6f6;
+  font-weight: 600;
+}
+
+.filters-sidebar .accordion-button { 
+  font-size: 0.95rem; 
+}
+
+/* Chips de filtros activos */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .35rem .6rem;
+  border-radius: 999px;
+  background: #4CA7BF;
+  color: #fff;
+  font-size: .85rem;
+}
+
+/* =========================================================
+   CONTROLES (selects, inputs, checkboxes) — CONSISTENTE
+   ========================================================= */
+
+.elegant-select {
+  border: 1px solid #CCC9C2;
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  background-color: white;
+  color: #333;
+}
+
+.elegant-select:focus {
+  border-color: #4CA7BF;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(76, 167, 191, 0.1);
+}
+
+/* Ocultar spinners de inputs number */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Botones */
+.btn-soft-primary {
+  background-color: #4CA7BF;
+  border: 1px solid #4CA7BF;
+  color: white;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.btn-soft-primary:hover {
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+}
+
+.btn-soft-secondary {
+  background-color: #F8F4EC;
+  border: 1px solid #CCC9C2;
+  color: #666;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.btn-soft-secondary:hover {
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+  color: #F8F4EC;
+}
+
+.btn-outline-secondary {
+  background-color: #F8F4EC;
+  border: 1px solid #CCC9C2;
+  color: #666;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #ff6961;
+  border-color: #ff6961;
+}
+
+/* =========================================================
+   LISTA ELEGANTE DE OPCIONES — CONSISTENTE
+   ========================================================= */
+
+.elegant-select-list {
+  background-color: #F8F4EC;
+  border: 1px solid #CCC9C2;
+  border-radius: 4px;
+  padding: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.elegant-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  margin: 0 0 6px 0;
+  border: 1px solid #CCC9C2;
+  border-radius: 4px;
+  background: #fff;
+  color: #333;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .08s ease, background-color .08s ease, color .08s ease, box-shadow .08s ease;
+  min-height: 38px;
+}
+
+.elegant-option:last-child { 
+  margin-bottom: 0; 
+}
+
+.elegant-option:hover { 
+  border-color: #4CA7BF; 
+}
+
+.elegant-option.active {
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgba(76, 167, 191, 0.1);
+}
+
+/* Input group text consistente */
+.input-group-text { 
+  background-color: #F8F4EC;
+}
+
+/* =========================================================
+   BADGES Y ESTADOS DE STOCK — MEJORADOS Y REDONDEADOS
+   ========================================================= */
+
+.badge.bg-warning {
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(255, 193, 7, 0.3);
+}
+
+.badge.bg-danger {
+  font-size: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+/* Estados de stock con bordes redondeados y destacados */
+.product-card.low-stock .card {
+  border: 2px solid #fd7e14 !important;  /* Borde naranja completo */
+  border-radius: 0.5rem !important;      /* Bordes redondeados */
+  box-shadow: 0 0 0 2px rgba(253, 126, 20, 0.1) !important; /* Sombra naranja sutil */
+}
+
+.product-card.low-stock .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(253, 126, 20, 0.4) !important; /* Sombra naranja más intensa */
+}
+
+.product-card.no-stock .card {
+  border: 2px solid #dc3545 !important;  /* Borde rojo completo */
+  border-radius: 0.5rem !important;      /* Bordes redondeados */
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.1) !important; /* Sombra roja sutil */
+}
+
+.product-card.no-stock .card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4) !important; /* Sombra roja más intensa */
+}

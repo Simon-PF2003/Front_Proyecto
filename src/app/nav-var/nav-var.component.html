@@ -27,9 +27,9 @@
             <a class="nav-link active" href="/institucional-contacto">Contacto</a>
         </li>
         <li>
-            <app-down-comp *ngIf="isEditProductsRoute() || isStockRoute() || isProductCategoryRoute() || isChargeStockRoute()"></app-down-comp>
+            <app-down-comp *ngIf="isEditProductsRoute() || isProductCategoryRoute() || isChargeStockRoute()"></app-down-comp>
         </li>
-        <li class="col-auto search-container" *ngIf="isProductosRoute() || isStockRoute() || isEditProductsRoute() || isProductCategoryRoute() || isChargeStockRoute()">
+        <li class="col-auto search-container" *ngIf="shouldShowProductSearch()">
             <div class="search-group">
                 <input class="busqueda form-control" type="text" id="searchProduct" [(ngModel)]="searchTerm" (keyup.enter)="searchProducts()"
                     placeholder="Buscar producto">

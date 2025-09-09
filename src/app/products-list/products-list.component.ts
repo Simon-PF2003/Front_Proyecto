@@ -93,14 +93,21 @@ export class ProductsListComponent implements OnInit {
   
   async fetchProducts() {
     try {
-      let data;
-  
-      // Usar el nuevo método de filtros combinados con filtros de precio y marca
-      data = await firstValueFrom(
+      console.log('Aplicando filtros en el backend:', {
+        searchTerm: this.searchTerm,
+        selectedCategory: this.getSelectedCategoryForBackend(),
+        selectedBrand: this.getSelectedBrandForBackend(),
+        hasStockFilter: this.hasStockFilter,
+        minPrice: this.minPrice,
+        maxPrice: this.maxPrice
+      });
+
+      // Enviar TODOS los filtros al backend para optimizar la consulta en BD
+      const data = await firstValueFrom(
         this.productService.getProductsWithFilters(
           this.searchTerm, 
-          this.selectedCategory,
-          this.selectedBrand,
+          this.getSelectedCategoryForBackend(), // Categoría seleccionada o 'all'
+          this.getSelectedBrandForBackend(), // Marca seleccionada o 'all'
           this.hasStockFilter,
           this.minPrice || undefined,
           this.maxPrice || undefined
@@ -110,13 +117,19 @@ export class ProductsListComponent implements OnInit {
       this.products = data || [];
       await this.applyDiscountToProducts();
       
-      this.applyLocalFilters();
+      // Los productos ya vienen filtrados desde el backend, no necesitamos filtros locales
+      this.filteredProducts = [...this.products];
+      
+      // Solo aplicar ordenamiento local
+      this.sortProducts();
+      this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
+      this.updateDisplayedProducts();
       
     } catch (error) {
       if ((error as any).status === 400) {
         this.products = [];
         this.filteredProducts = [];
-        Swal.fire('Sin resultados', 'No hay productos que cumplan con los filtros aplicados', 'info');
+        this.showFilteredResultsMessage();
       } else {
         console.error('Error al obtener los productos:', error);
         this.products = [];
@@ -139,43 +152,101 @@ export class ProductsListComponent implements OnInit {
     }
   }
 
-  applyLocalFilters() {
-    let filtered = [...this.products];
-
-    // 🔹 Filtrado local por CATEGORÍAS (multi)
-    if (this.selectedCategories.length) {
-      filtered = filtered.filter(p => {
-        const pid = p?.cat?._id ?? p?.cat;
-        return pid ? this.selectedCategories.includes(pid) : false;
-      });
+  // Métodos auxiliares para enviar filtros al backend
+  getSelectedCategoryForBackend(): string | string[] {
+    if (this.selectedCategories.length > 0) {
+      // Enviar múltiples categorías como array
+      return this.selectedCategories;
     } else if (this.selectedCategory && this.selectedCategory !== 'all') {
-      filtered = filtered.filter(p => {
-        const pid = p?.cat?._id ?? p?.cat;
-        return pid === this.selectedCategory;
-      });
+      // Enviar categoría única
+      return this.selectedCategory;
     }
+    return 'all';
+  }
 
-    // 🔹 Filtrado local por MARCAS (multi)
-    if (this.selectedBrands.length) {
-      filtered = filtered.filter(p => {
-        const name = p?.brand?.brand ?? p?.brand;
-        return name ? this.selectedBrands.includes(name) : false;
-      });
+  getSelectedBrandForBackend(): string | string[] {
+    if (this.selectedBrands.length > 0) {
+      // Enviar múltiples marcas como array
+      return this.selectedBrands;
     } else if (this.selectedBrand && this.selectedBrand !== 'all') {
-      filtered = filtered.filter(p => {
-        const name = p?.brand?.brand ?? p?.brand;
-        return name === this.selectedBrand;
-      });
+      // Enviar marca única
+      return this.selectedBrand;
+    }
+    return 'all';
+  }
+
+  // Mensaje mejorado para cuando no hay resultados con filtros aplicados
+  showFilteredResultsMessage() {
+    const activeFilters: string[] = [];
+
+    if (this.searchTerm) {
+      activeFilters.push(`Búsqueda: "${this.searchTerm}"`);
     }
 
-    this.filteredProducts = filtered;
+    if (this.selectedCategories.length > 0) {
+      const categoryNames = this.selectedCategories.map(catId => {
+        const cat = this.categories.find(c => c._id === catId);
+        return cat ? cat.type : 'Desconocida';
+      }).join(', ');
+      activeFilters.push(`Categorías: ${categoryNames}`);
+    } else if (this.selectedCategory && this.selectedCategory !== 'all') {
+      const cat = this.categories.find(c => c._id === this.selectedCategory);
+      if (cat) activeFilters.push(`Categoría: ${cat.type}`);
+    }
+
+    if (this.selectedBrands.length > 0) {
+      activeFilters.push(`Marcas: ${this.selectedBrands.join(', ')}`);
+    } else if (this.selectedBrand && this.selectedBrand !== 'all') {
+      activeFilters.push(`Marca: ${this.selectedBrand}`);
+    }
+
+    if (this.minPrice !== null || this.maxPrice !== null) {
+      const priceRange = `${this.minPrice || 0} - ${this.maxPrice || '∞'}`;
+      activeFilters.push(`Precio: $${priceRange}`);
+    }
+
+    if (this.hasStockFilter) {
+      activeFilters.push('Solo productos con stock');
+    }
+
+    const filtersText = activeFilters.length > 0 
+      ? activeFilters.join(' • ') 
+      : 'filtros aplicados';
+
+    Swal.fire({
+      title: 'Sin productos encontrados',
+      html: `
+        <p>No hay productos que cumplan con los filtros aplicados:</p>
+        <div class="text-start mt-3">
+          <small class="text-muted">${filtersText}</small>
+        </div>
+      `,
+      icon: 'info',
+      confirmButtonText: 'Entendido',
+      showCancelButton: true,
+      cancelButtonText: 'Limpiar filtros',
+      customClass: {
+        popup: 'text-center'
+      }
+    }).then((result) => {
+      if (result.dismiss === Swal.DismissReason.cancel) {
+        this.clearAllFilters();
+      }
+    });
+  }
+
+  applyLocalFilters() {
+    // REMOVIDO: Ya no aplicamos filtros locales, todos los filtros se envían al backend
+    // Los productos ya vienen filtrados desde el backend
+    this.filteredProducts = [...this.products];
     this.sortProducts();
     this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
     this.updateDisplayedProducts();
   }
 
   applyPriceFilter() {
-    this.fetchProducts();
+    this.currentPage = 1;
+    this.fetchProducts(); // Recargar desde backend con nuevos filtros
   }
 
   clearAllFilters() {
@@ -183,14 +254,17 @@ export class ProductsListComponent implements OnInit {
     this.maxPrice = null;
     this.hasStockFilter = false;
     this.selectedBrand = 'all';
+    this.selectedCategory = 'all';
     this.sortOrder = 'none';
-    this.fetchProducts();
     this.selectedBrands = [];
     this.selectedCategories = [];
+    this.currentPage = 1;
+    this.fetchProducts(); // Recargar desde backend sin filtros
   }
 
   applyAllFilters() {
-    this.fetchProducts();
+    this.currentPage = 1;
+    this.fetchProducts(); // Recargar desde backend con todos los filtros
   }
   
   sortProducts() {
@@ -241,8 +315,7 @@ export class ProductsListComponent implements OnInit {
       this.updateDisplayedProducts();
     }
   }
-  // Este quilombo es para que el filtro puedas agregar y sacar y tener multiples marcas / categorias
-  // Marcar / desmarcar MARCA (desktop + mobile)
+  // Marcar / desmarcar MARCA (desktop + mobile) - COMPLETAMENTE OPTIMIZADO PARA BACKEND
   toggleBrand(brandName: string, checked: boolean): void {
     const i = this.selectedBrands.indexOf(brandName);
     if (checked && i === -1) this.selectedBrands.push(brandName);
@@ -251,10 +324,10 @@ export class ProductsListComponent implements OnInit {
     // Al usar multi, dejamos el filtro simple en 'all' para que el backend no restrinja
     this.selectedBrand = 'all';
     this.currentPage = 1;
-    this.fetchProducts(); // reutilizamos tu flujo
+    this.fetchProducts(); // Ahora SIEMPRE usamos el backend
   }
 
-  // Marcar / desmarcar CATEGORÍA (desktop + mobile)
+  // Marcar / desmarcar CATEGORÍA (desktop + mobile) - COMPLETAMENTE OPTIMIZADO PARA BACKEND
   toggleCategory(catId: string, checked: boolean): void {
     const i = this.selectedCategories.indexOf(catId);
     if (checked && i === -1) this.selectedCategories.push(catId);
@@ -262,7 +335,7 @@ export class ProductsListComponent implements OnInit {
 
     this.selectedCategory = 'all';
     this.currentPage = 1;
-    this.fetchProducts(); // reutilizamos tu flujo
+    this.fetchProducts(); // Ahora SIEMPRE usamos el backend
   }
 
   // Quitar desde chip
@@ -278,15 +351,15 @@ export class ProductsListComponent implements OnInit {
     this.fetchProducts();
   }
 
-  // --- NUEVO: toggles estilo checkbox pero sin inputs, para listas interactivas ---
+  // --- toggles estilo checkbox pero sin inputs, para listas interactivas ---
   toggleCategoryItem(catId: string): void {
     const nextChecked = !this.selectedCategories.includes(catId);
-    this.toggleCategory(catId, nextChecked); // reutiliza tu método actual
+    this.toggleCategory(catId, nextChecked); // reutiliza el método optimizado
   }
 
   toggleBrandItem(brandName: string): void {
     const nextChecked = !this.selectedBrands.includes(brandName);
-    this.toggleBrand(brandName, nextChecked); // reutiliza tu método actual
+    this.toggleBrand(brandName, nextChecked); // reutiliza el método optimizado
   }
 
   // Este es del filtro de arriba (en los chips)

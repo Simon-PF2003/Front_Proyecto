@@ -6,6 +6,7 @@ import { filter } from 'rxjs/operators';
 import { countService } from '../services/count-cart.service';
 import { ActivatedRoute } from '@angular/router';
 import { UsersCountService } from '../services/users-count.service';
+import { StockViewService } from '../services/stock-view.service';
 
 
 @Component({
@@ -21,13 +22,15 @@ export class NavVarComponent implements OnInit {
   productsInCart: number = 0;
   productsInCartString: string = 'h';
   pendingUsersCount: number = 0;
+  stockCurrentView: string = 'suppliers';
 
   constructor(
     private router: Router,
     public authService: AuthService,
     private countService: countService,
     private route: ActivatedRoute,
-    private usersCountService: UsersCountService
+    private usersCountService: UsersCountService,
+    private stockViewService: StockViewService
   )
   
   {
@@ -35,7 +38,13 @@ export class NavVarComponent implements OnInit {
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         if (event instanceof NavigationEnd) {
+          const previousRoute = this.currentRoute;
           this.currentRoute = event.urlAfterRedirects || event.url;
+          
+          // Si salimos de stock-ingreso, resetear la vista a 'suppliers'
+          if (previousRoute.includes('/stock-ingreso') && !this.currentRoute.includes('/stock-ingreso')) {
+            this.stockViewService.setCurrentView('suppliers');
+          }
         }
       });
   }
@@ -66,6 +75,11 @@ export class NavVarComponent implements OnInit {
         this.usersCountService.updatePendingUsersCount();
       }
     }
+
+    // Suscribirse a los cambios de vista del stock-ingreso
+    this.stockViewService.currentView$.subscribe(view => {
+      this.stockCurrentView = view;
+    });
   }
 
   toggleNav() {
@@ -82,8 +96,21 @@ export class NavVarComponent implements OnInit {
   }
 
   isStockRoute(): boolean {
-  return this.currentRoute.includes('/stock-ingreso');
-}
+    return this.currentRoute.includes('/stock-ingreso');
+  }
+
+  // Nuevo método para verificar si mostrar búsqueda de productos
+  shouldShowProductSearch(): boolean {
+    // Mostrar en products-list, product-update, reporte-agrupar-productos, cargar-stock
+    if (this.isProductosRoute() || this.isEditProductsRoute() || this.isProductCategoryRoute() || this.isChargeStockRoute()) {
+      return true;
+    }
+    // En stock-ingreso solo mostrar si estamos en la vista de productos
+    if (this.isStockRoute()) {
+      return this.stockCurrentView === 'products';
+    }
+    return false;
+  }
 
   isEditProductsRoute(): boolean {
     return this.currentRoute.includes('/product-update');

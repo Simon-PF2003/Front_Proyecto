@@ -1,0 +1,23 @@
+
+/* =========================================================
+   CARDS GENERALES — ESTILO CONSISTENTE
+   ========================================================= */
+
+.card {
+  background-color: #F8F4EC;
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================================================
+   FORMULARIOS — INPUTS DE CANTIDAD
+   ========================================================= */
+
+.form-control-sm:focus {
+  box-shadow: 0 0 0 0.2rem rgba(76, 167, 191, 0.15);
+  border-color: #4CA7BF;
+}

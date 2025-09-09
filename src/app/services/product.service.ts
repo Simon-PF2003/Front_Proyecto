@@ -38,17 +38,13 @@ export class ProductService {
     return this.http.get<any[]>(`${this.URL}/noProducts`);
   }
 
-  getPendingStockProducts(): Observable<any[]> {
-    return this.http.get<any[]>(this.URL + '/pendingStock');
-  }
-
   getProductDetailsById(productId: any): Observable<any> {
     const url = `${this.URL}/product/${productId}`;
     return this.http.get<any>(url);
   }
 
   // Método unificado para filtros combinados
-  getProductsWithFilters(searchTerm?: string, category?: string, brand?: string, hasStock?: boolean, minPrice?: number, maxPrice?: number): Observable<any[]> {
+  getProductsWithFilters(searchTerm?: string, category?: string | string[], brand?: string | string[], hasStock?: boolean, minPrice?: number, maxPrice?: number, supplierId?: string, lowStockOnly?: boolean, noStockOnly?: boolean): Observable<any[]> {
     let url = `${this.URL}/products/filter?`;
     const params: string[] = [];
 
@@ -56,12 +52,30 @@ export class ProductService {
       params.push(`search=${encodeURIComponent(searchTerm)}`);
     }
     
+    // Soporte para múltiples categorías
     if (category && category !== 'all') {
-      params.push(`category=${encodeURIComponent(category)}`);
+      if (Array.isArray(category)) {
+        // Múltiples categorías: categories[]=cat1&categories[]=cat2
+        category.forEach(cat => {
+          params.push(`categories[]=${encodeURIComponent(cat)}`);
+        });
+      } else {
+        // Categoría única
+        params.push(`category=${encodeURIComponent(category)}`);
+      }
     }
 
+    // Soporte para múltiples marcas
     if (brand && brand !== 'all') {
-      params.push(`brand=${encodeURIComponent(brand)}`);
+      if (Array.isArray(brand)) {
+        // Múltiples marcas: brands[]=brand1&brands[]=brand2
+        brand.forEach(br => {
+          params.push(`brands[]=${encodeURIComponent(br)}`);
+        });
+      } else {
+        // Marca única
+        params.push(`brand=${encodeURIComponent(brand)}`);
+      }
     }
     
     if (hasStock !== undefined) {
@@ -74,6 +88,18 @@ export class ProductService {
 
     if (maxPrice !== undefined && maxPrice > 0) {
       params.push(`maxPrice=${maxPrice}`);
+    }
+
+    if (supplierId) {
+      params.push(`supplier=${encodeURIComponent(supplierId)}`);
+    }
+
+    if (lowStockOnly !== undefined) {
+      params.push(`lowStockOnly=${lowStockOnly}`);
+    }
+
+    if (noStockOnly !== undefined) {
+      params.push(`noStockOnly=${noStockOnly}`);
     }
 
     url += params.join('&');
