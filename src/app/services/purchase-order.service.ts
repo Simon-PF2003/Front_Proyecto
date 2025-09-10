@@ -22,12 +22,16 @@ export class PurchaseOrderService {
   };
 
 //GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS
-  getAllPurchaseOrders(): Observable<any[]> {
-    return this.http.get<any[]>(this.URL + '/purchaseOrders');
+  getPendingPurchaseOrders(filters: any): Observable<any[]> {
+    return this.http.get<any[]>(this.URL + '/getPendingPurchaseOrders', { params: filters });
   }
 
 //PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH PATCH
-  updatePurchaseOrder (id: string, purchaseOrderData: any): Observable<any> {
-    return this.http.patch<any>(`${this.URL}/purchaseOrders/${id}`, purchaseOrderData);
+  updatePurchaseOrder (purchaseOrderData: any): Observable<any> {
+    return this.http.patch<any>(this.URL + '/updatePurchaseOrders', purchaseOrderData);
+  }
+
+  cancelPurchaseOrder (purchaseOrderData: any): Observable<any> {
+    return this.http.patch<any>(this.URL + '/cancelPurchaseOrder', purchaseOrderData);
   }
 }
