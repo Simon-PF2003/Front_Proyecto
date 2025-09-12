@@ -52,7 +52,13 @@
               <button class="btn btn-warning botonNormal"><a class="nav-link active" aria-current="page" href="/bill-create">Facturación</a></button>
             </div>
             <div class="pannelBttn">
-              <button class="btn btn-success botonNormal"><a class="nav-link active" aria-current="page" href="/stock-ingreso">Solicitud de Stock</a></button>
+              <button class="btn btn-success botonNormal position-relative">
+                <a class="nav-link active" aria-current="page" href="/stock-ingreso">Solicitud de Stock</a>
+                <span *ngIf="lowStockProductsCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge-admin">
+                  {{ lowStockProductsCount }}
+                  <span class="visually-hidden">productos sin stock</span>
+                </span>
+              </button>
             </div>
             <div class="pannelBttn">
               <button class="btn btn-success botonNormal"><a class="nav-link active" aria-current="page" href="/stock-cargar">Ingreso de Stock</a></button>

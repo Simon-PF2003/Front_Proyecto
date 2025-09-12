@@ -25,6 +25,7 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
   displayedSuppliers: any[] = [];
   selectedSupplier: any = null;
   searchSupplierTerm: string = '';
+  supplierLowStockCounts: { [key: string]: number } = {};
   
   // Datos de productos
   products: any[] = [];
@@ -126,6 +127,10 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
         const result = await this.supplierService.searchSuppliers(this.searchSupplierTerm);
         this.suppliers = Array.isArray(result) ? result : [result];
       }
+      
+      // Cargar conteos de productos con bajo stock para cada proveedor
+      await this.loadLowStockCountsForSuppliers();
+      
       this.updateSupplierPagination();
     } catch (error) {
       console.error('Error al obtener los proveedores:', error);
@@ -135,6 +140,26 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
       }
       this.updateSupplierPagination();
     }
+  }
+
+  private async loadLowStockCountsForSuppliers() {
+    for (const supplier of this.suppliers) {
+      const supplierId = supplier._id || supplier.id;
+      try {
+        const lowStockProducts = await firstValueFrom(
+          this.productService.getLowStockProductsBySupplier(supplierId)
+        );
+        this.supplierLowStockCounts[supplierId] = lowStockProducts.length;
+      } catch (error) {
+        console.error(`Error al obtener productos con bajo stock para proveedor ${supplierId}:`, error);
+        this.supplierLowStockCounts[supplierId] = 0;
+      }
+    }
+  }
+
+  getLowStockCount(supplier: any): number {
+    const supplierId = supplier._id || supplier.id;
+    return this.supplierLowStockCounts[supplierId] || 0;
   }
 
   onSearchSupplier() {

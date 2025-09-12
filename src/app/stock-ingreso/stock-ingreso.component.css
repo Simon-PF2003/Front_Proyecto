@@ -3,6 +3,30 @@
    SISTEMA DE CARRITO — ESTILOS ESPECÍFICOS
    ========================================================= */
 
+/* Badge de notificación para proveedores con productos bajo stock */
+.badge.bg-danger {
+  background-color: #dc3545 !important;
+  font-size: 11px;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  line-height: 16px;
+  animation: pulse 2s infinite;
+  z-index: 10;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(220, 53, 69, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+  }
+}
+
 /* Botones outline primary consistentes */
 .btn-outline-primary {
   border-color: #4CA7BF;
@@ -111,4 +135,19 @@
   0% { transform: scale(1); }
   50% { transform: scale(1.02); }
   100% { transform: scale(1); }
+}
+
+.notification-badge-stock {
+  font-size: 11px;
+  font-weight: bold;
+  min-width: 18px;
+  height: 18px;
+  line-height: 1px;
+  animation: pulse 2s infinite;
+  z-index: 10;
+  transform: translate(-25%, -50%) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }

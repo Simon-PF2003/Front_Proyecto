@@ -4,6 +4,7 @@ import jwt_decode from 'jwt-decode';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { countService } from '../services/count-cart.service';
+import { ProductService } from '../services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { UsersCountService } from '../services/users-count.service';
 import { StockViewService } from '../services/stock-view.service';
@@ -22,6 +23,7 @@ export class NavVarComponent implements OnInit {
   productsInCart: number = 0;
   productsInCartString: string = 'h';
   pendingUsersCount: number = 0;
+  lowStockProductsCount: number = 0; 
   stockCurrentView: string = 'suppliers';
 
   constructor(
@@ -30,7 +32,8 @@ export class NavVarComponent implements OnInit {
     private countService: countService,
     private route: ActivatedRoute,
     private usersCountService: UsersCountService,
-    private stockViewService: StockViewService
+    private stockViewService: StockViewService,
+    private productService: ProductService
   )
   
   {
@@ -74,12 +77,18 @@ export class NavVarComponent implements OnInit {
         // Actualizar el conteo inicial
         this.usersCountService.updatePendingUsersCount();
       }
-    }
 
-    // Suscribirse a los cambios de vista del stock-ingreso
-    this.stockViewService.currentView$.subscribe(view => {
-      this.stockCurrentView = view;
-    });
+      if (this.userRole === 'Administrador') {
+        this.productService.getNoStockProducts().subscribe(products => {
+          this.lowStockProductsCount = products.length;
+        });
+      }
+
+      // Suscribirse a los cambios de vista del stock-ingreso
+      this.stockViewService.currentView$.subscribe(view => {
+        this.stockCurrentView = view;
+      });
+    }
   }
 
   toggleNav() {

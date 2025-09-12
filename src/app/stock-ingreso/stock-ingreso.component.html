@@ -27,8 +27,13 @@
             <p class="card-text">CUIT: {{ supplier.cuit }}</p>
             <p class="card-text">Dirección: {{ supplier.address }}</p>
             <p class="card-text">Teléfono: {{ supplier.phoneNumber }}</p>
-            <button class="btn btn-primary w-100" (click)="selectSupplier(supplier)">
+            <button class="btn btn-primary w-100 position-relative" (click)="selectSupplier(supplier)">
               Generar Orden de Compra
+              <span *ngIf="getLowStockCount(supplier) > 0" 
+                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge-stock">
+                {{ getLowStockCount(supplier) }}
+                <span class="visually-hidden">productos con bajo stock</span>
+              </span>
             </button>
           </div>
         </div>

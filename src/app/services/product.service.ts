@@ -38,6 +38,10 @@ export class ProductService {
     return this.http.get<any[]>(`${this.URL}/noProducts`);
   }
 
+  getLowStockProductsBySupplier(supplierId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.URL}/products/filter?supplier=${encodeURIComponent(supplierId)}&lowStockOnly=true`);
+  }
+
   getProductDetailsById(productId: any): Observable<any> {
     const url = `${this.URL}/product/${productId}`;
     return this.http.get<any>(url);
