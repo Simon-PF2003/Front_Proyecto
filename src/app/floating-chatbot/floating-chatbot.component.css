@@ -6,7 +6,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 1000;
+  z-index: 999 !important; /* Asegurar que esté por debajo de los modales (1050) */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 

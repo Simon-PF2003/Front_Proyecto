@@ -285,9 +285,33 @@ body {
   outline-offset: 2px;
 }
 
-/* Ensure chatbot is above all other elements but below modals */
+/* Critical: Ensure proper z-index hierarchy */
 .chatbot-wrapper {
-  z-index: 999;
+  z-index: 999 !important; /* Below modals */
+}
+
+/* Bootstrap modal z-index hierarchy - Critical for preventing chatbot interference */
+.modal {
+  z-index: 1050 !important; /* Above chatbot */
+}
+
+.modal-backdrop {
+  z-index: 1040 !important; /* Below modal but above chatbot */
+}
+
+/* Angular Bootstrap modal backdrop fix */
+ngb-modal-backdrop {
+  z-index: 1040 !important;
+}
+
+/* Additional modal-related elements */
+.modal-dialog {
+  z-index: 1051 !important;
+}
+
+/* Toast notifications should be above everything */
+.toast-container {
+  z-index: 1060 !important;
 }
 
 /* Override for modals if they exist */
