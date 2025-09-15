@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Font Awesome Icons */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
 /* 1) Layout base a nivel app */
 html, body { 
   height: 100%; 
@@ -260,6 +263,40 @@ input[type="number"] {
   font-size: 0.75rem;
   font-weight: 600;
   box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+/* =========================================================
+   CHATBOT INTEGRATION - Global adjustments
+   ========================================================= */
+
+/* Ensure chatbot doesn't interfere with existing layout */
+body {
+  padding-right: 0 !important; /* Prevent any padding that might be added by chatbot */
+}
+
+/* Smooth transitions for better UX */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Improve focus styles for better accessibility */
+.chatbot-wrapper *:focus-visible {
+  outline: 2px solid #4CA7BF;
+  outline-offset: 2px;
+}
+
+/* Ensure chatbot is above all other elements but below modals */
+.chatbot-wrapper {
+  z-index: 999;
+}
+
+/* Override for modals if they exist */
+.modal {
+  z-index: 1050;
+}
+
+.modal-backdrop {
+  z-index: 1040;
 }
 
 /* Estados de stock con bordes redondeados y destacados */

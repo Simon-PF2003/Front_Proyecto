@@ -1,0 +1,146 @@
+<!-- Floating Chatbot Button -->
+<div class="chatbot-wrapper" [class.chat-open]="isOpen">
+  <!-- Chat Widget Container -->
+  <div class="chat-widget" [class.open]="isOpen" [class.closed]="!isOpen">
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="header-content">
+        <div class="bot-avatar">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="header-info">
+          <h3>Asistente Virtual</h3>
+          <p class="status" [class.connected]="isConnected" [class.disconnected]="!isConnected">
+            <span class="status-dot"></span>
+            {{ isConnected ? 'En línea' : 'Desconectado' }}
+          </p>
+        </div>
+        <button class="close-btn" (click)="closeChat()" title="Cerrar chat">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Messages Area -->
+    <div class="chat-messages" #messagesContainer>
+      <div class="messages-list">
+        <div 
+          *ngFor="let message of messages; trackBy: trackByMessageId" 
+          [ngClass]="getMessageClasses(message)"
+          class="message-wrapper"
+        >
+          <div class="message-content" [innerHTML]="formatMessageText(message.text)"></div>
+          <div class="message-time">{{ message.timestamp | date:'short' }}</div>
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="typing-indicator" *ngIf="isTyping">
+          <div class="typing-content">
+            <div class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <span class="typing-text">El asistente está escribiendo...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions" *ngIf="!isTyping">
+      <div class="quick-actions-title">Consultas rápidas:</div>
+      <div class="quick-buttons">
+        <button 
+          *ngFor="let action of quickActions" 
+          class="quick-btn"
+          (click)="sendQuickAction(action)"
+          [title]="action.text"
+        >
+          <span class="quick-icon">{{ action.icon }}</span>
+          <span class="quick-text">{{ action.text }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- User ID Input (Optional) -->
+    <div class="user-input-section" *ngIf="!userId">
+      <input 
+        type="text" 
+        class="user-id-input" 
+        [(ngModel)]="userId"
+        placeholder="Tu email para consultas personalizadas (opcional)"
+        maxlength="100"
+      >
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-input">
+      <div class="input-wrapper">
+        <textarea 
+          #messageInput
+          class="message-input" 
+          [(ngModel)]="messageText"
+          (keypress)="onKeyPress($event)"
+          placeholder="Escribe tu consulta aquí..."
+          maxlength="500"
+          rows="1"
+          [disabled]="isTyping || !isConnected"
+        ></textarea>
+        <button 
+          class="send-btn"
+          (click)="sendMessage()"
+          [disabled]="!messageText.trim() || isTyping || !isConnected"
+          title="Enviar mensaje"
+        >
+          <i class="fas fa-paper-plane" *ngIf="!isTyping"></i>
+          <div class="spinner" *ngIf="isTyping"></div>
+        </button>
+      </div>
+      <div class="input-footer">
+        <div class="char-counter" [class.warning]="messageText.length > 450">
+          {{ messageText.length }}/500
+        </div>
+        <button class="clear-btn" (click)="clearChat()" title="Limpiar chat">
+          <i class="fas fa-broom"></i>
+          Limpiar
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Stats (Hidden by default, can be toggled) -->
+    <div class="chat-stats" *ngIf="false">
+      <div class="stats-content">
+        <div class="stat-item">
+          <span class="stat-label">Mensajes:</span>
+          <span class="stat-value">{{ messageCount }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Respuestas:</span>
+          <span class="stat-value">{{ responseCount }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Tiempo promedio:</span>
+          <span class="stat-value">{{ averageResponseTime }}ms</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Action Button -->
+  <button 
+    class="chat-fab" 
+    [class.has-new-messages]="hasNewMessages && !isOpen"
+    (click)="toggleChat()"
+    [title]="isOpen ? 'Cerrar chat' : 'Abrir asistente virtual'"
+  >
+    <div class="fab-content" [class.rotate]="isOpen">
+      <i class="fas fa-comments" *ngIf="!isOpen"></i>
+      <i class="fas fa-times" *ngIf="isOpen"></i>
+    </div>
+    <div class="new-message-badge" *ngIf="hasNewMessages && !isOpen">
+      <i class="fas fa-exclamation"></i>
+    </div>
+    <div class="connection-indicator" [class.connected]="isConnected"></div>
+  </button>
+</div>

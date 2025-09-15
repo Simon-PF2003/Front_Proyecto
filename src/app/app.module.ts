@@ -92,6 +92,9 @@ import { AdminPanelComponent } from './admin-panel/admin-panel.component';
 import { TasksComponent } from './tasks/tasks.component';
 import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
 
+//Chatbot
+import { FloatingChatbotComponent } from './floating-chatbot/floating-chatbot.component';
+
 
 @NgModule({
   declarations: [
@@ -166,6 +169,9 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
     //Tasks
     TasksComponent,
     PrivateTasksComponent,
+    
+    //Chatbot
+    FloatingChatbotComponent,
   ],
 
   imports: [
