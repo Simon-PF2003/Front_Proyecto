@@ -163,12 +163,33 @@ export class ProductRetrieveComponent implements OnInit {
       price: priceWithDiscount, 
     };
   
-    const respuesta = this.cartService.addToCart(productToAdd);
-    if (respuesta) {
-      this.productsInCart += quantity;
-      localStorage.setItem('productsInCart', this.productsInCart.toString());
-      this.countService.updateProductsInCartValue(this.productsInCart);
-    }
+    // Ahora el addToCart devuelve un Observable, necesitamos suscribirnos
+    this.cartService.addToCart(productToAdd).subscribe({
+      next: (success) => {
+        if (success) {
+          this.productsInCart += quantity;
+          localStorage.setItem('productsInCart', this.productsInCart.toString());
+          this.countService.updateProductsInCartValue(this.productsInCart);
+          
+          Swal.fire({
+            icon: 'success',
+            title: 'Producto agregado',
+            text: `${productToAdd.desc} agregado al carrito`,
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+        // Si success es false, el CartService ya mostró el error correspondiente
+      },
+      error: (error) => {
+        console.error('Error al agregar al carrito:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Hubo un problema al agregar el producto al carrito',
+        });
+      }
+    });
   }
   
 
