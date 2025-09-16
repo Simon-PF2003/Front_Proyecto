@@ -28,3 +28,189 @@
   align-items: center;
   font-weight: bold;
 }
+
+/* Chips de filtros */
+.filter-chip {
+  display: inline-flex;
+  align-items: center;
+  background-color: #4CA7BF;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  margin: 0.125rem;
+}
+
+/* Utilidades */
+.no-underline { 
+  text-decoration: none; 
+  color: inherit; 
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Sidebar de filtros */
+.filters-sidebar {
+  border: 1px solid #CCC9C2;
+  border-radius: 8px;
+}
+
+.filters-sidebar .card-header {
+  border-bottom: 1px solid #CCC9C2;
+  font-weight: 500;
+}
+
+/* Accordion overrides */
+.accordion-button {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  background-color: #F8F4EC;
+  border: none;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #E6E2DA;
+  color: #333;
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.25rem rgba(76, 167, 191, 0.25);
+  border-color: #4CA7BF;
+}
+
+.accordion-item {
+  border: 1px solid #E6E2DA;
+  margin-bottom: 0.25rem;
+  border-radius: 6px;
+}
+
+.accordion-body {
+  padding: 1rem;
+  background-color: white;
+}
+
+/* Lista elegante para selección múltiple */
+.elegant-select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #E6E2DA;
+  border-radius: 6px;
+  padding: 0.5rem;
+  background-color: white;
+}
+
+.elegant-option {
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: transparent;
+  text-align: left;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.elegant-option:hover { 
+  background-color: #F8F4EC; 
+  border-color: #CCC9C2;
+}
+
+.elegant-option.active {
+  background-color: #4CA7BF;
+  color: white;
+  border-color: #4CA7BF;
+}
+
+/* Select elegante */
+.elegant-select {
+  border: 1px solid #CCC9C2;
+  background-color: white;
+  color: #333;
+}
+
+.elegant-select:focus {
+  border-color: #4CA7BF;
+  box-shadow: 0 0 0 0.2rem rgba(76, 167, 191, 0.25);
+}
+
+/* Botones soft */
+.btn-soft-primary {
+  background-color: #4CA7BF;
+  border: 1px solid #4CA7BF;
+  color: white;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-soft-primary:hover {
+  background-color: #3a8aa0;
+  border-color: #3a8aa0;
+  color: white;
+}
+
+.btn-soft-secondary {
+  background-color: #F8F4EC;
+  border: 1px solid #CCC9C2;
+  color: #666;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.btn-soft-secondary:hover {
+  background-color: #E6E2DA;
+  border-color: #B8B5AE;
+  color: #555;
+}
+
+/* Input groups */
+.input-group-text {
+  background-color: #F8F4EC;
+  border-color: #CCC9C2;
+  color: #666;
+}
+
+.form-control {
+  border-color: #CCC9C2;
+}
+
+.form-control:focus {
+  border-color: #4CA7BF;
+  box-shadow: 0 0 0 0.2rem rgba(76, 167, 191, 0.25);
+}
+
+/* Form checks */
+.form-check-input:checked {
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+}
+
+.form-check-input:focus {
+  border-color: #4CA7BF;
+  box-shadow: 0 0 0 0.25rem rgba(76, 167, 191, 0.25);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .elegant-select-list {
+    max-height: 150px;
+  }
+  
+  .card .card-img-top {
+    height: 180px;
+  }
+}

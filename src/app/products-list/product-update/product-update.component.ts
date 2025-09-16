@@ -6,7 +6,9 @@ import { ProductService } from '../../services/product.service';
 import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../../services/auth.service';
-import { CategorySelectionService } from '../../services/category.service';
+import { CategorySelectionService, Category } from '../../services/category.service';
+import { BrandSelectionService } from '../../services/brand.service';
+import { FiltersStateService } from '../../shared/filters/filters-state.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -18,11 +20,10 @@ export class ProductUpdateComponent implements OnInit {
   products: any[] = [];
   filteredProducts: any[] = [];
   displayedProducts: any[] = [];
-
-  // ahora guarda el _id de la categoría (o 'all')
-  selectedCategory: string = 'all';
   searchTerm: string = '';
-  hasStockFilter: boolean = false;
+  sortOrder: string = 'none';
+  categories: Category[] = [];
+  brands: any[] = [];
 
   // Paginación
   currentPage: number = 1;
@@ -35,55 +36,204 @@ export class ProductUpdateComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
-    private categoryService: CategorySelectionService
-  ) {}
+    private categoryService: CategorySelectionService,
+    private brandService: BrandSelectionService,
+    public filters: FiltersStateService
+  ) {
+    this.filteredProducts = [];
+  }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.authService.checkAuthAndRedirect();
+
+    await this.loadBrands();
+    await this.loadCategories();
 
     this.route.queryParams.subscribe((queryParams) => {
       this.searchTerm = queryParams['q'] || '';
+      this.filters.set('searchTerm', this.searchTerm);
+    });
+
+    // Suscribirse a cambios en los filtros
+    this.filters.filters$.subscribe(() => {
       this.fetchProducts();
     });
 
     // Escuchar selecciones de categoría desde la navbar
     this.categoryService.categorySelected$.subscribe(async (category) => {
-      this.selectedCategory = category;
-      await this.fetchProducts();
+      this.filters.set('selectedCategory', category);
+    });
+
+    // Cargar productos inicial
+    this.fetchProducts();
+  }
+
+  async loadBrands() {
+    try {
+      this.brands = await firstValueFrom(this.brandService.getBrands());
+    } catch (error) {
+      console.error('Error loading brands:', error);
+      this.brands = [];
+    }
+  }
+
+  async loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (cats) => this.categories = cats || [],
+      error: (e) => console.error('Error al cargar categorías:', e)
     });
   }
 
   async fetchProducts() {
     try {
-      let data;
+      console.log('Aplicando filtros en el backend:', {
+        searchTerm: this.filters.value.searchTerm,
+        selectedCategory: this.filters.getSelectedCategoryForBackend(),
+        selectedBrand: this.filters.getSelectedBrandForBackend(),
+        hasStockFilter: this.filters.value.hasStockFilter,
+        minPrice: this.filters.value.minPrice,
+        maxPrice: this.filters.value.maxPrice
+      });
 
-      data = await firstValueFrom(
+      const data = await firstValueFrom(
         this.productService.getProductsWithFilters(
-          this.searchTerm, 
-          this.selectedCategory, 
-          undefined,
-          this.hasStockFilter
+          this.filters.value.searchTerm,
+          this.filters.getSelectedCategoryForBackend(),
+          this.filters.getSelectedBrandForBackend(),
+          this.filters.value.hasStockFilter,
+          this.filters.value.minPrice || undefined,
+          this.filters.value.maxPrice || undefined
         )
       );
 
       this.products = data || [];
       this.filteredProducts = [...this.products];
-
+      
+      // Solo aplicar ordenamiento local
+      this.sortProducts();
       this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
       this.updateDisplayedProducts();
+
     } catch (error) {
       if ((error as any).status === 400) {
         this.products = [];
         this.filteredProducts = [];
-        Swal.fire('Sin resultados', 'No hay productos que cumplan con los filtros aplicados', 'info');
+        this.showFilteredResultsMessage();
       } else {
         console.error('Error al obtener los productos:', error);
         this.products = [];
         this.filteredProducts = [];
       }
-      this.totalPages = 1;
+      this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
       this.updateDisplayedProducts();
     }
+  }
+
+  // Mensaje mejorado para cuando no hay resultados con filtros aplicados
+  showFilteredResultsMessage() {
+    const activeFilters: string[] = [];
+    const filterValues = this.filters.value;
+
+    if (filterValues.searchTerm) {
+      activeFilters.push(`Búsqueda: "${filterValues.searchTerm}"`);
+    }
+
+    if (filterValues.selectedCategories.length > 0) {
+      const categoryNames = filterValues.selectedCategories.map(catId => {
+        const cat = this.categories.find(c => c._id === catId);
+        return cat ? cat.type : 'Desconocida';
+      }).join(', ');
+      activeFilters.push(`Categorías: ${categoryNames}`);
+    }
+
+    if (filterValues.selectedBrands.length > 0) {
+      activeFilters.push(`Marcas: ${filterValues.selectedBrands.join(', ')}`);
+    }
+
+    if (filterValues.minPrice !== null || filterValues.maxPrice !== null) {
+      const priceRange = `${filterValues.minPrice || 0} - ${filterValues.maxPrice || '∞'}`;
+      activeFilters.push(`Precio: $${priceRange}`);
+    }
+
+    if (filterValues.hasStockFilter) {
+      activeFilters.push('Solo productos con stock');
+    }
+
+    const filtersText = activeFilters.length > 0 
+      ? activeFilters.join(' • ') 
+      : 'filtros aplicados';
+
+    Swal.fire({
+      title: 'Sin productos encontrados',
+      html: `
+        <p>No hay productos que cumplan con los filtros aplicados:</p>
+        <div class="text-start mt-3">
+          <small class="text-muted">${filtersText}</small>
+        </div>
+      `,
+      icon: 'info',
+      confirmButtonText: 'Entendido',
+      showCancelButton: true,
+      cancelButtonText: 'Limpiar filtros',
+      customClass: {
+        popup: 'text-center'
+      }
+    }).then((result) => {
+      if (result.dismiss === Swal.DismissReason.cancel) {
+        this.clearAllFilters();
+      }
+    });
+  }
+
+  clearAllFilters() {
+    this.filters.resetAll();
+    this.currentPage = 1;
+  }
+
+  applyPriceFilter() {
+    this.currentPage = 1;
+    // El fetchProducts se ejecuta automáticamente por la suscripción a filters$
+  }
+
+  sortProducts() {
+    let productsToSort = this.filteredProducts.length > 0 ? this.filteredProducts : this.products;
+    
+    if (this.sortOrder === 'asc') {
+      productsToSort.sort((a, b) => a.price - b.price);
+    } else if (this.sortOrder === 'desc') {
+      productsToSort.sort((a, b) => b.price - a.price);
+    } else if (this.sortOrder === 'name-asc') {
+      productsToSort.sort((a, b) => a.desc.localeCompare(b.desc));
+    } else if (this.sortOrder === 'name-desc') {
+      productsToSort.sort((a, b) => b.desc.localeCompare(a.desc));
+    } else if (this.sortOrder === 'code-asc') {
+      productsToSort.sort((a, b) => {
+        const codeA = Number(a.code);
+        const codeB = Number(b.code);
+        return codeA - codeB;
+      });
+    } else if (this.sortOrder === 'code-desc') {
+      productsToSort.sort((a, b) => {
+        const codeA = Number(a.code);
+        const codeB = Number(b.code);
+        return codeB - codeA;
+      });
+    }
+
+    if (this.filteredProducts.length > 0) {
+      this.filteredProducts = productsToSort;
+    } else {
+      this.products = productsToSort;
+    }
+    
+    this.updateDisplayedProducts();
+  }
+
+  // Métodos auxiliares para compatibilidad con el componente de filtros
+  getCategoryName(id: string): string {
+    if (!id || !this.categories || !this.categories.length) return id;
+    const cat = this.categories.find((x: any) => x && x._id === id);
+    return cat?.type ?? id;
   }
 
   updateDisplayedProducts() {

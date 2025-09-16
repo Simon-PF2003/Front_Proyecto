@@ -95,7 +95,9 @@ import { PrivateTasksComponent } from './private-tasks/private-tasks.component';
 //Chatbot
 import { FloatingChatbotComponent } from './floating-chatbot/floating-chatbot.component';
 
-
+//Filtros
+import { FiltersPanelComponent } from './shared/filters/filters-panel/filters-panel.component';
+import { FiltersStateService } from './shared/filters/filters-state.service';
 @NgModule({
   declarations: [
 //Genericos
@@ -172,6 +174,9 @@ import { FloatingChatbotComponent } from './floating-chatbot/floating-chatbot.co
     
     //Chatbot
     FloatingChatbotComponent,
+
+    //Filtros
+    FiltersPanelComponent,
   ],
 
   imports: [
