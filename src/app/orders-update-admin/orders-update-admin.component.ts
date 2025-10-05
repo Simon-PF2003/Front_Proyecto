@@ -38,15 +38,24 @@ export class OrdersUpdateAdminComponent {
   }
 
   async getOrders() {
-    this.orderService.getPedidos().subscribe(async (data: any) => {
+    this.orderService.getPedidos().subscribe((data: any) => {
+      console.log('Datos recibidos del backend:', data);
+      
+      // Como el backend ya usa populate, los datos del usuario ya vienen incluidos
+      // Solo necesitamos procesar los pedidos
       for (const pedido of data) {
-        try {
-          const cliente = await this.authService.getOrderUser(pedido.userId);
-          pedido.businessName = cliente.businessName;
-        } catch (error) {
-          console.error('Error obteniendo nombre del cliente:', error);
+        console.log('Pedido procesado:', pedido);
+        // Los datos ya vienen populados desde el backend
+        if (pedido.userId && pedido.userId.businessName) {
+          pedido.businessName = pedido.userId.businessName;
+          pedido.userCode = pedido.userId.code;
+        } else {
+          console.warn('Pedido sin datos de usuario populados:', pedido);
+          pedido.businessName = 'Usuario no encontrado';
+          pedido.userCode = 'N/A';
         }
       }
+      
       this.pedidos = data;
       this.pedidosFiltrados = [...this.pedidos];
       this.updatePagination();
@@ -67,9 +76,18 @@ export class OrdersUpdateAdminComponent {
   async fetchOrders() {
     if (this.searchTerm) {
       const data = await firstValueFrom(this.orderService.getOrdersFiltered(this.searchTerm));
+      console.log('Datos filtrados recibidos:', data);
+      
+      // Procesar pedidos filtrados (si también usan populate)
       for (const pedido of data) {
-        const cliente = await this.authService.getOrderUser(pedido.userId);
-        pedido.businessName = cliente.businessName;
+        if (pedido.userId && pedido.userId.businessName) {
+          pedido.businessName = pedido.userId.businessName;
+          pedido.userCode = pedido.userId.code;
+        } else {
+          console.warn('Pedido filtrado sin datos de usuario populados:', pedido);
+          pedido.businessName = 'Usuario no encontrado';
+          pedido.userCode = 'N/A';
+        }
       }
       this.pedidosFiltrados = data;
     } else {
@@ -101,6 +119,8 @@ export class OrdersUpdateAdminComponent {
   }
 
   openModal(pedido: any) {
+    console.log('Abriendo modal para pedido:', pedido);
+    console.log('ID del pedido:', pedido._id);
     this.showModal = true;
     this.selectedPedido = pedido._id;
   }

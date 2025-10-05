@@ -21,6 +21,11 @@
     }
 }
 
+.btn-info {
+  background-color: blueviolet;
+  border: blueviolet;
+  color: azure;
+}
 
 @media (min-width: 1201px){ 
 

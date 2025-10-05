@@ -32,7 +32,7 @@
                         <button class="btn w-100 text-left" type="button" data-bs-toggle="collapse" 
                                 [attr.data-bs-target]="'#collapse' + purchaseOrder._id" aria-expanded="false"
                                 [attr.aria-controls]="'collapse' + purchaseOrder._id">
-                            <strong>Orden ID:</strong> {{ purchaseOrder._id }} |
+                            <strong>Orden ID:</strong> {{ purchaseOrder.code }} |
                             <strong>Proveedor:</strong> {{ purchaseOrder.supplierId.businessName }} |
                             <strong>Fecha:</strong> {{ purchaseOrder.createdAt | date: 'dd/MM/yyyy HH:mm' }} 
                         </button>

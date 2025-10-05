@@ -25,6 +25,7 @@
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.1",
     "express": "^4.18.2",
+    "file-saver": "^2.0.5",
     "gsap": "^3.12.2",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
@@ -38,6 +39,7 @@
     "sweetalert2": "^11.6.13",
     "tslib": "^2.3.0",
     "validator": "^13.11.0",
+    "xlsx": "^0.18.5",
     "xss-clean": "^0.1.4",
     "zone.js": "~0.13.0"
   },
@@ -46,6 +48,7 @@
     "@angular/cli": "~16.2.0",
     "@angular/compiler-cli": "^16.2.0",
     "@angular/localize": "^16.2.0",
+    "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~4.3.0",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BillService } from '../services/bill.service';
 import Swal from 'sweetalert2';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-reporte-recaudacion',
@@ -58,7 +59,21 @@ export class ReporteRecaudacionComponent implements OnInit {
     const dateEnd = this.dateRangeEnd + "T23:59:59Z";
     this.billService.getBills(dateStart, dateEnd).subscribe(
       (response: any) => {
-        this.facturas = response.bills;
+        console.log('Respuesta del backend (getBills):', response);
+        console.log('Facturas recibidas:', response.bills);
+        
+        // Procesar las facturas para extraer los códigos correctos
+        this.facturas = response.bills.map((factura: any) => {
+          console.log('Procesando factura:', factura);
+          return {
+            ...factura,
+            userCode: factura.userId?.code || factura.userId?._id || 'N/A',
+            orderCode: factura.orderId?.code || factura.orderId?._id || 'N/A',
+            userBusinessName: factura.userId?.businessName || 'No disponible'
+          };
+        });
+        
+        console.log('Facturas procesadas:', this.facturas);
         this.totalRecaudado = response.totalRecaudado;
         this.totalPages = Math.ceil(this.facturas.length / this.pageSize);
         this.currentPage = 1;
@@ -92,5 +107,71 @@ export class ReporteRecaudacionComponent implements OnInit {
       this.currentPage = page;
       this.updateDisplayedFacturas();
     }
+  }
+
+  exportarExcel() {
+    if (this.facturas.length === 0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Sin datos',
+        text: 'No hay facturas para exportar.',
+      });
+      return;
+    }
+
+    // Mostrar loading mientras se genera el Excel
+    Swal.fire({
+      title: 'Generando Excel...',
+      text: 'Por favor espera mientras se prepara el archivo',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    const dateStart = this.dateRangeStart + "T00:00:00Z";
+    const dateEnd = this.dateRangeEnd + "T23:59:59Z";
+
+    this.billService.exportBillsExcel(dateStart, dateEnd).subscribe({
+      next: (blob: Blob) => {
+        Swal.close();
+        
+        // Generar el nombre del archivo con las fechas
+        const fechaInicio = new Date(this.dateRangeStart).toLocaleDateString('es-ES').replace(/\//g, '-');
+        const fechaFin = new Date(this.dateRangeEnd).toLocaleDateString('es-ES').replace(/\//g, '-');
+        const nombreArchivo = `Reporte_Recaudacion_${fechaInicio}_al_${fechaFin}.xlsx`;
+
+        // Descargar el archivo
+        saveAs(blob, nombreArchivo);
+
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: '¡Exportación exitosa!',
+          text: `El archivo ${nombreArchivo} se ha descargado correctamente.`,
+          timer: 3000,
+          showConfirmButton: false
+        });
+      },
+      error: (error) => {
+        Swal.close();
+        console.error('Error al exportar Excel:', error);
+        
+        let errorMessage = 'Ocurrió un error al generar el archivo Excel.';
+        if (error.status === 403) {
+          errorMessage = 'No se encontraron facturas para exportar en el rango de fechas seleccionado.';
+        } else if (error.status === 400) {
+          errorMessage = 'Rango de fechas inválido.';
+        } else if (error.status === 500) {
+          errorMessage = 'Error interno del servidor al generar el Excel.';
+        }
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de exportación',
+          text: errorMessage,
+        });
+      }
+    });
   }
 }

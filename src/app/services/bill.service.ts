@@ -29,4 +29,11 @@ export class BillService {
     getBillPDF(billId: string): Observable<any> {
         return this.http.get<any>(this.URL + '/getBillPDF', { params: { billId }});
     }
+
+    exportBillsExcel(dateStart: string, dateEnd: string): Observable<Blob> {
+        return this.http.get(`${this.URL}/exportBillsExcel`, {
+            params: { dateStart, dateEnd },
+            responseType: 'blob'
+        });
+    }
 }

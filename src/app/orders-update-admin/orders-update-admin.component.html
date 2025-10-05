@@ -39,7 +39,7 @@
     <div class="col">
       <div *ngFor="let pedido of paginatedPedidos" class="card mb-3">
       <div class="card-header d-flex flex-wrap justify-content-between">
-        <div class="text-break"><strong>ID del Pedido:</strong> {{ pedido._id }}</div>
+        <div class="text-break"><strong>ID del Pedido:</strong> {{ pedido.code }}</div>
         <div><strong>Fecha:</strong> {{ pedido.createdAt | date:'dd/MM/yyyy - HH:mm' }}</div>
       </div>
 
@@ -59,8 +59,8 @@
           <p class="mb-2 text-break" [ngClass]="{ 'pendiente': pedido.status === 'Pendiente', 'en-curso': pedido.status === 'En curso', 'facturado': pedido.status === 'Facturado' }">
             <strong>Estado:</strong> {{ pedido.status }}
           </p>
-          <p class="mb-2 text-break"><strong>Usuario ID:</strong> {{ pedido.userId }}</p>
-          <p class="mb-2 text-break"><strong>Razón Social:</strong> {{ pedido.businessName }}</p>
+          <p class="mb-2 text-break"><strong>Usuario ID:</strong> {{ pedido.userCode || pedido.userId?.code || 'N/A' }}</p>
+          <p class="mb-2 text-break"><strong>Razón Social:</strong> {{ pedido.businessName || pedido.userId?.businessName || 'No disponible' }}</p>
           <button class="btn btn-primary mb-2" (click)="openModal(pedido)">Cambiar Estado</button>
         </div>
       </div>
