@@ -3,6 +3,27 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { CartItem } from '../cart/art-item.model';
+
+export interface StockValidationResult {
+  valid: boolean;
+  invalidItems: Array<{
+    productId: string;
+    productName: string;
+    requestedQuantity: number;
+    availableStock: number;
+    error: string;
+  }>;
+  message?: string;
+}
+
+export interface OrderRequest {
+  items: CartItem[];
+  total: number;
+  userId: string;
+  date: string;
+  orderId: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -17,10 +38,40 @@ export class OrderService {
   ) {}
 
 //POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS
-  createNewOrder (orderData: any): Observable<any> {
-    console.log('intente', orderData)
+  
+  /**
+   * Crea una nueva orden con validación de stock y transacciones atómicas
+   * Esta es la función principal para crear órdenes
+   */
+  generateOrder(orderData: OrderRequest): Observable<any> {
+    console.log('Creando orden:', orderData);
     return this.http.post<any>(this.URL + '/generateNewOrder', orderData);
-  };
+  }
+
+  /**
+   * Valida que todos los productos tengan stock suficiente antes de crear el pedido
+   */
+  validateStockBeforeOrder(items: CartItem[]): Observable<StockValidationResult> {
+    const validationRequest = {
+      items: items.map(item => ({
+        productId: item._id,
+        requestedQuantity: item.quantity
+      }))
+    };
+
+    return this.http.post<StockValidationResult>(
+      `${this.URL}/orders/validate-stock`, 
+      validationRequest
+    );
+  }
+
+  /**
+   * @deprecated Usar generateOrder() en su lugar
+   */
+  createNewOrder(orderData: any): Observable<any> {
+    console.log('Método obsoleto, usar generateOrder()');
+    return this.generateOrder(orderData);
+  }
 
 //GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS GETS
   // Mis pedidos

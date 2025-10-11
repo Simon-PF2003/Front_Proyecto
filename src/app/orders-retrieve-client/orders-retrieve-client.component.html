@@ -21,7 +21,7 @@
                                         <div>
                                             <p class="text-dark mb-0 ml-3 mx-2">
                                                 <i class="fas fa-receipt"></i>
-                                                <i>{{ order._id }}</i>
+                                                <i>{{ order.code }}</i>
                                             </p>
                                         </div>
                                         <div>
@@ -37,9 +37,15 @@
                                             </p>
                                         </div>
                                         <div>
-                                            <p class="text-dark mb-0 mr-3">
+                                            <p class="text-dark mb-0 mx-2">
                                                 <i class="fas fa-info-circle"></i> 
                                                 <i>{{ order.status }}</i>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="text-dark mb-0 mr-3">
+                                                <i class="fas fa-credit-card"></i>
+                                                <i>{{ getPaymentStatusText(order.payment_status) }}</i>
                                             </p>
                                         </div>
                                         </div>

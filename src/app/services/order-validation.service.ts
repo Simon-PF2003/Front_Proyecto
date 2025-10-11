@@ -51,13 +51,13 @@ export class OrderValidationService {
   }
 
   /**
-   * Crea una orden de forma atómica (valida stock + crea orden + actualiza stock)
+   * Crea una orden con validación de stock y actualización atómica
    * Todo en una sola transacción en el backend
    */
-  createOrderAtomic(orderData: OrderRequest): Observable<any> {
-    console.log('Enviando orden atómica:', orderData);
+  generateOrder(orderData: OrderRequest): Observable<any> {
+    console.log('Enviando orden:', orderData);
     
-    return this.http.post(`${this.apiUrl}/orders/create-atomic`, orderData);
+    return this.http.post(`${this.apiUrl}/orders`, orderData);
   }
 
   /**

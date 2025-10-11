@@ -49,21 +49,14 @@
         <input class="form-check-input" type="radio" name="paymentMethod" id="sinPagar" 
                value="sin_pagar" [(ngModel)]="selectedPaymentMethod">
         <label class="form-check-label" for="sinPagar">
-          Pedido sin pago (Pago contra entrega)
+          Pedido sin pago (pagar en local)
         </label>
       </div>
       <div class="form-check">
         <input class="form-check-input" type="radio" name="paymentMethod" id="mercadoPagoTarjeta" 
                value="mercadopago_tarjeta" [(ngModel)]="selectedPaymentMethod">
         <label class="form-check-label" for="mercadoPagoTarjeta">
-          MercadoPago - Tarjeta de Crédito/Débito
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="paymentMethod" id="mercadoPagoQR" 
-               value="mercadopago_qr" [(ngModel)]="selectedPaymentMethod">
-        <label class="form-check-label" for="mercadoPagoQR">
-          MercadoPago - Código QR
+          Mercado Pago - Tarjeta de Crédito/Débito
         </label>
       </div>
     </div>

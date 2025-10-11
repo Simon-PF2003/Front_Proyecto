@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CartServiceService } from 'src/app/services/cart-service.service';
 import { CartItem } from '../art-item.model';
-import { OrderService } from 'src/app/services/order.service';
+import { OrderService, StockValidationResult } from 'src/app/services/order.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { countService } from 'src/app/services/count-cart.service';
-import { OrderValidationService, StockValidationResult } from 'src/app/services/order-validation.service';
 import { MercadopagoService } from 'src/app/services/mercadopago.service';
 import Swal from 'sweetalert2';
 import { ProductService } from 'src/app/services/product.service';
@@ -28,7 +27,6 @@ export class CartComponent implements OnInit {
     private authService: AuthService,
     private countService: countService,
     private productService: ProductService,
-    private orderValidationService: OrderValidationService,
     private mercadopagoService: MercadopagoService,
     private router: Router
     ) {}
@@ -98,20 +96,24 @@ confirmarPedido() {
     return;
   }
 
-  console.log('Usuario autenticado, obteniendo datos de usuario...');
   this.authService.getUserData().subscribe({
     next: (userData) => {
-      console.log('UserData obtenida:', userData);
-      
+      // Asegurar que los items mantengan los precios con descuento
+      const itemsConPreciosCorrectos = this.cartItems.map(item => ({
+        ...item,
+        brand: item.brand || 'Sin marca',
+        price: item.price, // Precio con descuento aplicado
+        originalPrice: item.originalPrice || item.price,
+        discountApplied: item.discount || 0
+      }));
+
       const orderData = { 
-        items: this.cartItems, 
+        items: itemsConPreciosCorrectos, 
         total: this.total, 
         userId: userData.id, 
         date: new Date().toLocaleString(),
         orderId: this.generateOrderId()
       };
-
-      console.log('OrderData preparada:', orderData);
 
       // Mostrar loading
       Swal.fire({
@@ -125,11 +127,9 @@ confirmarPedido() {
 
       // PASO 1: Validar stock antes de mostrar la nota
       console.log('Iniciando validación de stock...');
-      this.orderValidationService.validateStockBeforeOrder(this.cartItems).subscribe({
+      this.orderService.validateStockBeforeOrder(this.cartItems).subscribe({
         next: (validation: StockValidationResult) => {
           Swal.close(); // Cerrar loading
-          console.log('Resultado de validación:', validation);
-
           if (validation.valid) {
             // Stock válido -> Mostrar nota de pedido
             this.mostrarNotaPedido(orderData).then((result) => {
@@ -145,16 +145,8 @@ confirmarPedido() {
         error: (error) => {
           Swal.close();
           console.error('Error al validar stock:', error);
-          console.error('Error completo:', {
-            status: error.status,
-            message: error.message,
-            error: error.error,
-            url: error.url
-          });
           
-          // Fallback: usar el método original si el nuevo no funciona
           if (error.status === 404 || error.status === 0) {
-            console.log('Endpoint no encontrado o error de conexión, usando método original...');
             this.mostrarNotaPedido(orderData).then((result) => {
               if (result.isConfirmed) {
                 this.procesarPedidoConPago(orderData);
@@ -186,12 +178,6 @@ confirmarPedido() {
       });
     },
     error: (error) => {
-      console.error('=== ERROR AL OBTENER USERDATA ===');
-      console.error('Error completo:', error);
-      console.error('Status:', error.status);
-      console.error('Message:', error.message);
-      console.error('Error object:', error.error);
-      console.error('URL:', error.url);
       
       let errorMessage = 'No se pudo obtener la información del usuario.';
       
@@ -236,10 +222,10 @@ private procesarPedidoAtomic(orderData: any) {
     }
   });
 
-  this.orderValidationService.createOrderAtomic(orderData).subscribe({
+  this.orderService.createNewOrder(orderData).subscribe({
     next: (response) => {
       Swal.close();
-      console.log('Pedido creado exitosamente:', response);
+      console.log('🔍 RESPONSE DEBUG:', response);
       
       Swal.fire({
         icon: 'success',
@@ -388,7 +374,10 @@ private usarMetodoOriginal(orderData: any) {
 }
 
 // Método para mostrar la nota de pedido
-mostrarNotaPedido(orderData: any): Promise<any> {
+async mostrarNotaPedido(orderData: any): Promise<any> {
+  // Obtener datos del usuario
+  const userData = await this.authService.getUserData().toPromise();
+  
   // Formatear los productos
   const productos = orderData.items.map((item: any) => {
     return `
@@ -408,7 +397,7 @@ mostrarNotaPedido(orderData: any): Promise<any> {
   const contenidoNota = `
     <p><strong>Número de Pedido:</strong> ${orderData.orderId}</p>
     <p><strong>Fecha:</strong> ${orderData.date}</p>
-    <p><strong>ID Cliente:</strong> ${orderData.userId}</p>
+    <p><strong>Cliente:</strong> ${userData.code} - ${userData.businessName}</p>
     <p><strong>Método de Pago:</strong> ${metodoPago}</p>
     <p><strong>Productos:</strong></p>
     <ul>${productos}</ul>
@@ -435,11 +424,9 @@ mostrarNotaPedido(orderData: any): Promise<any> {
 private getPaymentMethodText(): string {
   switch (this.selectedPaymentMethod) {
     case 'sin_pagar':
-      return 'Pago contra entrega';
+      return 'Pago en local';
     case 'mercadopago_tarjeta':
-      return 'MercadoPago - Tarjeta de Crédito/Débito';
-    case 'mercadopago_qr':
-      return 'MercadoPago - Código QR';
+      return 'Mercado Pago - Tarjeta de Crédito/Débito';
     default:
       return 'Sin especificar';
   }
@@ -455,9 +442,6 @@ private procesarPedidoConPago(orderData: any) {
   } else if (this.selectedPaymentMethod === 'mercadopago_tarjeta') {
     // Crear pedido y procesar pago con tarjeta
     this.procesarPedidoConMercadoPago(orderData, 'MercadoPago_Tarjeta');
-  } else if (this.selectedPaymentMethod === 'mercadopago_qr') {
-    // Crear pedido y procesar pago con QR
-    this.procesarPedidoConMercadoPago(orderData, 'MercadoPago_QR');
   }
 }
 
@@ -474,18 +458,16 @@ private procesarPedidoSinPago(orderData: any) {
     }
   });
 
-  // Usar el método atómico si está disponible, sino el original
-  this.orderValidationService.createOrderAtomic(orderData).subscribe({
+  // Crear pedido con validación de stock integrada
+  this.orderService.createNewOrder(orderData).subscribe({
     next: (response) => {
       Swal.close();
-      console.log('Pedido creado exitosamente:', response);
-      
       Swal.fire({
         icon: 'success',
         title: '¡Pedido confirmado!',
         html: `
           <p>Tu pedido se registró exitosamente.</p>
-          <p><strong>Método de pago:</strong> Pago contra entrega</p>
+          <p><strong>Método de pago:</strong> Pago en local</p>
         `,
       });
 
@@ -520,12 +502,13 @@ private procesarPedidoConMercadoPago(orderData: any, paymentMethod: string) {
   });
 
   // Primero crear la orden
-  this.orderValidationService.createOrderAtomic(orderData).subscribe({
+  this.orderService.createNewOrder(orderData).subscribe({
     next: (response) => {
-      console.log('Pedido creado exitosamente:', response);
+      // Compatibilidad con ambos formatos de respuesta
       const orderId = response.order?._id || response._id;
       
       if (!orderId) {
+        console.error('❌ No se pudo obtener orderId:', response);
         Swal.close();
         Swal.fire({
           icon: 'error',
@@ -535,6 +518,10 @@ private procesarPedidoConMercadoPago(orderData: any, paymentMethod: string) {
         return;
       }
 
+      // Verificar qué se guardó en la orden antes de crear la preferencia
+      console.log('✅ Orden creada exitosamente con ID:', orderId);
+      console.log('📋 Datos de respuesta:', response);
+      
       // Crear la preferencia de pago
       this.crearPreferenciaPago(orderId, paymentMethod);
     },
@@ -556,25 +543,48 @@ private procesarPedidoConMercadoPago(orderData: any, paymentMethod: string) {
  * Crea la preferencia de pago en MercadoPago
  */
 private crearPreferenciaPago(orderId: string, paymentMethod: string) {
-  let serviceCall;
+  console.log('🔥 CREANDO PREFERENCIA DE PAGO PARA ORDEN:', orderId);
   
-  if (paymentMethod === 'MercadoPago_QR') {
-    serviceCall = this.mercadopagoService.createQRPreference(orderId);
-  } else {
-    serviceCall = this.mercadopagoService.createPreference(orderId, paymentMethod);
-  }
+  // Preparar items explícitamente con precios correctos para MercadoPago
+  const itemsParaMercadoPago = this.cartItems.map(item => ({
+    desc: item.desc,
+    price: item.price, // Precio CON descuento
+    quantity: item.quantity,
+    brand: item.brand || 'Sin marca'
+  }));
+  
+  const serviceCall = this.mercadopagoService.createPreference(orderId, paymentMethod, itemsParaMercadoPago);
 
   serviceCall.subscribe({
     next: (response) => {
       Swal.close();
-      console.log('Preferencia creada:', response);
       
       if (response.success && response.init_point) {
-        // Limpiar carrito antes de redireccionar
-        this.limpiarCarritoCompleto();
-        
-        // Redireccionar a MercadoPago
-        window.location.href = response.init_point;
+        // Mostrar confirmación antes de abrir MercadoPago
+        Swal.fire({
+          icon: 'success',
+          title: '¡Pedido creado!',
+          html: `
+            <p>Tu pedido se ha creado exitosamente.</p>
+            <p>Se abrirá Mercado Pago en una nueva pestaña para completar el pago.</p>
+          `,
+          confirmButtonText: 'Abrir Mercado Pago',
+          showCancelButton: true,
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Limpiar carrito
+            this.limpiarCarritoCompleto();
+            
+            // Abrir MercadoPago en nueva pestaña
+            window.open(response.init_point, '_blank');
+            
+            // Opcional: redirigir a una página de "esperando pago"
+            this.router.navigate(['/pago/pendiente'], { 
+              queryParams: { order: orderId } 
+            });
+          }
+        });
       } else {
         Swal.fire({
           icon: 'error',
@@ -590,7 +600,7 @@ private crearPreferenciaPago(orderId: string, paymentMethod: string) {
       Swal.fire({
         icon: 'error',
         title: 'Error de pago',
-        text: 'No se pudo conectar con MercadoPago. Intenta nuevamente.',
+        text: 'No se pudo conectar con Mercado Pago. Intenta nuevamente.',
         showCancelButton: true,
         confirmButtonText: 'Reintentar',
         cancelButtonText: 'Cancelar'
@@ -671,9 +681,7 @@ getButtonText(): string {
     case 'sin_pagar':
       return 'Confirmar Pedido (Sin Pago)';
     case 'mercadopago_tarjeta':
-      return 'Pagar con Tarjeta';
-    case 'mercadopago_qr':
-      return 'Pagar con QR';
+      return 'Pagar con Mercado Pago';
     default:
       return 'Selecciona método de pago';
   }

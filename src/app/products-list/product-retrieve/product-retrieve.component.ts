@@ -151,19 +151,22 @@ export class ProductRetrieveComponent implements OnInit {
       Swal.fire({ title: 'No puedes comprar', text: 'No puedes comprar productos siendo moroso', icon: 'error' });
       return;
     } 
-  
+
+    const originalPrice = this.productDetails.data.price;
     const priceWithDiscount = this.discountPercentage > 0 
-      ? this.productDetails.data.price * (1 - this.discountPercentage)
-      : this.productDetails.data.price;
-  
+      ? originalPrice * (1 - this.discountPercentage)
+      : originalPrice;
+
     const productToAdd = {
       ...this.productDetails.data,
       _id: this.productId,
       quantity: quantity,
-      price: priceWithDiscount, 
+      price: priceWithDiscount, // PRECIO CON DESCUENTO
+      originalPrice: originalPrice, // PRECIO ORIGINAL SIN DESCUENTO
+      discount: this.discountPercentage,
+      brand: this.productDetails.data.brand?.name || 'Sin marca'
     };
   
-    // Ahora el addToCart devuelve un Observable, necesitamos suscribirnos
     this.cartService.addToCart(productToAdd).subscribe({
       next: (success) => {
         if (success) {
@@ -174,12 +177,11 @@ export class ProductRetrieveComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Producto agregado',
-            text: `${productToAdd.desc} agregado al carrito`,
+            text: `${productToAdd.desc} agregado al carrito con descuento aplicado`,
             timer: 2000,
             showConfirmButton: false
           });
         }
-        // Si success es false, el CartService ya mostró el error correspondiente
       },
       error: (error) => {
         console.error('Error al agregar al carrito:', error);

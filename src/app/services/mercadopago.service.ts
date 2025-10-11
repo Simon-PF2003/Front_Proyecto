@@ -16,23 +16,19 @@ export class MercadopagoService {
    * @param paymentMethod Método de pago seleccionado
    * @returns Observable con la respuesta de MercadoPago
    */
-  createPreference(orderId: string, paymentMethod: string = 'MercadoPago_Tarjeta'): Observable<any> {
+  createPreference(orderId: string, paymentMethod: string = 'MercadoPago_Tarjeta', items?: any[]): Observable<any> {
     const body = { 
       orderId, 
-      paymentMethod 
+      paymentMethod,
+      ...(items && { items }) // Enviar items explícitamente si se proporcionan
     };
+    
+    console.log('📤 ENVIANDO AL BACKEND PARA MERCADOPAGO:', body);
+    
     return this.http.post<any>(`${this.URL}/payments/mp/create-preference`, body);
   }
 
-  /**
-   * Crea una preferencia para pago con QR
-   * @param orderId ID de la orden creada
-   * @returns Observable con la respuesta de MercadoPago
-   */
-  createQRPreference(orderId: string): Observable<any> {
-    const body = { orderId };
-    return this.http.post<any>(`${this.URL}/payments/mp/create-qr`, body);
-  }
+
 
   /**
    * Obtiene el estado de pago de una orden

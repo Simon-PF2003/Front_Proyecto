@@ -62,6 +62,31 @@ export class OrdersRetrieveClientComponent implements OnInit {
     return fecha.toISOString().split('T')[0];
   }
 
+  getPaymentStatusText(paymentStatus: string): string {
+    if (!paymentStatus) {
+      return 'No procesado';
+    }
+
+    switch (paymentStatus.toLowerCase()) {
+      case 'aprobado':
+      case 'approved':
+        return 'Pagado';
+      case 'pendiente':
+      case 'pending':
+        return 'Pago Pendiente';
+      case 'procesando':
+        return 'Procesando';
+      case 'rechazado':
+      case 'rejected':
+        return 'Pago Rechazado';
+      case 'cancelado':
+      case 'cancelled':
+        return 'Pago Cancelado';
+      default:
+        return paymentStatus;
+    }
+  }
+
   cancelOrder(orderId: string): void {
     Swal.fire({
       title: '¿Estás seguro de cancelar el pedido?',
