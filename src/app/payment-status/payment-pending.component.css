@@ -1,0 +1,100 @@
+.pending-content {
+  padding: 2rem 0;
+}
+
+.payment-details {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.action-buttons {
+  padding: 1rem 0;
+}
+
+.action-buttons .btn {
+  margin: 0.25rem;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.badge-warning {
+  background-color: #ffc107 !important;
+  color: #212529 !important;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  display: inline-block;
+}
+
+.mr-3 {
+  margin-right: 1rem !important;
+}
+
+.card {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  border: none;
+}
+
+.card-body {
+  padding: 3rem 2rem;
+}
+
+.info-message ul {
+  margin-bottom: 0;
+  padding-left: 1.5rem;
+}
+
+.info-message li {
+  margin-bottom: 0.5rem;
+}
+
+.alert-info {
+  border-left: 4px solid #17a2b8;
+}
+
+.progress {
+  height: 0.5rem;
+}
+
+.progress-info {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.fa-spin {
+  animation: fa-spin 1s infinite linear;
+}
+
+@keyframes fa-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .card-body {
+    padding: 2rem 1rem;
+  }
+  
+  .payment-details .row {
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .action-buttons .btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .info-message ul {
+    text-align: left;
+  }
+}

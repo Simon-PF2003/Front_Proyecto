@@ -20,6 +20,38 @@
   justify-content: space-between;
 }
 
+.payment-options {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.payment-options h5 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.form-check {
+  margin-bottom: 0.75rem;
+  padding-left: 1.5rem;
+}
+
+.form-check-input {
+  margin-top: 0.3rem;
+}
+
+.form-check-label {
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+}
+
+.form-check-input:checked + .form-check-label {
+  color: #007bff;
+}
+
 @media screen and (max-width: 768px) {  
   .quantities {
     display: flex;
@@ -33,4 +65,13 @@
     align-items: center;
   }
 
+  .payment-options {
+    text-align: center;
   }
+
+  .form-check {
+    text-align: left;
+    display: inline-block;
+    margin: 0.5rem 0;
+  }
+}

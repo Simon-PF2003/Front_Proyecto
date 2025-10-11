@@ -41,6 +41,37 @@
   </div>
   <div class="total col-12 text-right my-4">
     <p>Subtotal: {{ total | currency }}</p>
-    <button class="btn btn-success" (click)="confirmarPedido()">Confirmar Pedido</button>
+    
+    <!-- Opciones de pago -->
+    <div class="payment-options mb-3">
+      <h5>Selecciona método de pago:</h5>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="paymentMethod" id="sinPagar" 
+               value="sin_pagar" [(ngModel)]="selectedPaymentMethod">
+        <label class="form-check-label" for="sinPagar">
+          Pedido sin pago (Pago contra entrega)
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="paymentMethod" id="mercadoPagoTarjeta" 
+               value="mercadopago_tarjeta" [(ngModel)]="selectedPaymentMethod">
+        <label class="form-check-label" for="mercadoPagoTarjeta">
+          MercadoPago - Tarjeta de Crédito/Débito
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="paymentMethod" id="mercadoPagoQR" 
+               value="mercadopago_qr" [(ngModel)]="selectedPaymentMethod">
+        <label class="form-check-label" for="mercadoPagoQR">
+          MercadoPago - Código QR
+        </label>
+      </div>
+    </div>
+
+    <button class="btn btn-success" 
+            [disabled]="!selectedPaymentMethod" 
+            (click)="confirmarPedido()">
+      {{ getButtonText() }}
+    </button>
   </div>
 </div>

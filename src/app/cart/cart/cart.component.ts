@@ -5,8 +5,10 @@ import { OrderService } from 'src/app/services/order.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { countService } from 'src/app/services/count-cart.service';
 import { OrderValidationService, StockValidationResult } from 'src/app/services/order-validation.service';
+import { MercadopagoService } from 'src/app/services/mercadopago.service';
 import Swal from 'sweetalert2';
 import { ProductService } from 'src/app/services/product.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -18,6 +20,7 @@ export class CartComponent implements OnInit {
   cartItems: CartItem[] = [];
   total: number = 0;
   productsInCart: number = 0;
+  selectedPaymentMethod: string = 'sin_pagar'; // Valor por defecto
 
   constructor(
     private cartService: CartServiceService,
@@ -25,7 +28,9 @@ export class CartComponent implements OnInit {
     private authService: AuthService,
     private countService: countService,
     private productService: ProductService,
-    private orderValidationService: OrderValidationService
+    private orderValidationService: OrderValidationService,
+    private mercadopagoService: MercadopagoService,
+    private router: Router
     ) {}
 
   ngOnInit(): void {
@@ -129,7 +134,7 @@ confirmarPedido() {
             // Stock válido -> Mostrar nota de pedido
             this.mostrarNotaPedido(orderData).then((result) => {
               if (result.isConfirmed) {
-                this.procesarPedidoAtomic(orderData);
+                this.procesarPedidoConPago(orderData);
               }
             });
           } else {
@@ -152,7 +157,7 @@ confirmarPedido() {
             console.log('Endpoint no encontrado o error de conexión, usando método original...');
             this.mostrarNotaPedido(orderData).then((result) => {
               if (result.isConfirmed) {
-                this.usarMetodoOriginal(orderData);
+                this.procesarPedidoConPago(orderData);
               }
             });
           } else {
@@ -171,7 +176,7 @@ confirmarPedido() {
               if (result.isConfirmed) {
                 this.mostrarNotaPedido(orderData).then((result) => {
                   if (result.isConfirmed) {
-                    this.usarMetodoOriginal(orderData);
+                    this.procesarPedidoConPago(orderData);
                   }
                 });
               }
@@ -396,11 +401,15 @@ mostrarNotaPedido(orderData: any): Promise<any> {
     `;
   }).join('');
 
+  // Obtener el texto del método de pago
+  const metodoPago = this.getPaymentMethodText();
+
   // Contenido del resumen del pedido
   const contenidoNota = `
     <p><strong>Número de Pedido:</strong> ${orderData.orderId}</p>
     <p><strong>Fecha:</strong> ${orderData.date}</p>
     <p><strong>ID Cliente:</strong> ${orderData.userId}</p>
+    <p><strong>Método de Pago:</strong> ${metodoPago}</p>
     <p><strong>Productos:</strong></p>
     <ul>${productos}</ul>
     <p><strong>Total:</strong> ${orderData.total.toFixed(2)}</p>
@@ -412,7 +421,7 @@ mostrarNotaPedido(orderData: any): Promise<any> {
     html: contenidoNota,
     icon: 'info',
     showCancelButton: true,
-    confirmButtonText: 'Confirmar Pedido',
+    confirmButtonText: this.getButtonText(),
     cancelButtonText: 'Cancelar',
     customClass: {
       popup: 'swal-wide', // Clase personalizada para ajustar el diseño si es necesario
@@ -420,10 +429,254 @@ mostrarNotaPedido(orderData: any): Promise<any> {
   });
 }
 
+/**
+ * Obtiene el texto descriptivo del método de pago seleccionado
+ */
+private getPaymentMethodText(): string {
+  switch (this.selectedPaymentMethod) {
+    case 'sin_pagar':
+      return 'Pago contra entrega';
+    case 'mercadopago_tarjeta':
+      return 'MercadoPago - Tarjeta de Crédito/Débito';
+    case 'mercadopago_qr':
+      return 'MercadoPago - Código QR';
+    default:
+      return 'Sin especificar';
+  }
+}
+
+/**
+ * Procesa el pedido según el método de pago seleccionado
+ */
+private procesarPedidoConPago(orderData: any) {
+  if (this.selectedPaymentMethod === 'sin_pagar') {
+    // Crear pedido sin pago
+    this.procesarPedidoSinPago(orderData);
+  } else if (this.selectedPaymentMethod === 'mercadopago_tarjeta') {
+    // Crear pedido y procesar pago con tarjeta
+    this.procesarPedidoConMercadoPago(orderData, 'MercadoPago_Tarjeta');
+  } else if (this.selectedPaymentMethod === 'mercadopago_qr') {
+    // Crear pedido y procesar pago con QR
+    this.procesarPedidoConMercadoPago(orderData, 'MercadoPago_QR');
+  }
+}
+
+/**
+ * Procesa el pedido sin pago (método original)
+ */
+private procesarPedidoSinPago(orderData: any) {
+  Swal.fire({
+    title: 'Procesando pedido...',
+    text: 'Creando tu pedido sin pago',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
+  // Usar el método atómico si está disponible, sino el original
+  this.orderValidationService.createOrderAtomic(orderData).subscribe({
+    next: (response) => {
+      Swal.close();
+      console.log('Pedido creado exitosamente:', response);
+      
+      Swal.fire({
+        icon: 'success',
+        title: '¡Pedido confirmado!',
+        html: `
+          <p>Tu pedido se registró exitosamente.</p>
+          <p><strong>Método de pago:</strong> Pago contra entrega</p>
+        `,
+      });
+
+      // Limpiar carrito
+      this.limpiarCarritoCompleto();
+    },
+    error: (error) => {
+      Swal.close();
+      console.error('Error al crear el pedido:', error);
+      
+      // Fallback al método original si el atómico falla
+      if (error.status === 404) {
+        this.usarMetodoOriginal(orderData);
+      } else {
+        this.mostrarErrorPedido(error);
+      }
+    }
+  });
+}
+
+/**
+ * Procesa el pedido con MercadoPago
+ */
+private procesarPedidoConMercadoPago(orderData: any, paymentMethod: string) {
+  Swal.fire({
+    title: 'Procesando pedido...',
+    text: 'Creando tu pedido y preparando el pago',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
+  // Primero crear la orden
+  this.orderValidationService.createOrderAtomic(orderData).subscribe({
+    next: (response) => {
+      console.log('Pedido creado exitosamente:', response);
+      const orderId = response.order?._id || response._id;
+      
+      if (!orderId) {
+        Swal.close();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo obtener el ID de la orden creada.',
+        });
+        return;
+      }
+
+      // Crear la preferencia de pago
+      this.crearPreferenciaPago(orderId, paymentMethod);
+    },
+    error: (error) => {
+      Swal.close();
+      console.error('Error al crear el pedido:', error);
+      
+      // Fallback al método original si el atómico falla
+      if (error.status === 404) {
+        this.crearPedidoOriginalYPagar(orderData, paymentMethod);
+      } else {
+        this.mostrarErrorPedido(error);
+      }
+    }
+  });
+}
+
+/**
+ * Crea la preferencia de pago en MercadoPago
+ */
+private crearPreferenciaPago(orderId: string, paymentMethod: string) {
+  let serviceCall;
+  
+  if (paymentMethod === 'MercadoPago_QR') {
+    serviceCall = this.mercadopagoService.createQRPreference(orderId);
+  } else {
+    serviceCall = this.mercadopagoService.createPreference(orderId, paymentMethod);
+  }
+
+  serviceCall.subscribe({
+    next: (response) => {
+      Swal.close();
+      console.log('Preferencia creada:', response);
+      
+      if (response.success && response.init_point) {
+        // Limpiar carrito antes de redireccionar
+        this.limpiarCarritoCompleto();
+        
+        // Redireccionar a MercadoPago
+        window.location.href = response.init_point;
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error de pago',
+          text: 'No se pudo inicializar el pago. Intenta nuevamente.',
+        });
+      }
+    },
+    error: (error) => {
+      Swal.close();
+      console.error('Error al crear preferencia de pago:', error);
+      
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de pago',
+        text: 'No se pudo conectar con MercadoPago. Intenta nuevamente.',
+        showCancelButton: true,
+        confirmButtonText: 'Reintentar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.crearPreferenciaPago(orderId, paymentMethod);
+        }
+      });
+    }
+  });
+}
+
+/**
+ * Fallback: crea pedido con método original y luego procesa pago
+ */
+private crearPedidoOriginalYPagar(orderData: any, paymentMethod: string) {
+  this.orderService.createNewOrder(orderData).subscribe({
+    next: (response) => {
+      console.log('Pedido guardado con método original:', response);
+      const orderId = response.order?._id || response._id;
+      
+      if (orderId) {
+        // Actualizar stock
+        this.productService.actualizarStock(orderData).subscribe({
+          next: (res) => console.log('Stock Actualizado'),
+          error: (err) => console.log('Error al actualizar el stock')
+        });
+        
+        // Crear preferencia de pago
+        this.crearPreferenciaPago(orderId, paymentMethod);
+      } else {
+        Swal.close();
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo obtener el ID de la orden creada.',
+        });
+      }
+    },
+    error: (error) => {
+      Swal.close();
+      this.mostrarErrorPedido(error);
+    }
+  });
+}
+
+/**
+ * Muestra error de pedido
+ */
+private mostrarErrorPedido(error: any) {
+  if (error.status === 409) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Stock insuficiente',
+      text: 'El stock de algunos productos cambió mientras procesábamos tu pedido. Revisa tu carrito.',
+    });
+    this.actualizarStockEnCarrito();
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error al crear el pedido',
+      text: 'Hubo un problema procesando tu pedido. Intenta nuevamente.',
+    });
+  }
+}
+
 // Método para generar un número único de pedido
 generateOrderId(): string {
   const timestamp = new Date().getTime();
   return `ORD-${timestamp}`;
+}
+
+/**
+ * Obtiene el texto del botón según el método de pago seleccionado
+ */
+getButtonText(): string {
+  switch (this.selectedPaymentMethod) {
+    case 'sin_pagar':
+      return 'Confirmar Pedido (Sin Pago)';
+    case 'mercadopago_tarjeta':
+      return 'Pagar con Tarjeta';
+    case 'mercadopago_qr':
+      return 'Pagar con QR';
+    default:
+      return 'Selecciona método de pago';
+  }
 }
 
 

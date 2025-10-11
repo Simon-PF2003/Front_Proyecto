@@ -60,6 +60,11 @@ import { ReporteAgruparProductosComponent } from './reporte-agrupar-productos/re
 import { ReporteOrdenarClientesComponent } from './reporte-ordenar-clientes/reporte-ordenar-clientes.component';
 import { ReporteRecaudacionComponent } from './reporte-recaudacion/reporte-recaudacion.component';
 
+//Payment Status
+import { PaymentSuccessComponent } from './payment-status/payment-success.component';
+import { PaymentErrorComponent } from './payment-status/payment-error.component';
+import { PaymentPendingComponent } from './payment-status/payment-pending.component';
+
 
 const routes: Routes = [
 //Products
@@ -107,7 +112,12 @@ const routes: Routes = [
 //login, signup, retrieve password
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  {path:'retrieve-pass',component:RetrievePassComponent},  
+  {path:'retrieve-pass',component:RetrievePassComponent},
+
+//Payment Status
+  { path: 'pago/exito', component: PaymentSuccessComponent },
+  { path: 'pago/error', component: PaymentErrorComponent },
+  { path: 'pago/pendiente', component: PaymentPendingComponent },  
 
 //Reportes
   {path: 'reporte-agrupar-productos', component:ReporteAgruparProductosComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },

@@ -98,6 +98,11 @@ import { FloatingChatbotComponent } from './floating-chatbot/floating-chatbot.co
 //Filtros
 import { FiltersPanelComponent } from './shared/filters/filters-panel/filters-panel.component';
 import { FiltersStateService } from './shared/filters/filters-state.service';
+
+//Payment Status
+import { PaymentSuccessComponent } from './payment-status/payment-success.component';
+import { PaymentErrorComponent } from './payment-status/payment-error.component';
+import { PaymentPendingComponent } from './payment-status/payment-pending.component';
 @NgModule({
   declarations: [
 //Genericos
@@ -177,6 +182,11 @@ import { FiltersStateService } from './shared/filters/filters-state.service';
 
     //Filtros
     FiltersPanelComponent,
+
+    //Payment Status
+    PaymentSuccessComponent,
+    PaymentErrorComponent,
+    PaymentPendingComponent,
   ],
 
   imports: [

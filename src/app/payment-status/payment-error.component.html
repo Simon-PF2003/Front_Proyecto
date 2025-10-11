@@ -1,0 +1,67 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card text-center">
+        <div class="card-body">
+          <div *ngIf="loading" class="text-center">
+            <div class="spinner-border text-danger" role="status">
+              <span class="sr-only">Cargando...</span>
+            </div>
+            <p class="mt-3">Verificando estado del pago...</p>
+          </div>
+
+          <div *ngIf="!loading">
+            <div class="error-content">
+              <i class="fas fa-times-circle text-danger" style="font-size: 4rem;"></i>
+              <h2 class="text-danger mt-3">Error en el Pago</h2>
+              <p class="lead">Hubo un problema procesando tu pago</p>
+              
+              <div class="payment-details mt-4">
+                <div class="row" *ngIf="orderId">
+                  <div class="col-sm-6">
+                    <strong>Orden:</strong>
+                  </div>
+                  <div class="col-sm-6">
+                    {{ orderId }}
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-sm-6">
+                    <strong>Estado:</strong>
+                  </div>
+                  <div class="col-sm-6">
+                    <span class="badge badge-danger">{{ paymentStatus }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="error-message mt-4">
+                <div class="alert alert-warning" role="alert">
+                  <h6><i class="fas fa-info-circle"></i> ¿Qué puedes hacer?</h6>
+                  <ul class="text-left mt-2">
+                    <li>Verificar que tengas fondos suficientes en tu tarjeta</li>
+                    <li>Comprobar que los datos de la tarjeta sean correctos</li>
+                    <li>Intentar con otra tarjeta o método de pago</li>
+                    <li>Contactar con tu banco si el problema persiste</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="action-buttons mt-4">
+                <button class="btn btn-primary mr-3" (click)="reintentar()">
+                  <i class="fas fa-redo"></i> Reintentar Pago
+                </button>
+                <button class="btn btn-secondary mr-3" (click)="verificarEstadoPago()">
+                  <i class="fas fa-sync"></i> Verificar Estado
+                </button>
+                <button class="btn btn-outline-secondary" (click)="volverAlInicio()">
+                  <i class="fas fa-home"></i> Volver al Inicio
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
