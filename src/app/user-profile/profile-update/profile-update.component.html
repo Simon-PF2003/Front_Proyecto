@@ -1,0 +1,105 @@
+<div class="modal-content">
+  <div class="modal-header">
+    <h5 class="modal-title" id="updateProfileModalLabel">Actualizar Perfil</h5>
+    <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
+  </div>
+  <div class="modal-body">
+    <form *ngIf="userData">
+      <!-- Formulario para actualizar datos personales -->
+      <div class="form-section mb-4">
+        
+        <div class="form-group">
+          <label for="businessName">Razón Social:</label>
+          <input type="text" class="form-control" id="businessName" [(ngModel)]="userData.businessName" 
+                 name="businessName" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" class="form-control" id="email" [(ngModel)]="userData.email" 
+                 name="email" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Teléfono:</label>
+          <input type="text" class="form-control" id="phoneNumber" [(ngModel)]="userData.phoneNumber" 
+                 name="phoneNumber" required>
+        </div>
+
+        <div class="form-group">
+          <label for="address">Dirección:</label>
+          <input type="text" class="form-control" id="address" [(ngModel)]="userData.address" 
+                 name="address" required>
+        </div>
+
+      </div>
+
+      <!-- Sección para cambiar contraseña -->
+      <hr>
+      <div class="form-section">
+        <div class="text-center mb-3">
+          <button type="button" class="btn btn-soft-secondary" (click)="togglePasswordForm()">
+            {{ showPasswordForm ? 'Cancelar' : 'Cambiar Contraseña' }}
+          </button>
+        </div>
+
+        <!-- Formulario de cambio de contraseña (IGUAL que retrieve-pass) -->
+        <div *ngIf="showPasswordForm">
+          <!-- Paso 1: Enviar código de verificación -->
+          <form *ngIf="!showVerificationForm" (ngSubmit)="sendVerificationCode()">
+            <p class="text-muted small mb-3">
+              Te enviaremos un código de verificación a tu correo: <strong>{{ userData.email }}</strong>
+            </p>
+            <button type="submit" class="btn btn-info btn-block">
+              Enviar Código de Verificación
+            </button>
+          </form>
+
+          <!-- Paso 2: Ingresar código de verificación -->
+          <form *ngIf="showVerificationForm && !setPassword" (ngSubmit)="verifyCode()">
+            <div class="form-group">
+              <label for="verificationCode">Código de Verificación:</label>
+              <input type="text" class="form-control" id="verificationCode" 
+                     [(ngModel)]="verificationCode" name="verificationCode" 
+                     placeholder="Ingresa el código de 6 caracteres">
+              <small class="form-text text-muted">
+                Ingrese el código de verificación de 6 caracteres enviado a su mail
+              </small>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mb-2">
+              Verificar Código
+            </button>
+          </form>
+
+          <div *ngIf="showVerificationForm && !setPassword" class="text-center">
+            <a (click)="resetPasswordForm()" class="btn btn-link btn-sm">Volver a enviar código</a>
+          </div>
+
+          <!-- Paso 3: Ingresar nueva contraseña (SOLO después de verificar código) -->
+          <form *ngIf="setPassword" (ngSubmit)="changePassword()">
+            <div class="form-group">
+              <label for="newPassword">Nueva Contraseña:</label>
+              <input type="password" class="form-control" id="newPassword" 
+                     [(ngModel)]="newPassword" name="newPassword" 
+                     placeholder="Ingrese su nueva contraseña">
+            </div>
+
+            <div class="form-group">
+              <label for="newPassword2">Confirmar Contraseña:</label>
+              <input type="password" class="form-control" id="newPassword2" 
+                     [(ngModel)]="newPassword2" name="newPassword2" 
+                     placeholder="Confirme su nueva contraseña">
+            </div>
+
+            <button type="submit" class="btn btn-success btn-block">
+              Actualizar Contraseña
+            </button>
+          </form>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="saveChanges()">Guardar Cambios</button>
+  </div>
+</div>

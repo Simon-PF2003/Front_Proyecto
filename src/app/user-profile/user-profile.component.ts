@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import jwt_decode from 'jwt-decode';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProfileUpdateComponent } from './profile-update/profile-update.component';
 
 @Component({
   selector: 'app-user-profile',
@@ -21,6 +23,7 @@ export class UserProfileComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private http: HttpClient,
+    private modalService: NgbModal
   ) {}
 
   defaultImage = 'assets/prodBase.png';
@@ -68,6 +71,14 @@ export class UserProfileComponent implements OnInit {
         window.location.reload();
       });
     }
+  }
+
+  openUpdateModal() {
+    const modalRef = this.modalService.open(ProfileUpdateComponent, { 
+      size: 'lg',
+      centered: true 
+    });
+    modalRef.componentInstance.userData = { ...this.userData };
   }
 }
 

@@ -103,6 +103,7 @@ import { FiltersStateService } from './shared/filters/filters-state.service';
 import { PaymentSuccessComponent } from './payment-status/payment-success.component';
 import { PaymentErrorComponent } from './payment-status/payment-error.component';
 import { PaymentPendingComponent } from './payment-status/payment-pending.component';
+import { ProfileUpdateComponent } from './user-profile/profile-update/profile-update.component';
 @NgModule({
   declarations: [
 //Genericos
@@ -187,6 +188,7 @@ import { PaymentPendingComponent } from './payment-status/payment-pending.compon
     PaymentSuccessComponent,
     PaymentErrorComponent,
     PaymentPendingComponent,
+    ProfileUpdateComponent,
   ],
 
   imports: [

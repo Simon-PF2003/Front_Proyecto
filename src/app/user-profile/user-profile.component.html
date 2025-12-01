@@ -28,6 +28,10 @@
           <p class="card-text">Correo Electrónico: {{ userData.email }}</p>
           <p class="card-text">Cuit: {{ userData.cuit }}</p>
           <p class="card-text">Dirección: {{ userData.address }}</p>
+          <p class="card-text">Teléfono: {{ userData.phoneNumber }}</p>
+          <div class="text-center mt-3">
+            <button class="btn btn-primary" (click)="openUpdateModal()">Actualizar Datos</button>
+          </div>
         </div>
       </div>
       <form (submit)="uploadProfileImage($event)" enctype="multipart/form-data" class="mt-3">
