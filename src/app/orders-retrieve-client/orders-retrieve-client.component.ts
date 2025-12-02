@@ -59,7 +59,10 @@ export class OrdersRetrieveClientComponent implements OnInit {
 
   hourFormat(fechaISO: string): string {
     const fecha = new Date(fechaISO);
-    return fecha.toISOString().split('T')[0];
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fecha.getFullYear();
+    return `${dia}/${mes}/${anio}`;
   }
 
   getPaymentStatusText(paymentStatus: string): string {

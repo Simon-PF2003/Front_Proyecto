@@ -37,12 +37,10 @@ export class OrdersUpdateAdminComponent {
     });
   }
 
-  async getOrders() {
-    this.orderService.getPedidos().subscribe((data: any) => {
+  async getOrders(status?: string) {
+    this.orderService.getPedidos(status).subscribe((data: any) => {
       console.log('Datos recibidos del backend:', data);
       
-      // Como el backend ya usa populate, los datos del usuario ya vienen incluidos
-      // Solo necesitamos procesar los pedidos
       for (const pedido of data) {
         console.log('Pedido procesado:', pedido);
         // Los datos ya vienen populados desde el backend
@@ -64,13 +62,8 @@ export class OrdersUpdateAdminComponent {
 
   filterPedidos(status?: string) {
     this.selectedStatus = status || '';
-    if (status) {
-      this.pedidosFiltrados = this.pedidos.filter(pedido => pedido.status === status);
-    } else {
-      this.pedidosFiltrados = [...this.pedidos];
-    }
     this.currentPage = 1;
-    this.updatePagination();
+    this.getOrders(status);
   }
 
   async fetchOrders() {
@@ -100,7 +93,7 @@ export class OrdersUpdateAdminComponent {
   async cambiarEstado(pedId: string, nuevoEstado: string) {
     try {
       await firstValueFrom(this.orderService.cambiarEstado(pedId, nuevoEstado));
-      this.getOrders();
+      this.getOrders(this.selectedStatus || undefined);
       this.showModal = false;
       this.selectedPedido = null;
 
@@ -111,7 +104,7 @@ export class OrdersUpdateAdminComponent {
       Swal.fire({
         icon: 'success',
         title: '¡Estado actualizado!',
-        text: `El pedido ${pedId} ahora está ${nuevoEstado}`,
+        text: `El pedido ahora está ${nuevoEstado}`,
       });
     } catch (error) {
       console.error('Error al cambiar estado:', error);

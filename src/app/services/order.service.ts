@@ -80,8 +80,9 @@ export class OrderService {
   };
 
   //Obtener todos los pedidos (para el admin, es la parte de update)
-  getPedidos(): Observable<any[]> {
-    return this.http.get<any[]>(this.URL + '/pedidos');
+  getPedidos(status?: string): Observable<any[]> {
+    const url = status ? `${this.URL}/pedidos?status=${encodeURIComponent(status)}` : `${this.URL}/pedidos`;
+    return this.http.get<any[]>(url);
   };
 
   //Obtiene el mail del usuario del pedido para comunicarle el cambio de estado

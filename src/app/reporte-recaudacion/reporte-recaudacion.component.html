@@ -46,7 +46,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let factura of displayedFacturas">
-            <td>{{ factura._id }}</td>
+            <td>{{ factura.code }}</td>
             <td>{{ factura.orderCode || factura.orderId?.code || 'N/A' }}</td>
             <td>{{ factura.userCode || factura.userId?.code || 'N/A' }}</td>
             <td>{{ factura.userBusinessName || factura.userId?.businessName || 'No disponible' }}</td>

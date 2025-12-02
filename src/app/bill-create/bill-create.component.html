@@ -4,7 +4,7 @@
     <form (submit)="applyFilters()" class="p-3 border rounded" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;">
         <div class="row">
             <div class="col-md-3 mb-2">
-                <input [(ngModel)]="filters.orderId" name="orderId" placeholder="ID Pedido" class="form-control">
+                <input [(ngModel)]="filters.code" name="code" placeholder="Nro Pedido" class="form-control">
             </div>
             <div class="col-md-3 mb-2">
                 <input [(ngModel)]="filters.userBusiness" name="userBusiness" placeholder="Razón Social del Cliente" class="form-control">
@@ -41,7 +41,7 @@
                         <button class="btn w-100 text-left" type="button" data-bs-toggle="collapse" 
                                 [attr.data-bs-target]="'#collapse' + order._id" aria-expanded="false"
                                 [attr.aria-controls]="'collapse' + order._id">
-                            <strong>Pedido ID:</strong> {{ order._id }} |
+                            <strong>Pedido ID:</strong> {{ order.code }} |
                             <strong>Cliente:</strong> {{ order.userId.businessName }} |
                             <strong>Fecha:</strong> {{ order.createdAt | date: 'dd/MM/yyyy HH:mm' }} |
                             <strong>Total (sin IVA):</strong> {{ order.total | currency }}

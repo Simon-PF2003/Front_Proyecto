@@ -395,7 +395,6 @@ async mostrarNotaPedido(orderData: any): Promise<any> {
 
   // Contenido del resumen del pedido
   const contenidoNota = `
-    <p><strong>Número de Pedido:</strong> ${orderData.orderId}</p>
     <p><strong>Fecha:</strong> ${orderData.date}</p>
     <p><strong>Cliente:</strong> ${userData.code} - ${userData.businessName}</p>
     <p><strong>Método de Pago:</strong> ${metodoPago}</p>

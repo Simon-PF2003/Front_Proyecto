@@ -19,6 +19,12 @@
         En Curso
       </button>
 
+      <button class="mx-2 btn btn-info" 
+        [ngClass]="{'active': selectedStatus === 'Terminado'}" 
+        (click)="filterPedidos('Terminado')">
+        Terminado
+      </button>
+
       <button class="mx-2 btn btn-success" 
         [ngClass]="{'active': selectedStatus === 'Facturado'}" 
         (click)="filterPedidos('Facturado')">
@@ -38,13 +44,19 @@
   <div class="row">
     <div class="col">
       <div *ngFor="let pedido of paginatedPedidos" class="card mb-3">
-      <div class="card-header d-flex flex-wrap justify-content-between">
-        <div class="text-break"><strong>ID del Pedido:</strong> {{ pedido.code }}</div>
+      <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+        <div class="text-break"><strong>Nro de Pedido:</strong> {{ pedido.code }}</div>
         <div><strong>Fecha:</strong> {{ pedido.createdAt | date:'dd/MM/yyyy - HH:mm' }}</div>
       </div>
 
       <div class="card-body">
-        <h5 class="card-title">Ítems:</h5>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h5 class="card-title mb-0">Ítems:</h5>
+          <span class="badge-facturado" [ngClass]="pedido.billed ? 'facturado-si' : 'facturado-no'">
+            <i class="fas" [ngClass]="pedido.billed ? 'fa-file-invoice-dollar' : 'fa-file-invoice'"></i>
+            {{ pedido.billed ? 'Facturado' : 'Sin facturar' }}
+          </span>
+        </div>
         <ul class="list-group">
           <li class="list-group-item" *ngFor="let producto of pedido.items">
             <strong>Producto:</strong> {{ producto.desc }}<br>
@@ -56,7 +68,7 @@
 
         <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
           <p class="mb-2"><strong>Total:</strong> ${{ pedido.total }}</p>
-          <p class="mb-2 text-break" [ngClass]="{ 'pendiente': pedido.status === 'Pendiente', 'en-curso': pedido.status === 'En curso', 'facturado': pedido.status === 'Facturado' }">
+          <p class="mb-2 text-break" [ngClass]="{ 'pendiente': pedido.status === 'Pendiente', 'en-curso': pedido.status === 'En curso', 'terminado': pedido.status === 'Terminado', 'facturado': pedido.status === 'Facturado' }">
             <strong>Estado:</strong> {{ pedido.status }}
           </p>
           <p class="mb-2 text-break"><strong>Usuario ID:</strong> {{ pedido.userCode || pedido.userId?.code || 'N/A' }}</p>

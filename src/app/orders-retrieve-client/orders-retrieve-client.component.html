@@ -50,7 +50,7 @@
                                         </div>
                                         </div>
                                         <div class="mb-0 mx-4">
-                                            <button *ngIf="order.status === 'Pendiente'" class="btn btn-danger"
+                                            <button *ngIf="order.status === 'Pendiente' && order.payment_status != 'Aprobado'" class="btn btn-danger"
                                             (click)="cancelOrder(order._id); $event.stopPropagation()">Cancelar</button>
                                         </div>
                                     </div>

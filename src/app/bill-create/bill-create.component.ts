@@ -15,6 +15,7 @@ export class BillCreateComponent implements OnInit {
   selectedOrder: any = null;
   filters = {
     orderId: '',
+    code: '',
     userBusiness: '',
     minTotal: '',
     maxTotal: '',
@@ -114,14 +115,7 @@ export class BillCreateComponent implements OnInit {
         this.selectedOrder = null;
   
         const pdfUrl = URL.createObjectURL(pdfBlob);
-        const filename = `factura_${facturaData.orderId}.pdf`;
-        const a = document.createElement('a');
-        a.href = pdfUrl;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(pdfUrl);
+        window.open(pdfUrl, '_blank');
 
         location.reload();
       },

@@ -65,11 +65,45 @@
 
 
 .en-curso {
-  background-color: #cce5ff;  
-  color: #004085;  
+  background-color: #fffeb1;  
+  color: #7c833d;  
+}
+
+.terminado {
+  background-color: #d1ecf1;  
+  color: #007aaa;  
 }
 
 .facturado {
   background-color: #d4edda;  
   color: #155724;  
 }
+
+/* Badge para estado de facturación */
+.badge-facturado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.facturado-si {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.facturado-no {
+  background: linear-gradient(135deg, #6c757d 0%, #868e96 100%);
+  color: white;
+  box-shadow: 0 2px 4px rgba(108, 117, 125, 0.3);
+}
+
+.badge-facturado i {
+  font-size: 16px;
+}
+
