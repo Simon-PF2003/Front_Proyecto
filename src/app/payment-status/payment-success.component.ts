@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 })
 export class PaymentSuccessComponent implements OnInit {
   orderId: string = '';
+  orderCode: string = '';
   paymentStatus: string = 'Verificando...';
   loading: boolean = true;
   orderDetails: any = null;
@@ -39,6 +40,7 @@ export class PaymentSuccessComponent implements OnInit {
         if (response.success) {
           this.paymentStatus = response.payment_status;
           this.orderDetails = response;
+          this.orderCode = response.code || this.orderId;
           
           if (response.payment_status === 'Aprobado') {
             // Mostrar mensaje de éxito
@@ -69,7 +71,7 @@ export class PaymentSuccessComponent implements OnInit {
       title: '¡Pago Exitoso!',
       html: `
         <p>Tu pago se procesó correctamente.</p>
-        <p><strong>Orden:</strong> ${this.orderId}</p>
+        <p><strong>Orden:</strong> ${this.orderCode}</p>
         <p><strong>Estado:</strong> ${this.paymentStatus}</p>
       `,
       confirmButtonText: 'Continuar'
