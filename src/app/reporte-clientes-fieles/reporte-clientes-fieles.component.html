@@ -1,1 +1,150 @@
-<p>reporte-clientes-fieles works!</p>
+<div class="container mt-4">
+  <h2>Reporte de Fidelidad de Clientes</h2>
+
+  <!-- Filtro de fechas -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="dateRangeStart" class="form-label">Desde:</label>
+      <input 
+        type="date" 
+        id="dateRangeStart" 
+        class="form-control" 
+        [(ngModel)]="dateRangeStart" 
+        (change)="fetchClientesFieles()" 
+      />
+    </div>
+    <div class="col-md-6">
+      <label for="dateRangeEnd" class="form-label">Hasta:</label>
+      <input 
+        type="date" 
+        id="dateRangeEnd" 
+        class="form-control" 
+        [(ngModel)]="dateRangeEnd" 
+        (change)="fetchClientesFieles()" 
+      />
+    </div>
+  </div>
+
+  <!-- Botón de exportar -->
+  <div class="row mb-3" *ngIf="clientes.length > 0">
+    <div class="col-12 text-end">
+      <button 
+        class="btn btn-success" 
+        (click)="exportarExcel()"
+        [disabled]="clientes.length === 0">
+        <i class="fas fa-file-excel me-2"></i>
+        Descargar Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla de clientes fieles -->
+  <div class="row">
+    <div class="col-md-12">
+      <div *ngIf="clientes.length === 0" class="alert alert-info text-center">
+        No se encontraron clientes fieles en el rango de fechas seleccionado.
+      </div>
+      
+      <table *ngIf="clientes.length > 0" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID Cliente</th>
+            <th>Nombre</th>
+            <th>Cantidad de Compras</th>
+            <th>Monto Total Gastado</th>
+            <th>Fecha Último Pedido</th>
+            <th>Nivel de Fidelidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cliente of displayedClientes">
+            <td>{{ cliente.clienteCode || cliente.clienteId || 'N/A' }}</td>
+            <td>{{ cliente.clienteNombre || 'No disponible' }}</td>
+            <td>{{ cliente.cantidadCompras }}</td>
+            <td>{{ cliente.montoTotalGastado | currency }}</td>
+            <td>{{ cliente.fechaUltimoPedido | date: 'dd/MM/yyyy' }}</td>
+            <td>
+              <span 
+                class="badge"
+                [ngStyle]="{
+                  'background': cliente.nivelFidelidad === 'Bronce' ? 'linear-gradient(90deg, #ad7c4a 0%, #cd7f32 100%)' :
+                                cliente.nivelFidelidad === 'Plata' ? 'linear-gradient(90deg, #bfc1c2 0%, #e0e0e0 100%)' :
+                                cliente.nivelFidelidad === 'Oro' ? 'linear-gradient(90deg, #ffe066 0%, #ffd700 100%)' : '#6c757d',
+                  'color': cliente.nivelFidelidad === 'Bronce' ? '#fff8e1' :
+                           cliente.nivelFidelidad === 'Plata' ? '#222' :
+                           cliente.nivelFidelidad === 'Oro' ? '#7c5a00' : '#fff',
+                  'font-weight': 'bold'
+                }">
+                {{ cliente.nivelFidelidad }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Resumen -->
+  <div class="row mt-3" *ngIf="clientes.length > 0">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card text-center" style="background-color: #F8F4EC;">
+            <div class="card-body">
+              <h5 class="card-title">Total Clientes Fieles</h5>
+              <p class="card-text display-6">{{ clientes.length }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center" style="background-color: #F8F4EC;">
+            <div class="card-body">
+              <h5 class="card-title">Total Compras</h5>
+              <p class="card-text display-6">{{ totalCompras }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center" style="background-color: #F8F4EC;">
+            <div class="card-body">
+              <h5 class="card-title">Monto Total</h5>
+              <p class="card-text display-6">{{ totalMonto | currency }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <nav class="mt-4" *ngIf="clientes.length > 0">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button 
+          class="page-link" 
+          style="background-color: #F8F4EC; border: 1px solid #CCC9C2" 
+          (click)="changePage(currentPage - 1)">
+          Anterior
+        </button>
+      </li>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item">
+        <button 
+          class="page-link" 
+          [ngStyle]="currentPage === (i + 1) ? 
+            {'background-color': '#4CA7BF', 'border': '1px solid #CCC9C2', 'color': 'white'} : 
+            {'background-color': '#F8F4EC', 'border': '1px solid #CCC9C2'}"
+          (click)="changePage(i + 1)">
+          {{ i + 1 }}
+        </button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button 
+          class="page-link" 
+          style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" 
+          (click)="changePage(currentPage + 1)">
+          Siguiente
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>

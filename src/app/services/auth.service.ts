@@ -366,6 +366,16 @@ async getClienteEmail(cuit: string, authToken: string): Promise<any> {
     return this.http.delete(url);
   }
 
+//REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES 
+  getClientesFieles(startDate: string, endDate: string): Observable<any> {
+    const queryParams = new URLSearchParams({
+      startDate: startDate,
+      endDate: endDate
+    }).toString();
+
+    return this.http.get<any>(`${this.URL}/clientFidelity?${queryParams}`);
+  }
+
 
 //EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA 
   logOut() {
