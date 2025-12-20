@@ -1,1 +1,167 @@
-<p>reporte-analisis-ventas works!</p>
+<div class="container mt-4">
+  <h2>Análisis de Ventas por Producto</h2>
+
+  <!-- Filtros de fechas y categorías -->
+  <div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #F8F4EC; cursor: pointer;" (click)="toggleFiltersCollapse()">
+      <div>
+        <i class="fas fa-filter me-2"></i>Filtros
+      </div>
+      <button class="btn btn-sm btn-outline-secondary" type="button" (click)="toggleFiltersCollapse(); $event.stopPropagation()">
+        <i class="fas" [ngClass]="isFiltersCollapsed ? 'fa-plus' : 'fa-minus'"></i>
+      </button>
+    </div>
+    <div class="card-body">
+      <!-- Filtros de fechas (siempre visibles) -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="dateRangeStart" class="form-label">Desde:</label>
+          <input type="date" id="dateRangeStart" class="form-control" [(ngModel)]="dateRangeStart" (change)="fetchAnalisisVentas()" />
+        </div>
+        <div class="col-md-6">
+          <label for="dateRangeEnd" class="form-label">Hasta:</label>
+          <input type="date" id="dateRangeEnd" class="form-control" [(ngModel)]="dateRangeEnd" (change)="fetchAnalisisVentas()" />
+        </div>
+      </div>
+
+      <!-- Sección colapsable de filtros adicionales -->
+      <div [ngClass]="{'collapse': isFiltersCollapsed}">
+        <!-- Filtro de categorías (múltiples) -->
+        <div class="row">
+          <div class="col-12">
+            <label class="form-label">
+              <i class="fas fa-layer-group me-2"></i>Categorías (seleccionar una o varias):
+            </label>
+            
+            <!-- Chips de categorías seleccionadas -->
+            <div class="mb-2" *ngIf="selectedCategories.length > 0">
+              <span class="badge bg-primary me-2 mb-1" *ngFor="let catId of selectedCategories" style="font-size: 0.9rem;">
+                {{ getCategoryName(catId) }}
+                <i class="fas fa-times ms-1" style="cursor: pointer;" (click)="toggleCategory(catId, false)"></i>
+              </span>
+            </div>
+
+            <!-- Lista de categorías disponibles -->
+            <div class="elegant-select-list" role="listbox" aria-label="Categorías" style="max-height: 200px; overflow-y: auto;">
+              <button
+                type="button"
+                class="elegant-option"
+                *ngFor="let c of categories"
+                [class.active]="selectedCategories.includes(c._id)"
+                (click)="toggleCategoryItem(c._id)"
+                role="option"
+                [attr.aria-selected]="selectedCategories.includes(c._id)">
+                <span>{{ c.type }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botón para limpiar filtros -->
+        <div class="row mt-3">
+          <div class="col-12 d-flex justify-content-between align-items-center">
+            <button class="btn btn-outline-secondary btn-sm" (click)="clearFilters()">
+              <i class="fas fa-times me-1"></i>Limpiar Filtros
+            </button>
+            
+            <!-- Spinner de carga -->
+            <div class="loading-spinner" *ngIf="isLoading">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+              <span class="ms-2 text-muted">Cargando productos...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón de exportar -->
+  <div class="row mb-3" *ngIf="productosVentas.length > 0">
+    <div class="col-12 text-end">
+      <button 
+        class="btn btn-success" 
+        (click)="exportarExcel()"
+        [disabled]="productosVentas.length === 0">
+        <i class="fas fa-file-excel me-2"></i>
+        Descargar Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Resumen de ventas totales -->
+  <div class="row mb-3" *ngIf="ventasTotales > 0">
+    <div class="col-12">
+      <div class="alert alert-info">
+        <strong>Total de ventas en el período:</strong> {{ ventasTotales }} unidades vendidas
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de análisis de ventas por producto -->
+  <div class="row">
+    <div class="col-md-12">
+      <div *ngIf="productosVentas.length === 0" class="alert alert-info text-center">
+        No se encontraron ventas en el rango de fechas y categorías seleccionadas.
+      </div>
+      
+      <table *ngIf="productosVentas.length > 0" class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Marca</th>
+            <th>Categoría</th>
+            <th>Unidades Vendidas</th>
+            <th>% del Total</th>
+            <th>Precio Unitario</th>
+            <th>Ingreso Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of displayedProductos">
+            <td>{{ item.productDesc }}</td>
+            <td>{{ item.brandName || 'Sin marca' }}</td>
+            <td>{{ item.categoryName || 'Sin categoría' }}</td>
+            <td class="text-center">{{ item.cantidadVendida }}</td>
+            <td class="text-center">
+              <span class="badge bg-success">{{ item.porcentaje }}%</span>
+            </td>
+            <td class="text-end">{{ item.precioUnitario | currency }}</td>
+            <td class="text-end"><strong>{{ item.ingresoTotal | currency }}</strong></td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td class="text-start"><strong>TOTALES:</strong></td>
+            <td colspan="2"></td>
+            <td class="text-center"><strong>{{ ventasTotales }}</strong></td>
+            <td class="text-center"><strong>100%</strong></td>
+            <td></td>
+            <td class="text-end"><strong>{{ ingresoTotalGeneral | currency }}</strong></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <nav class="mt-4" *ngIf="totalPages > 1">
+    <ul class="pagination justify-content-center"> 
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2" (click)="changePage(currentPage - 1)">Anterior</button>
+      </li>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item">
+        <button 
+          class="page-link" 
+          [ngStyle]="currentPage === (i + 1) ? {'background-color': '#4CA7BF', 'border': '1px solid #CCC9C2', 'color': 'white'} : {'background-color': '#F8F4EC', 'border': '1px solid #CCC9C2'}"
+          (click)="changePage(i + 1)">
+          {{ i + 1 }}
+        </button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" (click)="changePage(currentPage + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
+</div>

@@ -139,6 +139,34 @@ export class ProductService {
     return this.http.delete(url);
   }
 
+//REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES
+  // Obtener análisis de ventas por producto con filtros de fecha y categorías
+  getAnalisisVentas(dateStart: string, dateEnd: string, categories?: string[]): Observable<any> {
+    let url = `${this.URL}/products/analisis-ventas?dateStart=${encodeURIComponent(dateStart)}&dateEnd=${encodeURIComponent(dateEnd)}`;
+    
+    if (categories && categories.length > 0) {
+      categories.forEach(catId => {
+        url += `&categories[]=${encodeURIComponent(catId)}`;
+      });
+    }
+    
+    console.log('URL análisis de ventas:', url);
+    return this.http.get<any>(url);
+  }
+
+  // Exportar análisis de ventas a Excel
+  exportAnalisisVentasExcel(dateStart: string, dateEnd: string, categories?: string[]): Observable<Blob> {
+    let url = `${this.URL}/products/analisis-ventas/export?dateStart=${encodeURIComponent(dateStart)}&dateEnd=${encodeURIComponent(dateEnd)}`;
+    
+    if (categories && categories.length > 0) {
+      categories.forEach(catId => {
+        url += `&categories[]=${encodeURIComponent(catId)}`;
+      });
+    }
+    
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
 
   
 

@@ -1,0 +1,170 @@
+/* Estilos para la lista de selección de categorías */
+.elegant-select-list {
+  border: 1px solid #CCC9C2;
+  border-radius: 4px;
+  padding: 0;
+  background-color: #F8F4EC;
+  list-style: none;
+}
+
+.elegant-option {
+  width: 100%;
+  padding: 10px 15px;
+  border: none;
+  background-color: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #E5E3DD;
+}
+
+.elegant-option:last-child {
+  border-bottom: none;
+}
+
+.elegant-option:hover {
+  background-color: #E5E3DD;
+}
+
+.elegant-option.active {
+  background-color: #4CA7BF;
+  color: white;
+  font-weight: 500;
+}
+
+.elegant-option.active:hover {
+  background-color: #3d8a9f;
+}
+
+/* Estilos para los badges de categorías seleccionadas */
+.badge {
+  padding: 8px 12px;
+  font-weight: 500;
+}
+
+.badge .fa-times {
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.badge .fa-times:hover {
+  opacity: 1;
+}
+
+/* Mejoras visuales para la tabla */
+.table thead th {
+  background-color: #F8F4EC;  /* Color cremita en lugar de azul */
+  color: #333;                 /* Texto oscuro para contraste */
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid #CCC9C2;  /* Bordes consistentes */
+}
+
+/* Fila de totales - forzar color sólido sin opacidad */
+.table tfoot tr {
+  background-color: #CCC9C2 !important;
+  opacity: 1 !important;
+}
+
+.table tfoot tr td {
+  background-color: #CCC9C2 !important;
+  opacity: 1 !important;
+  background-image: none !important;
+  filter: none !important;
+}
+
+/* Eliminar cualquier overlay de Bootstrap */
+.table tfoot tr::before,
+.table tfoot tr::after,
+.table tfoot tr td::before,
+.table tfoot tr td::after {
+  display: none !important;
+  background: none !important;
+}
+
+/* Badge de porcentaje en color azul */
+.badge.bg-success {
+  background-color: #4CA7BF !important;  /* Color azul principal */
+}
+
+/* Estilos para el card de filtros */
+.card-header {
+  font-weight: 600;
+  border-bottom: 2px solid #CCC9C2;
+}
+
+.card-header .btn-outline-secondary {
+  border-color: #CCC9C2;
+  color: #333;
+  padding: 0.25rem 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.card-header .btn-outline-secondary:hover {
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+  color: white;
+}
+
+.card-header .btn-outline-secondary i {
+  font-size: 0.85rem;
+  transition: transform 0.3s ease;
+}
+
+/* Animación de colapso */
+.collapse {
+  display: none;
+}
+
+.collapsing {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.35s ease;
+}
+
+/* Spinner de carga */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.loading-spinner .spinner-border {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-width: 0.2em;
+  color: #4CA7BF !important;
+}
+
+.loading-spinner span {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive: scroll horizontal en tablas pequeñas */
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  .elegant-select-list {
+    max-height: 150px !important;
+  }
+  
+  .loading-spinner span {
+    display: none; /* Ocultar texto en móviles */
+  }
+}
