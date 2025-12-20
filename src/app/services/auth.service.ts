@@ -367,19 +367,21 @@ async getClienteEmail(cuit: string, authToken: string): Promise<any> {
   }
 
 //REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES REPORTES 
-  getClientesFieles(startDate: string, endDate: string): Observable<any> {
+  getClientesFieles(startDate: string, endDate: string, sortOrder: string = 'desc'): Observable<any> {
     const queryParams = new URLSearchParams({
       startDate: startDate,
-      endDate: endDate
+      endDate: endDate,
+      sortOrder: sortOrder
     }).toString();
 
     return this.http.get<any>(`${this.URL}/clientFidelity?${queryParams}`);
   }
 
-  getClientesRiesgoAbandono(startDate: string, endDate: string): Observable<any> {
+  getClientesRiesgoAbandono(startDate: string, endDate: string, sortOrder: string = 'desc'): Observable<any> {
     const queryParams = new URLSearchParams({
       startDate: startDate,
-      endDate: endDate
+      endDate: endDate,
+      sortOrder: sortOrder
     }).toString();
 
     return this.http.get<any>(`${this.URL}/potentialRiskClients?${queryParams}`);

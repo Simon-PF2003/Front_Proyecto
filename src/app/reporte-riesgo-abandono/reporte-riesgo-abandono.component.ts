@@ -22,6 +22,7 @@ export class ReporteRiesgoAbandonoComponent implements OnInit {
   clientes: ClienteRiesgo[] = [];
   dateRangeStart: string = '';
   dateRangeEnd: string = '';
+  sortOrder: string = 'desc'; // 'asc' o 'desc'
 
   // Paginación
   currentPage: number = 1;
@@ -66,7 +67,7 @@ export class ReporteRiesgoAbandonoComponent implements OnInit {
     const dateStart = this.dateRangeStart + "T00:00:00Z";
     const dateEnd = this.dateRangeEnd + "T23:59:59Z";
     
-    this.authService.getClientesRiesgoAbandono(dateStart, dateEnd).subscribe(
+    this.authService.getClientesRiesgoAbandono(dateStart, dateEnd, this.sortOrder).subscribe(
       (response: any) => {
         console.log('Respuesta del backend:', response);
         

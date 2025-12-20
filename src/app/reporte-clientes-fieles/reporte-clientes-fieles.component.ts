@@ -24,6 +24,7 @@ export class ReporteClientesFielesComponent implements OnInit {
   dateRangeEnd: string = '';
   totalCompras: number = 0;
   totalMonto: number = 0;
+  sortOrder: string = 'desc'; // 'asc' o 'desc'
 
   // Paginación
   currentPage: number = 1;
@@ -68,7 +69,7 @@ export class ReporteClientesFielesComponent implements OnInit {
     const dateStart = this.dateRangeStart + "T00:00:00Z";
     const dateEnd = this.dateRangeEnd + "T23:59:59Z";
     
-    this.authService.getClientesFieles(dateStart, dateEnd).subscribe(
+    this.authService.getClientesFieles(dateStart, dateEnd, this.sortOrder).subscribe(
       (response: any) => {
         console.log('Respuesta del backend:', response);
         

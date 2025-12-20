@@ -1,9 +1,9 @@
 <div class="container mt-4">
   <h2>Reporte de Riesgo de Abandono</h2>
 
-  <!-- Filtro de fechas -->
+  <!-- Filtro de fechas y ordenamiento -->
   <div class="row mb-3">
-    <div class="col-md-6">
+    <div class="col-md-4 col-sm-6 mb-2 mb-md-0">
       <label for="dateRangeStart" class="form-label">Desde:</label>
       <input 
         type="date" 
@@ -13,7 +13,7 @@
         (change)="fetchClientesRiesgo()" 
       />
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4 col-sm-6 mb-2 mb-md-0">
       <label for="dateRangeEnd" class="form-label">Hasta:</label>
       <input 
         type="date" 
@@ -22,6 +22,17 @@
         [(ngModel)]="dateRangeEnd" 
         (change)="fetchClientesRiesgo()" 
       />
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <label for="sortOrder" class="form-label">Ordenar por Riesgo:</label>
+      <select 
+        id="sortOrder" 
+        class="form-select" 
+        [(ngModel)]="sortOrder" 
+        (change)="fetchClientesRiesgo()">
+        <option value="desc">Mayor a Menor</option>
+        <option value="asc">Menor a Mayor</option>
+      </select>
     </div>
   </div>
 
@@ -45,40 +56,42 @@
         No se encontraron clientes en riesgo de abandono en el rango de fechas seleccionado.
       </div>
       
-      <table *ngIf="clientes.length > 0" class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID Cliente</th>
-            <th>Nombre</th>
-            <th>Fecha Último Pedido</th>
-            <th>Días de Inactividad</th>
-            <th>Monto Gastado</th>
-            <th>Nivel de Riesgo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let cliente of displayedClientes">
-            <td>{{ cliente.clienteCode || cliente.clienteId || 'N/A' }}</td>
-            <td>{{ cliente.clienteNombre || 'No disponible' }}</td>
-            <td>{{ cliente.fechaUltimoPedido | date: 'dd/MM/yyyy' }}</td>
-            <td>{{ cliente.diasInactividad }}</td>
-            <td>{{ cliente.montoGastado | currency }}</td>
-            <td>
-              <span 
-                class="badge"
-                [ngStyle]="{
-                  'background': cliente.nivelRiesgo === 'Bajo' ? 'linear-gradient(90deg, #28a745 0%, #4caf50 100%)' :
-                                cliente.nivelRiesgo === 'Medio' ? 'linear-gradient(90deg, #ffc107 0%, #ffb300 100%)' :
-                                cliente.nivelRiesgo === 'Alto' ? 'linear-gradient(90deg, #dc3545 0%, #f44336 100%)' : '#6c757d',
-                  'color': cliente.nivelRiesgo === 'Medio' ? '#222' : '#fff',
-                  'font-weight': 'bold'
-                }">
-                {{ cliente.nivelRiesgo }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-responsive" *ngIf="clientes.length > 0">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID Cliente</th>
+              <th>Nombre</th>
+              <th>Fecha Último Pedido</th>
+              <th>Días de Inactividad</th>
+              <th>Monto Gastado</th>
+              <th>Nivel de Riesgo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cliente of displayedClientes">
+              <td>{{ cliente.clienteCode || cliente.clienteId || 'N/A' }}</td>
+              <td>{{ cliente.clienteNombre || 'No disponible' }}</td>
+              <td>{{ cliente.fechaUltimoPedido | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ cliente.diasInactividad }}</td>
+              <td>{{ cliente.montoGastado | currency }}</td>
+              <td>
+                <span 
+                  class="badge"
+                  [ngStyle]="{
+                    'background': cliente.nivelRiesgo === 'Bajo' ? 'linear-gradient(90deg, #28a745 0%, #4caf50 100%)' :
+                                  cliente.nivelRiesgo === 'Medio' ? 'linear-gradient(90deg, #ffc107 0%, #ffb300 100%)' :
+                                  cliente.nivelRiesgo === 'Alto' ? 'linear-gradient(90deg, #dc3545 0%, #f44336 100%)' : '#6c757d',
+                    'color': cliente.nivelRiesgo === 'Medio' ? '#222' : '#fff',
+                    'font-weight': 'bold'
+                  }">
+                  {{ cliente.nivelRiesgo }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -86,7 +99,7 @@
   <div class="row mt-3" *ngIf="clientes.length > 0">
     <div class="col-md-12">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
           <div class="card text-center" style="background-color: #F8F4EC;">
             <div class="card-body">
               <h5 class="card-title">Total Clientes en Riesgo</h5>
@@ -94,7 +107,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
           <div class="card text-center" style="background-color: #ffebee;">
             <div class="card-body">
               <h5 class="card-title">Riesgo Alto</h5>
@@ -102,7 +115,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6 mb-3 mb-md-0">
           <div class="card text-center" style="background-color: #fff8e1;">
             <div class="card-body">
               <h5 class="card-title">Riesgo Medio</h5>
@@ -110,7 +123,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3 col-sm-6">
           <div class="card text-center" style="background-color: #e8f5e9;">
             <div class="card-body">
               <h5 class="card-title">Riesgo Bajo</h5>
