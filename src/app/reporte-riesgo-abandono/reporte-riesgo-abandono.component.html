@@ -1,1 +1,156 @@
-<p>reporte-riesgo-abandono works!</p>
+<div class="container mt-4">
+  <h2>Reporte de Riesgo de Abandono</h2>
+
+  <!-- Filtro de fechas -->
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label for="dateRangeStart" class="form-label">Desde:</label>
+      <input 
+        type="date" 
+        id="dateRangeStart" 
+        class="form-control" 
+        [(ngModel)]="dateRangeStart" 
+        (change)="fetchClientesRiesgo()" 
+      />
+    </div>
+    <div class="col-md-6">
+      <label for="dateRangeEnd" class="form-label">Hasta:</label>
+      <input 
+        type="date" 
+        id="dateRangeEnd" 
+        class="form-control" 
+        [(ngModel)]="dateRangeEnd" 
+        (change)="fetchClientesRiesgo()" 
+      />
+    </div>
+  </div>
+
+  <!-- Botón de exportar -->
+  <div class="row mb-3" *ngIf="clientes.length > 0">
+    <div class="col-12 text-end">
+      <button 
+        class="btn btn-success" 
+        (click)="exportarExcel()"
+        [disabled]="clientes.length === 0">
+        <i class="fas fa-file-excel me-2"></i>
+        Descargar Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla de clientes en riesgo -->
+  <div class="row">
+    <div class="col-md-12">
+      <div *ngIf="clientes.length === 0" class="alert alert-info text-center">
+        No se encontraron clientes en riesgo de abandono en el rango de fechas seleccionado.
+      </div>
+      
+      <table *ngIf="clientes.length > 0" class="table table-bordered table-striped">
+        <thead>
+          <tr>
+            <th>ID Cliente</th>
+            <th>Nombre</th>
+            <th>Fecha Último Pedido</th>
+            <th>Días de Inactividad</th>
+            <th>Monto Gastado</th>
+            <th>Nivel de Riesgo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cliente of displayedClientes">
+            <td>{{ cliente.clienteCode || cliente.clienteId || 'N/A' }}</td>
+            <td>{{ cliente.clienteNombre || 'No disponible' }}</td>
+            <td>{{ cliente.fechaUltimoPedido | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ cliente.diasInactividad }}</td>
+            <td>{{ cliente.montoGastado | currency }}</td>
+            <td>
+              <span 
+                class="badge"
+                [ngStyle]="{
+                  'background': cliente.nivelRiesgo === 'Bajo' ? 'linear-gradient(90deg, #28a745 0%, #4caf50 100%)' :
+                                cliente.nivelRiesgo === 'Medio' ? 'linear-gradient(90deg, #ffc107 0%, #ffb300 100%)' :
+                                cliente.nivelRiesgo === 'Alto' ? 'linear-gradient(90deg, #dc3545 0%, #f44336 100%)' : '#6c757d',
+                  'color': cliente.nivelRiesgo === 'Medio' ? '#222' : '#fff',
+                  'font-weight': 'bold'
+                }">
+                {{ cliente.nivelRiesgo }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Resumen -->
+  <div class="row mt-3" *ngIf="clientes.length > 0">
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card text-center" style="background-color: #F8F4EC;">
+            <div class="card-body">
+              <h5 class="card-title">Total Clientes en Riesgo</h5>
+              <p class="card-text display-6">{{ clientes.length }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center" style="background-color: #ffebee;">
+            <div class="card-body">
+              <h5 class="card-title">Riesgo Alto</h5>
+              <p class="card-text display-6 text-danger">{{ countByRiesgo('Alto') }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center" style="background-color: #fff8e1;">
+            <div class="card-body">
+              <h5 class="card-title">Riesgo Medio</h5>
+              <p class="card-text display-6 text-warning">{{ countByRiesgo('Medio') }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center" style="background-color: #e8f5e9;">
+            <div class="card-body">
+              <h5 class="card-title">Riesgo Bajo</h5>
+              <p class="card-text display-6 text-success">{{ countByRiesgo('Bajo') }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <nav class="mt-4" *ngIf="clientes.length > 0">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button 
+          class="page-link" 
+          style="background-color: #F8F4EC; border: 1px solid #CCC9C2" 
+          (click)="changePage(currentPage - 1)">
+          Anterior
+        </button>
+      </li>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item">
+        <button 
+          class="page-link" 
+          [ngStyle]="currentPage === (i + 1) ? 
+            {'background-color': '#4CA7BF', 'border': '1px solid #CCC9C2', 'color': 'white'} : 
+            {'background-color': '#F8F4EC', 'border': '1px solid #CCC9C2'}"
+          (click)="changePage(i + 1)">
+          {{ i + 1 }}
+        </button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button 
+          class="page-link" 
+          style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" 
+          (click)="changePage(currentPage + 1)">
+          Siguiente
+        </button>
+      </li>
+    </ul>
+  </nav>
+</div>
