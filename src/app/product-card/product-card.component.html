@@ -5,15 +5,15 @@
     <!-- <p class="card-text">{{ product.desc }}</p> -->
     <p class="card-text">Marca: {{ product.brand?.brand || 'Sin marca' }}</p>
     <p class="card-text">Categoría: {{ product.cat?.type || 'Sin categoría' }}</p>
-    <p class="card-price" *ngIf="discountPercentage === 0">
-      {{ product.price | currency }}
-      <span class="text-danger" *ngIf="product.stock === 0"> 🔴 Agotado</span>
-    </p>
+    <div *ngIf="discountPercentage === 0">
+      <p class="card-price mb-1">{{ product.price | currency }}</p>
+      <p class="text-danger mb-1" *ngIf="product.stock === 0"><small>🔴 Agotado</small></p>
+    </div>
 
-    <p class="card-text" *ngIf="discountPercentage > 0">
-      Precio: <span class="text-danger"><del>{{ product.price | currency }}</del></span>
-      <strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong>
-      <span class="text-danger" *ngIf="product.stock === 0"> 🔴 Agotado</span>
-    </p>
+    <div *ngIf="discountPercentage > 0">
+      <p class="card-text text-danger mb-2"><small><del>{{ product.price | currency }}</del></small></p>
+      <p class="card-price mb-2"><strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong></p>
+      <p class="text-danger mb-2" *ngIf="product.stock === 0"><small>🔴 Agotado</small></p>
+    </div>
     <button class="btn btn-primary" style="font-family: BlinkMacSystemFont, 'Segoe UI'; border: none; width: 100%;" (click)="comprar()"> Comprar</button>
   </div>

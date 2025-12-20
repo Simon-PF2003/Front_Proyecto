@@ -235,15 +235,15 @@
                   <p class="card-text">Stock: {{ product.stock }}</p>
 
                   <div class="mt-auto">
-                    <p class="card-price mb-0" *ngIf="discountPercentage === 0">
-                      {{ product.price | currency }}
-                      <span class="text-danger" *ngIf="product.stock === 0"> 🔴 Agotado</span>
-                    </p>
-                    <p class="card-text mb-0" *ngIf="discountPercentage > 0">
-                      Precio: <span class="text-danger"><del>{{ product.price | currency }}</del></span>
-                      <strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong>
-                      <span class="text-danger" *ngIf="product.stock === 0"> 🔴 Agotado</span>
-                    </p>
+                    <div *ngIf="discountPercentage === 0">
+                      <p class="card-price mb-1">{{ product.price | currency }}</p>
+                      <p class="text-danger mb-1" *ngIf="product.stock === 0"><small>🔴 Agotado</small></p>
+                    </div>
+                    <div *ngIf="discountPercentage > 0">
+                      <p class="card-text text-danger mb-1"><small><del>{{ product.price | currency }}</del></small></p>
+                      <p class="card-price mb-1"><strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong></p>
+                      <p class="text-danger mb-1" *ngIf="product.stock === 0"><small>🔴 Agotado</small></p>
+                    </div>
                   </div>
 
                 </div>
