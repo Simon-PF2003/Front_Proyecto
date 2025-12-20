@@ -80,6 +80,10 @@ import { SupplierUpdateModalComponent } from './supplier-update/supplier-update-
 import { ReporteOrdenarClientesComponent } from './reporte-ordenar-clientes/reporte-ordenar-clientes.component';
 import { ReporteAgruparProductosComponent } from './reporte-agrupar-productos/reporte-agrupar-productos.component';
 import { ReporteRecaudacionComponent } from './reporte-recaudacion/reporte-recaudacion.component';
+import { ReporteClientesFielesComponent } from './reporte-clientes-fieles/reporte-clientes-fieles.component';
+import { ReporteRiesgoAbandonoComponent } from './reporte-riesgo-abandono/reporte-riesgo-abandono.component';
+import { ReporteAnalisisVentasComponent } from './reporte-analisis-ventas/reporte-analisis-ventas.component';
+import { ReportePronosticoDemandaComponent } from './reporte-pronostico-demanda/reporte-pronostico-demanda.component';
 
 //Stock
 import { StockIngresoComponent } from './stock-ingreso/stock-ingreso.component';
@@ -104,6 +108,7 @@ import { PaymentSuccessComponent } from './payment-status/payment-success.compon
 import { PaymentErrorComponent } from './payment-status/payment-error.component';
 import { PaymentPendingComponent } from './payment-status/payment-pending.component';
 import { ProfileUpdateComponent } from './user-profile/profile-update/profile-update.component';
+
 @NgModule({
   declarations: [
 //Genericos
@@ -166,6 +171,10 @@ import { ProfileUpdateComponent } from './user-profile/profile-update/profile-up
     ReporteRecaudacionComponent,
     ReporteOrdenarClientesComponent,
     ReporteAgruparProductosComponent,
+    ReporteClientesFielesComponent,
+    ReporteRiesgoAbandonoComponent,
+    ReporteAnalisisVentasComponent,
+    ReportePronosticoDemandaComponent,
     
     //Stock
     StockIngresoComponent,

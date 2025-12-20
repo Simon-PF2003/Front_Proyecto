@@ -59,6 +59,10 @@ import { BillCreateComponent } from './bill-create/bill-create.component';
 import { ReporteAgruparProductosComponent } from './reporte-agrupar-productos/reporte-agrupar-productos.component';
 import { ReporteOrdenarClientesComponent } from './reporte-ordenar-clientes/reporte-ordenar-clientes.component';
 import { ReporteRecaudacionComponent } from './reporte-recaudacion/reporte-recaudacion.component';
+import { ReporteClientesFielesComponent } from './reporte-clientes-fieles/reporte-clientes-fieles.component';
+import { ReporteRiesgoAbandonoComponent } from './reporte-riesgo-abandono/reporte-riesgo-abandono.component';
+import { ReporteAnalisisVentasComponent } from './reporte-analisis-ventas/reporte-analisis-ventas.component';
+import { ReportePronosticoDemandaComponent } from './reporte-pronostico-demanda/reporte-pronostico-demanda.component';
 
 //Payment Status
 import { PaymentSuccessComponent } from './payment-status/payment-success.component';
@@ -123,6 +127,10 @@ const routes: Routes = [
   {path: 'reporte-agrupar-productos', component:ReporteAgruparProductosComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   {path: 'reporte-ordenar-clientes', component:ReporteOrdenarClientesComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   {path: 'reporte-recaudacion', component:ReporteRecaudacionComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'reporte-clientes-fieles', component:ReporteClientesFielesComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'reporte-riesgo-abandono', component:ReporteRiesgoAbandonoComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'reporte-analisis-ventas', component:ReporteAnalisisVentasComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  {path: 'reporte-pronostico-demanda', component:ReportePronosticoDemandaComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   
 //Extra
   { path: '', component: HomeComponent }, //ruta inicial, si quisiera que me lleve a otra --> redirecTo: '/nombre_pag',pathMatch: 'full'  
