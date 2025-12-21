@@ -26,7 +26,7 @@ export class ReporteAnalisisVentasComponent implements OnInit {
   isLoading: boolean = false;
 
   // Control de colapso de filtros
-  isFiltersCollapsed: boolean = false;
+  isFiltersCollapsed: boolean = true;
 
   // Paginación
   currentPage: number = 1;
@@ -39,9 +39,10 @@ export class ReporteAnalisisVentasComponent implements OnInit {
     private categorySelectionService: CategorySelectionService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.setDefaultDateRange();
-    this.loadCategories();
+    await this.loadCategories();
+    // Realizar búsqueda inicial inmediatamente al cargar el componente
     this.fetchAnalisisVentas();
   }
 
