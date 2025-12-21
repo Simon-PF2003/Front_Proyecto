@@ -167,8 +167,21 @@ export class ProductService {
     return this.http.get(url, { responseType: 'blob' });
   }
 
-
-  
-
-
+  // Obtener pronóstico de demanda de productos
+  getPronosticoDemanda(
+    dateEnd: string, 
+    predictionType: string, 
+    sortBy: string = 'quantity', 
+    sortOrder: string = 'desc',
+    stockStatus: string = 'all'
+  ): Observable<any> {
+    let url = `${this.URL}/products/sales_forecast?dateEnd=${encodeURIComponent(dateEnd)}&type=${encodeURIComponent(predictionType)}&sortBy=${encodeURIComponent(sortBy)}&sortOrder=${encodeURIComponent(sortOrder)}`;
+    
+    if (stockStatus && stockStatus !== 'all') {
+      url += `&stockStatus=${encodeURIComponent(stockStatus)}`;
+    }
+    
+    console.log('URL pronóstico de demanda:', url);
+    return this.http.get<any>(url);
+  }
 }

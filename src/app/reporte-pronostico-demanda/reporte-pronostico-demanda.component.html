@@ -1,1 +1,205 @@
-<p>reporte-pronostico-demanda works!</p>
+<div class="container mt-4">
+  <h2>Pronóstico de Demanda de Productos</h2>
+
+  <!-- Formulario de filtros -->
+  <div class="card mb-4">
+    <div class="card-header" style="background-color: #F8F4EC;">
+      <i class="fas fa-chart-line me-2"></i>Configuración de Pronóstico
+    </div>
+    <div class="card-body">
+      <!-- Filtros de fechas -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="dateRangeEnd" class="form-label">Predecir hasta:</label>
+          <input type="date" id="dateRangeEnd" class="form-control" [(ngModel)]="dateRangeEnd" />
+          <small class="text-muted">La predicción comienza desde hoy</small>
+        </div>
+        <div class="col-md-6">
+          <label for="predictionType" class="form-label">Tipo de Pronóstico:</label>
+          <select id="predictionType" class="form-select" [(ngModel)]="predictionType">
+            <option value="weekly">Semanal (7 días)</option>
+            <option value="monthly">Mensual (30 días)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Botón de búsqueda -->
+      <div class="row">
+        <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <button class="btn btn-primary" (click)="fetchPronostico()" [disabled]="isLoading">
+            <i class="fas fa-search me-2"></i>Generar Pronóstico
+          </button>
+          
+          <!-- Spinner de carga -->
+          <div class="loading-spinner" *ngIf="isLoading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <span class="ms-2 text-muted">Calculando pronóstico...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros y Ordenamiento -->
+  <div class="row mb-3" *ngIf="productosPronostico.length > 0">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header" style="background-color: #F8F4EC;">
+          <i class="fas fa-filter me-2"></i>Filtros y Ordenamiento
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <!-- Filtro por estado de stock -->
+            <div class="col-md-4 mb-3 mb-md-0">
+              <label class="form-label fw-bold"><i class="fas fa-filter me-2"></i>Filtrar por Stock:</label>
+              <select class="form-select" [(ngModel)]="stockStatusFilter" (change)="fetchPronostico()">
+                <option value="all">Todos los productos</option>
+                <option value="sufficient">Solo con stock suficiente</option>
+                <option value="insufficient">Solo con stock insuficiente</option>
+              </select>
+            </div>
+            
+            <!-- Ordenar por criterio -->
+            <div class="col-md-4 mb-3 mb-md-0">
+              <label class="form-label fw-bold"><i class="fas fa-sort me-2"></i>Ordenar por:</label>
+              <select class="form-select" [(ngModel)]="sortBy" (change)="fetchPronostico()">
+                <option value="quantity">Cantidad predicha</option>
+                <option value="stockDiff">Diferencia de stock</option>
+              </select>
+            </div>
+            
+            <!-- Dirección de ordenamiento -->
+            <div class="col-md-4">
+              <label class="form-label fw-bold"><i class="fas fa-sort-amount-down me-2"></i>Orden:</label>
+              <div class="btn-group w-100" role="group">
+                <button 
+                  type="button" 
+                  class="btn btn-sm"
+                  [ngClass]="sortOrder === 'desc' ? 'btn-primary' : 'btn-outline-secondary'"
+                  (click)="sortOrder = 'desc'; fetchPronostico()">
+                  <i class="fas fa-arrow-down me-1"></i>Mayor a Menor
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-sm"
+                  [ngClass]="sortOrder === 'asc' ? 'btn-primary' : 'btn-outline-secondary'"
+                  (click)="sortOrder = 'asc'; fetchPronostico()">
+                  <i class="fas fa-arrow-up me-1"></i>Menor a Mayor
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Resumen de pronóstico -->
+  <div class="row mb-3" *ngIf="productosPronostico.length > 0">
+    <div class="col-md-6 mb-2 mb-md-0">
+      <div class="alert alert-success">
+        <strong><i class="fas fa-arrow-up me-2"></i>Mayor Demanda Predicha (Total):</strong><br>
+        {{ mayorDemanda?.desc || 'N/A' }} ({{ mayorDemanda?.totalEsperado || mayorDemanda?.cantidadPredicha || 0 }} unidades)
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="alert alert-warning">
+        <strong><i class="fas fa-arrow-down me-2"></i>Menor Demanda Predicha (Total):</strong><br>
+        {{ menorDemanda?.desc || 'N/A' }} ({{ menorDemanda?.totalEsperado || menorDemanda?.cantidadPredicha || 0 }} unidades)
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabla de pronóstico de demanda -->
+  <div class="row">
+    <div class="col-md-12">
+      <div *ngIf="productosPronostico.length === 0 && !isLoading" class="alert alert-info text-center">
+        No se han generado pronósticos aún. Selecciona un rango de fechas y tipo de pronóstico.
+      </div>
+      
+      <div class="table-responsive">
+        <table *ngIf="productosPronostico.length > 0" class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="d-none d-md-table-cell">ID Producto</th>
+              <th>Descripción</th>
+              <th class="d-none d-lg-table-cell">Categoría</th>
+              <th class="text-center">Stock</th>
+              <th class="text-center d-none d-sm-table-cell">Precio</th>
+              <th class="text-center">Por Período</th>
+              <th class="text-center">Total Esperado</th>
+              <th class="text-center">Diferencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of displayedProductos">
+              <td class="d-none d-md-table-cell"><small class="text-muted">{{ item._id }}</small></td>
+              <td>
+                <strong>{{ item.desc }}</strong>
+                <div class="d-lg-none">
+                  <small class="text-muted d-block">{{ item.categoryName || 'Sin categoría' }}</small>
+                </div>
+                <div class="d-sm-none">
+                  <small class="text-primary d-block mt-1">{{ item.price | currency }}</small>
+                </div>
+              </td>
+              <td class="d-none d-lg-table-cell">{{ item.categoryName || 'Sin categoría' }}</td>
+              <td class="text-center">
+                <span class="badge bg-secondary">{{ item.stock }}</span>
+              </td>
+              <td class="text-end d-none d-sm-table-cell">{{ item.price | currency }}</td>
+              <td class="text-center">
+                <div class="prediction-info">
+                  <strong class="text-primary fs-5 d-block">{{ item.cantidadPredicha }}</strong>
+                  <small class="text-muted d-block">{{ predictionTypeLabel }}</small>
+                </div>
+              </td>
+              <td class="text-center">
+                <div class="prediction-info">
+                  <strong class="text-success fs-5 d-block">{{ item.totalEsperado }}</strong>
+                  <small class="text-muted d-block">{{ item.numeroPeriodos }} período{{ item.numeroPeriodos > 1 ? 's' : '' }}</small>
+                </div>
+              </td>
+              <td class="text-center">
+                <div *ngIf="item.stock < item.totalEsperado" class="stock-deficit">
+                  <span class="badge bg-danger">
+                    <i class="fas fa-exclamation-triangle me-1"></i>Faltan {{ item.totalEsperado - item.stock }}
+                  </span>
+                  <small class="d-block text-danger mt-1">Insuficiente</small>
+                </div>
+                <div *ngIf="item.stock >= item.totalEsperado" class="stock-surplus">
+                  <span class="badge bg-success">
+                    <i class="fas fa-check-circle me-1"></i>Sobran {{ item.stock - item.totalEsperado }}
+                  </span>
+                  <small class="d-block text-success mt-1">Suficiente</small>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+  <nav class="mt-4" *ngIf="totalPages > 1">
+    <ul class="pagination justify-content-center"> 
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2" (click)="changePage(currentPage - 1)">Anterior</button>
+      </li>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item">
+        <button 
+          class="page-link" 
+          [ngStyle]="currentPage === (i + 1) ? {'background-color': '#4CA7BF', 'border': '1px solid #CCC9C2', 'color': 'white'} : {'background-color': '#F8F4EC', 'border': '1px solid #CCC9C2'}"
+          (click)="changePage(i + 1)">
+          {{ i + 1 }}
+        </button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" (click)="changePage(currentPage + 1)">Siguiente</button>
+      </li>
+    </ul>
+  </nav>
+</div>
