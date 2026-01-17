@@ -11,6 +11,7 @@
 .table thead th {
   background-color: white !important;
   border-color: #dee2e6;
+  white-space: nowrap;
 }
 
 /* Personalizar bordes */
@@ -21,4 +22,42 @@
 .table-bordered td,
 .table-bordered th {
   border-color: #dee2e6;
+}
+
+/* Responsividad de la tabla */
+.table-responsive {
+  border-radius: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  min-width: 800px;
+  margin-bottom: 0;
+}
+
+/* Mejoras para móvil */
+@media (max-width: 768px) {
+  .table {
+    font-size: 14px;
+  }
+
+  .table thead th {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .table tbody td {
+    padding: 8px;
+  }
+
+  .btn-sm {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+}
+
+/* Evitar que las celdas con números se rompan */
+.text-nowrap {
+  white-space: nowrap;
 }

@@ -1,113 +1,324 @@
-<div class="container mt-3">
+<div class="container-fluid mt-4">
+  
+  <!-- Encabezado superior (mobile): botón para abrir filtros -->
+  <div class="d-lg-none d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Pedidos</h5>
+    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filtersOffcanvas">
+      <i class="fas fa-filter me-2"></i>Filtros
+    </button>
+  </div>
+
   <div class="row">
-    <div class="col-12 text-center my-4">
-      <h2 style="color: #333; font-size: 28px;">Pedidos</h2>
-    </div>
-
-    <div *ngIf="pedidos.length === 0" class="alert alert-info">No hay pedidos disponibles.</div>
-
-    <div class="col-12 text-center">
-      <button class="mx-2 btn btn-danger" 
-        [ngClass]="{'active': selectedStatus === 'Pendiente'}" 
-        (click)="filterPedidos('Pendiente')">
-        Pendientes
-      </button>
-
-      <button class="mx-2 btn btn-warning" 
-        [ngClass]="{'active': selectedStatus === 'En curso'}" 
-        (click)="filterPedidos('En curso')">
-        En Curso
-      </button>
-
-      <button class="mx-2 btn btn-info" 
-        [ngClass]="{'active': selectedStatus === 'Terminado'}" 
-        (click)="filterPedidos('Terminado')">
-        Terminado
-      </button>
-
-      <button class="mx-2 btn btn-success" 
-        [ngClass]="{'active': selectedStatus === 'Facturado'}" 
-        (click)="filterPedidos('Facturado')">
-        Facturados
-      </button>
-
-      <button class="mx-2 btn btn-secondary" 
-        [ngClass]="{'active': selectedStatus === ''}" 
-        (click)="filterPedidos()">
-        Todos
-      </button>
-    </div>
-  </div>
-</div>
-
-<div class="container mt-2">
-  <div class="row">
-    <div class="col">
-      <div *ngFor="let pedido of paginatedPedidos" class="card mb-3">
-      <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
-        <div class="text-break"><strong>Nro de Pedido:</strong> {{ pedido.code }}</div>
-        <div><strong>Fecha:</strong> {{ pedido.createdAt | date:'dd/MM/yyyy - HH:mm' }}</div>
-      </div>
-
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="card-title mb-0">Ítems:</h5>
-          <span class="badge-facturado" [ngClass]="pedido.billed ? 'facturado-si' : 'facturado-no'">
-            <i class="fas" [ngClass]="pedido.billed ? 'fa-file-invoice-dollar' : 'fa-file-invoice'"></i>
-            {{ pedido.billed ? 'Facturado' : 'Sin facturar' }}
-          </span>
+    <!-- SIDEBAR (desktop) -->
+    <aside class="col-lg-3 d-none d-lg-block mb-4">
+      <div class="filters-sidebar card sticky-top" style="top: 1rem;">
+        <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #F8F4EC;">
+          <span><i class="fas fa-sliders-h me-2"></i>Filtros</span>
+          <button class="btn btn-outline-secondary btn-sm" (click)="clearAllFilters()">
+            <i class="fas fa-times me-1"></i>Resetear
+          </button>
         </div>
-        <ul class="list-group">
-          <li class="list-group-item" *ngFor="let producto of pedido.items">
-            <strong>Producto:</strong> {{ producto.desc }}<br>
-            <strong>Cantidad:</strong> {{ producto.quantity }}<br>
-            <strong>Precio:</strong> {{ producto.price }}
-            <strong>Subtotal: {{ producto.price * producto.quantity }}</strong>
-          </li>
-        </ul>
 
-        <div class="d-flex flex-wrap justify-content-between align-items-center mt-3">
-          <p class="mb-2"><strong>Total:</strong> ${{ pedido.total }}</p>
-          <p class="mb-2 text-break" [ngClass]="{ 'pendiente': pedido.status === 'Pendiente', 'en-curso': pedido.status === 'En curso', 'terminado': pedido.status === 'Terminado', 'facturado': pedido.status === 'Facturado' }">
-            <strong>Estado:</strong> {{ pedido.status }}
-          </p>
-          <p class="mb-2 text-break"><strong>Usuario ID:</strong> {{ pedido.userCode || pedido.userId?.code || 'N/A' }}</p>
-          <p class="mb-2 text-break"><strong>Razón Social:</strong> {{ pedido.businessName || pedido.userId?.businessName || 'No disponible' }}</p>
-          <button class="btn btn-primary mb-2" (click)="openModal(pedido)">Cambiar Estado</button>
+        <div class="card-body">
+          <div class="accordion" id="filtersAccordion">
+
+            <!-- Razón Social -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingBusinessName">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBusinessName">
+                  <i class="fas fa-building me-2"></i>Razón Social
+                </button>
+              </h2>
+              <div id="collapseBusinessName" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                  <input type="text" class="form-control" placeholder="Buscar por razón social..."
+                        [(ngModel)]="filterBusinessName" (keyup.enter)="applyFilters()">
+                  <button class="btn btn-sm btn-primary w-100 mt-2" (click)="applyFilters()">
+                    <i class="fas fa-search me-1"></i>Buscar
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rango de Fechas -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingDate">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDate">
+                  <i class="fas fa-calendar-alt me-2"></i>Rango de Fechas
+                </button>
+              </h2>
+              <div id="collapseDate" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                  <div class="mb-2">
+                    <label class="form-label small">Desde</label>
+                    <input type="date" class="form-control" 
+                          [(ngModel)]="filterDateFrom" (change)="applyFilters()">
+                  </div>
+                  <div>
+                    <label class="form-label small">Hasta</label>
+                    <input type="date" class="form-control"
+                          [(ngModel)]="filterDateTo" (change)="applyFilters()">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Estado del Pedido -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingStatus">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStatus">
+                  <i class="fas fa-tasks me-2"></i>Estado del Pedido
+                </button>
+              </h2>
+              <div id="collapseStatus" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  <div class="elegant-select-list" role="listbox">
+                    <button type="button" class="elegant-option"
+                            *ngFor="let status of statusOptions"
+                            [class.active]="filterStatus.includes(status)"
+                            (click)="toggleStatusFilter(status)"
+                            role="option"
+                            [attr.aria-selected]="filterStatus.includes(status)">
+                      <span>{{ status }}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Estado de Facturación -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingBilled">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBilled">
+                  <i class="fas fa-file-invoice-dollar me-2"></i>Estado de Facturación
+                </button>
+              </h2>
+              <div id="collapseBilled" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  <select class="form-select" [(ngModel)]="filterBilled" (change)="applyFilters()">
+                    <option value="all">Todos</option>
+                    <option value="true">Facturado</option>
+                    <option value="false">Sin facturar</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Rango de Precio Total -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingPrice">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrice">
+                  <i class="fas fa-dollar-sign me-2"></i>Rango de Precio Total
+                </button>
+              </h2>
+              <div id="collapsePrice" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  <div class="input-group mb-2">
+                    <span class="input-group-text">$</span>
+                    <input type="number" class="form-control" placeholder="Mínimo"
+                          [(ngModel)]="filterMinPrice" (keydown.enter)="applyPriceFilter()" min="0">
+                  </div>
+                  <div class="input-group mb-2">
+                    <span class="input-group-text">$</span>
+                    <input type="number" class="form-control" placeholder="Máximo"
+                          [(ngModel)]="filterMaxPrice" (keydown.enter)="applyPriceFilter()" min="0">
+                  </div>
+                  <div class="d-grid">
+                    <button type="button" class="btn btn-soft-primary btn-sm" (click)="applyPriceFilter()">
+                      <i class="fas fa-search me-1"></i>Aplicar filtro
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+    </aside>
 
-<div class="container">
-  <div class="modal" tabindex="-1" role="dialog" [ngClass]="{ 'd-block': showModal }">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Cambiar Estado del Pedido</h5>
-        <button type="button" class="close" (click)="closeModal()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Seleccione el nuevo estado para el pedido:</p>
-        <div class="text-center">
-          <button class="btn btn-warning mx-1 mb-2" (click)="cambiarEstado(selectedPedido,'En curso')">En Curso</button>
-          <button class="btn btn-danger mx-1 mb-2" (click)="cambiarEstado(selectedPedido, 'Cancelado')">Cancelado</button>
-          <button class="btn btn-success mx-1 mb-2" (click)="cambiarEstado(selectedPedido, 'Terminado')">Terminado</button>
-          <button class="btn btn-info mx-1 mb-2" (click)="cambiarEstado(selectedPedido, 'Entregado')">Entregado</button>
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="col-lg-9">
+      <!-- Barra de estado y ordenamiento -->
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div class="text-muted">
+          <i class="fas fa-box me-1"></i>Mostrando {{ displayedPedidos.length }} de {{ pedidosFiltrados.length }} pedidos
+        </div>
+        
+        <!-- Controles de ordenamiento -->
+        <div class="d-flex gap-2 align-items-center">
+          <label class="mb-0 small text-muted">Ordenar por:</label>
+          <select class="form-select form-select-sm" style="width: auto;" [(ngModel)]="sortBy" (change)="applyFilters()">
+            <option value="createdAt">Fecha</option>
+            <option value="code">Código</option>
+            <option value="total">Total</option>
+          </select>
+          <button class="btn btn-sm btn-outline-secondary" (click)="sortOrder = sortOrder === 'asc' ? 'desc' : 'asc'; applyFilters()" 
+                  [title]="sortOrder === 'asc' ? 'Ascendente' : 'Descendente'">
+            <i class="fas" [ngClass]="sortOrder === 'asc' ? 'fa-sort-amount-up' : 'fa-sort-amount-down'"></i>
+          </button>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
-<div class="container">
-  <nav class="mt-4">
-    <ul class="pagination justify-content-center"> 
+      <!-- Chips de filtros activos -->
+      <div class="mb-3 d-flex flex-wrap gap-2">
+        
+        <!-- Razón Social -->
+        <span *ngIf="filterBusinessName" class="filter-chip">
+          Razón Social: {{ filterBusinessName }}
+          <button type="button" class="btn-close btn-close-white btn-close-sm ms-2"
+                  (click)="filterBusinessName=''; applyFilters()"></button>
+        </span>
+
+        <!-- Fechas -->
+        <span *ngIf="filterDateFrom || filterDateTo" class="filter-chip">
+          Fechas: {{ filterDateFrom | date:'dd/MM/yyyy' }} - {{ filterDateTo | date:'dd/MM/yyyy' }}
+          <button type="button" class="btn-close btn-close-white btn-close-sm ms-2"
+                  (click)="filterDateFrom=''; filterDateTo=''; applyFilters()"></button>
+        </span>
+
+        <!-- Estados -->
+        <span *ngFor="let status of filterStatus" class="filter-chip">
+          Estado: {{ status }}
+          <button type="button" class="btn-close btn-close-white btn-close-sm ms-2"
+                  (click)="removeStatusFilter(status)"></button>
+        </span>
+
+        <!-- Facturación -->
+        <span *ngIf="filterBilled !== 'all'" class="filter-chip">
+          {{ filterBilled === 'true' ? 'Facturado' : 'Sin facturar' }}
+          <button type="button" class="btn-close btn-close-white btn-close-sm ms-2"
+                  (click)="filterBilled='all'; applyFilters()"></button>
+        </span>
+
+        <!-- Precio -->
+        <span *ngIf="filterMinPrice != null || filterMaxPrice != null" class="filter-chip">
+          Precio:
+          ${{ (filterMinPrice ?? 0) }}
+          -
+          ${{ filterMaxPrice != null ? filterMaxPrice : '∞' }}
+          <button type="button" class="btn-close btn-close-white btn-close-sm ms-2"
+                  (click)="filterMinPrice=null; filterMaxPrice=null; applyFilters()"></button>
+        </span>
+      </div>
+
+      <!-- Lista de Pedidos -->
+      <div *ngIf="pedidosFiltrados.length === 0" class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No hay pedidos que cumplan con los filtros aplicados.
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div *ngFor="let pedido of paginatedPedidos" class="card mb-4 order-card-large">
+            <!-- HEADER: Click para expandir/colapsar - Fondo cremita -->
+            <div class="card-header order-header-cream" (click)="togglePedidoExpansion(pedido._id)">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div class="d-flex align-items-center gap-3">
+                  <i class="fas fa-chevron-right transition-icon" [ngClass]="{'rotated': isPedidoExpanded(pedido._id)}"></i>
+                  <div>
+                    <strong class="pedido-code">{{ pedido.code }}</strong>
+                    <div class="text-muted pedido-date">{{ pedido.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                  <div class="d-flex flex-column align-items-start gap-1">
+                    <small class="text-muted" style="font-size: 10px; text-transform: uppercase;">Estado</small>
+                    <span class="badge status-badge-large" 
+                         [ngClass]="{ 
+                           'bg-warning text-dark': pedido.status === 'Pendiente', 
+                           'bg-info text-dark': pedido.status === 'En curso', 
+                           'bg-primary': pedido.status === 'Terminado', 
+                           'bg-success': pedido.status === 'Entregado',
+                           'bg-danger': pedido.status === 'Cancelado'
+                         }">
+                      {{ pedido.status }}
+                    </span>
+                  </div>
+                  
+                  <div class="d-flex flex-column align-items-start gap-1">
+                    <small class="text-muted" style="font-size: 10px; text-transform: uppercase;">Pago</small>
+                    <span class="badge status-badge-large" [ngClass]="pedido.payment_status === 'Aprobado' ? 'bg-success' : 'bg-warning text-dark'">
+                      {{ pedido.payment_status || 'Pendiente' }}
+                    </span>
+                  </div>
+                  
+                  <span class="badge-facturado-text" [ngClass]="pedido.billed ? 'facturado-si' : 'facturado-no'">
+                    <i class="fas" [ngClass]="pedido.billed ? 'fa-file-invoice-dollar' : 'fa-file-invoice'"></i>
+                    {{ pedido.billed ? 'Facturado' : 'Sin facturar' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body card-body-large">
+              <!-- INFORMACIÓN PRINCIPAL (siempre visible) -->
+              <div class="order-main-info-large">
+                <div class="info-grid-large">
+                  <div class="info-item-large">
+                    <span class="info-label-large"><i class="fas fa-building me-2"></i>Cliente:</span>
+                    <span class="info-value-large">{{ pedido.businessName || 'No disponible' }}</span>
+                  </div>
+                  
+                  <div class="info-item-large">
+                    <span class="info-label-large"><i class="fas fa-user me-2"></i>Usuario:</span>
+                    <span class="info-value-large">{{ pedido.userCode || 'N/A' }}</span>
+                  </div>
+                  
+                  <div class="info-item-large">
+                    <span class="info-label-large"><i class="fas fa-wallet me-2"></i>Método:</span>
+                    <span class="info-value-large">{{ getPaymentMethodLabel(pedido.payment_method) }}</span>
+                  </div>
+
+                  <div class="info-item-large total-highlight">
+                    <span class="info-label-large"><i class="fas fa-dollar-sign me-2"></i>Total:</span>
+                    <span class="info-value-total">${{ pedido.total }}</span>
+                  </div>
+                </div>
+                
+                <div class="order-actions-inline-large">
+                  <button class="btn btn-primary btn-edit-large" (click)="openModal(pedido); $event.stopPropagation()">
+                    <i class="fas fa-edit me-2"></i>Editar
+                  </button>
+                </div>
+              </div>
+
+              <!-- DETALLES DE PRODUCTOS (colapsable) -->
+              <div class="order-details" *ngIf="isPedidoExpanded(pedido._id)">
+                <hr class="my-4">
+                <h5 class="text-muted mb-3"><i class="fas fa-box-open me-2"></i>Productos del Pedido</h5>
+                <div class="table-responsive">
+                  <table class="table table-hover products-table">
+                    <thead>
+                      <tr>
+                        <th>Producto</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-end">Precio Unit.</th>
+                        <th class="text-end">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let producto of pedido.items">
+                        <td>{{ producto.desc }}</td>
+                        <td class="text-center">{{ producto.quantity }}</td>
+                        <td class="text-end">${{ producto.price }}</td>
+                        <td class="text-end fw-bold">${{ producto.price * producto.quantity }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paginación -->
+      <nav class="mt-4" *ngIf="totalPages > 1">
+        <ul class="pagination justify-content-center"> 
           <li class="page-item" [class.disabled]="currentPage === 1">
-            <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2" (click)="changePage(currentPage - 1)">Anterior</button>
+            <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2" (click)="changePage(currentPage - 1)">
+              <i class="fas fa-chevron-left"></i> Anterior
+            </button>
           </li>
           <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item">
             <button 
@@ -118,8 +329,209 @@
             </button>
           </li>
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" (click)="changePage(currentPage + 1)">Siguiente</button>
+            <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" (click)="changePage(currentPage + 1)">
+              Siguiente <i class="fas fa-chevron-right"></i>
+            </button>
           </li>
-      </ul>
-  </nav>
+        </ul>
+      </nav>
+    </main>
+  </div>
+</div>
+
+<!-- MODAL DE EDICIÓN -->
+<div class="modal fade" tabindex="-1" [ngClass]="{ 'show d-block': showModal }" [ngStyle]="{ 'display': showModal ? 'block' : 'none' }">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="background-color: #F8F4EC;">
+        <h5 class="modal-title">
+          <i class="fas fa-edit me-2"></i>Editar Pedido
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body" *ngIf="selectedPedido">
+        <div class="mb-3">
+          <h6 class="text-muted">Pedido: {{ selectedPedido.code }}</h6>
+          <p class="mb-1"><strong>Cliente:</strong> {{ selectedPedido.businessName }}</p>
+          <p class="mb-1"><strong>Total:</strong> ${{ selectedPedido.total }}</p>
+        </div>
+
+        <hr>
+
+        <div class="row">
+          <!-- Estado del Pedido -->
+          <div class="col-md-12 mb-3">
+            <label for="editStatus" class="form-label">
+              <i class="fas fa-tasks me-2"></i><strong>Estado del Pedido</strong>
+            </label>
+            <select id="editStatus" class="form-select" [(ngModel)]="editingStatus">
+              <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+            </select>
+          </div>
+
+          <!-- Estado de Pago -->
+          <div class="col-md-6 mb-3">
+            <label for="editPaymentStatus" class="form-label">
+              <i class="fas fa-credit-card me-2"></i><strong>Estado de Pago</strong>
+            </label>
+            <select id="editPaymentStatus" class="form-select" [(ngModel)]="editingPaymentStatus">
+              <option *ngFor="let status of paymentStatusOptions" [value]="status">{{ status }}</option>
+            </select>
+          </div>
+
+          <!-- Método de Pago -->
+          <div class="col-md-6 mb-3">
+            <label for="editPaymentMethod" class="form-label">
+              <i class="fas fa-wallet me-2"></i><strong>Método de Pago</strong>
+            </label>
+            <select id="editPaymentMethod" class="form-select" [(ngModel)]="editingPaymentMethod">
+              <option value="Efectivo">Efectivo</option>
+              <option value="MercadoPago_Tarjeta">Transferencia</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">
+          <i class="fas fa-times me-1"></i>Cancelar
+        </button>
+        <button type="button" class="btn btn-primary" (click)="updatePedido()">
+          <i class="fas fa-save me-1"></i>Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Backdrop del modal -->
+<div class="modal-backdrop fade" [ngClass]="{ 'show': showModal }" *ngIf="showModal"></div>
+
+<!-- OFFCANVAS MOBILE -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="filtersOffcanvas">
+  <div class="offcanvas-header" style="background-color: #F8F4EC;">
+    <h5 class="offcanvas-title"><i class="fas fa-sliders-h me-2"></i>Filtros</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <!-- Mismo contenido que el sidebar desktop -->
+    <div class="accordion" id="filtersAccordionMobile">
+
+      <!-- Razón Social -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBusinessNameMobile">
+            <i class="fas fa-building me-2"></i>Razón Social
+          </button>
+        </h2>
+        <div id="collapseBusinessNameMobile" class="accordion-collapse collapse show">
+          <div class="accordion-body">
+            <input type="text" class="form-control" placeholder="Buscar por razón social..."
+                  [(ngModel)]="filterBusinessName" (keyup.enter)="applyFilters()">
+            <button class="btn btn-sm btn-primary w-100 mt-2" (click)="applyFilters()">
+              <i class="fas fa-search me-1"></i>Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rango de Fechas -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDateMobile">
+            <i class="fas fa-calendar-alt me-2"></i>Rango de Fechas
+          </button>
+        </h2>
+        <div id="collapseDateMobile" class="accordion-collapse collapse show">
+          <div class="accordion-body">
+            <div class="mb-2">
+              <label class="form-label small">Desde</label>
+              <input type="date" class="form-control" 
+                    [(ngModel)]="filterDateFrom" (change)="applyFilters()">
+            </div>
+            <div>
+              <label class="form-label small">Hasta</label>
+              <input type="date" class="form-control"
+                    [(ngModel)]="filterDateTo" (change)="applyFilters()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado del Pedido -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStatusMobile">
+            <i class="fas fa-tasks me-2"></i>Estado del Pedido
+          </button>
+        </h2>
+        <div id="collapseStatusMobile" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            <div class="elegant-select-list">
+              <button type="button" class="elegant-option"
+                      *ngFor="let status of statusOptions"
+                      [class.active]="filterStatus.includes(status)"
+                      (click)="toggleStatusFilter(status)">
+                <span>{{ status }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estado de Facturación -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBilledMobile">
+            <i class="fas fa-file-invoice-dollar me-2"></i>Estado de Facturación
+          </button>
+        </h2>
+        <div id="collapseBilledMobile" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            <select class="form-select" [(ngModel)]="filterBilled" (change)="applyFilters()">
+              <option value="all">Todos</option>
+              <option value="true">Facturado</option>
+              <option value="false">Sin facturar</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rango de Precio Total -->
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePriceMobile">
+            <i class="fas fa-dollar-sign me-2"></i>Rango de Precio Total
+          </button>
+        </h2>
+        <div id="collapsePriceMobile" class="accordion-collapse collapse">
+          <div class="accordion-body">
+            <div class="input-group mb-2">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control" placeholder="Mínimo"
+                    [(ngModel)]="filterMinPrice" (keydown.enter)="applyPriceFilter()" min="0">
+            </div>
+            <div class="input-group mb-2">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control" placeholder="Máximo"
+                    [(ngModel)]="filterMaxPrice" (keydown.enter)="applyPriceFilter()" min="0">
+            </div>
+            <div class="d-grid">
+              <button type="button" class="btn btn-soft-primary btn-sm" (click)="applyPriceFilter()">
+                <i class="fas fa-search me-1"></i>Aplicar filtro
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="mt-3 d-grid">
+      <button class="btn btn-outline-secondary" (click)="clearAllFilters()" data-bs-dismiss="offcanvas">
+        <i class="fas fa-times me-1"></i>Resetear Filtros
+      </button>
+    </div>
+  </div>
 </div>

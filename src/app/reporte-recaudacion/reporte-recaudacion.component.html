@@ -28,41 +28,44 @@
 
   <!-- Tabla de facturas -->
   <div class="row">
-    <div class="col-md-12">
+    <div class="col-12">
       <div *ngIf="facturas.length === 0" class="alert alert-info text-center">
         No se encontraron facturas en el rango de fechas seleccionado.
       </div>
       
-      <table *ngIf="facturas.length > 0" class="table table-bordered table-striped">
-        <thead>
-          <tr>
-            <th>ID Factura</th>
-            <th>N° Pedido</th>
-            <th>ID Cliente</th>
-            <th>Razón Social</th>
-            <th>Fecha</th>
-            <th>Precio Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let factura of displayedFacturas">
-            <td>{{ factura.code }}</td>
-            <td>{{ factura.orderCode || factura.orderId?.code || 'N/A' }}</td>
-            <td>{{ factura.userCode || factura.userId?.code || 'N/A' }}</td>
-            <td>{{ factura.userBusinessName || factura.userId?.businessName || 'No disponible' }}</td>
-            <td>{{ factura.createdAt | date: 'dd/MM/yyyy':'UTC' }}</td>
-            <td class="d-flex justify-content-between align-items-center">
-              <span>{{ factura.total | currency }}</span>
-              <button 
-                class="btn btn-sm btn-primary" 
-                (click)="verFactura(factura._id)"
-                title="Ver factura en PDF">
-                <i class="fas fa-file-pdf me-1"></i>Ver Factura
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div *ngIf="facturas.length > 0" class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>ID Factura</th>
+              <th>N° Pedido</th>
+              <th>ID Cliente</th>
+              <th>Razón Social</th>
+              <th>Fecha</th>
+              <th>Precio Total</th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let factura of displayedFacturas">
+              <td>{{ factura.code }}</td>
+              <td>{{ factura.orderCode || factura.orderId?.code || 'N/A' }}</td>
+              <td>{{ factura.userCode || factura.userId?.code || 'N/A' }}</td>
+              <td>{{ factura.userBusinessName || factura.userId?.businessName || 'No disponible' }}</td>
+              <td class="text-nowrap">{{ factura.createdAt | date: 'dd/MM/yyyy':'UTC' }}</td>
+              <td class="text-end">{{ factura.total | currency }}</td>
+              <td class="text-center">
+                <button 
+                  class="btn btn-sm btn-primary" 
+                  (click)="verFactura(factura._id)"
+                  title="Ver factura en PDF">
+                  <i class="fas fa-file-pdf me-1"></i><span class="d-none d-lg-inline">Ver Factura</span><span class="d-lg-none">Ver</span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 

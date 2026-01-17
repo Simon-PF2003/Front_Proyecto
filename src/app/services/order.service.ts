@@ -79,18 +79,52 @@ export class OrderService {
     return this.http.get(`${this.URL}/orders/${userId}`);
   };
 
-  //Obtener todos los pedidos (para el admin, es la parte de update)
+  /**
+   * Obtener todos los pedidos (para el admin, parte de update)
+   * @param status - Filtro opcional por estado (legacy, mantener por compatibilidad)
+   */
   getPedidos(status?: string): Observable<any[]> {
     const url = status ? `${this.URL}/pedidos?status=${encodeURIComponent(status)}` : `${this.URL}/pedidos`;
     return this.http.get<any[]>(url);
   };
 
-  //Obtiene el mail del usuario del pedido para comunicarle el cambio de estado
+  getPedidosWithFilters(filters: {
+    businessName?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    status?: string[];
+    billed?: boolean;
+    minPrice?: number;
+    maxPrice?: number;
+    sortBy?: string;      // Campo por el cual ordenar: 'createdAt', 'code', 'total'
+    sortOrder?: string;   // Dirección: 'asc' o 'desc'
+  }): Observable<any[]> {
+
+    let params: any = {};
+    
+    if (filters.businessName) params.businessName = filters.businessName;
+    if (filters.dateFrom) params.dateFrom = filters.dateFrom;
+    if (filters.dateTo) params.dateTo = filters.dateTo;
+    if (filters.status && filters.status.length > 0) params.status = filters.status.join(',');
+    if (filters.billed !== undefined) params.billed = filters.billed.toString();
+    if (filters.minPrice !== undefined) params.minPrice = filters.minPrice.toString();
+    if (filters.maxPrice !== undefined) params.maxPrice = filters.maxPrice.toString();
+    if (filters.sortBy) params.sortBy = filters.sortBy;
+    if (filters.sortOrder) params.sortOrder = filters.sortOrder;
+
+    return this.http.get<any[]>(`${this.URL}/pedidos/filtered`, { params });
+  }
+
+  /**
+   * @deprecated El backend ahora envía el email automáticamente al actualizar pedidos.
+   * Ya no es necesario llamar a este endpoint desde el frontend.
+   * Mantener solo por compatibilidad con código legacy.
+   */
   getEmailByOrder(pedId: string){
     return this.http.get(`${this.URL}/getEmail/${pedId}`);
   }
 
-  // Filtra los pedidos por su estado
+  // Filtra los pedidos por su estado (legacy - usar getPedidosWithFilters en su lugar)
   getOrdersFiltered(searchTerm: string): Observable<any[]> {
     console.log(searchTerm, 'service');
     const url = `${this.URL}/searchOrders/${searchTerm}`;
@@ -111,11 +145,25 @@ export class OrderService {
     return this.http.patch(`${this.URL}/cancelOrder/${userId}`, body);
   };
 
+  /**
+   * @deprecated Usar updatePedidoMultipleFields() en su lugar para actualizar pedidos.
+   * Esta función solo actualiza el estado, mientras que updatePedidoMultipleFields
+   * permite actualizar múltiples campos (status, payment_status, payment_method).
+   */
   cambiarEstado(pedId:string, nuevoEstado:string)
   {
     const body = { status: nuevoEstado};
     console.log(body);
     return this.http.patch(`${this.URL}/changeStatus/${pedId}`, body);
+  }
+
+  updatePedidoMultipleFields(pedId: string, updateData: {
+    status?: string;
+    payment_status?: string;
+    payment_method?: string;
+  }): Observable<any> {
+    console.log(`Actualizando pedido ${pedId} con:`, updateData);
+    return this.http.patch(`${this.URL}/pedidos/${pedId}`, updateData);
   }
 }
 
