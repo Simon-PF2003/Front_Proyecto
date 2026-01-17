@@ -1,89 +1,201 @@
-<div class="container mb-5">
-  <div class="row">
-    <div class="col-lg-6 col-md-8 col-sm-10 mx-auto">
-      <div class="card mt-5">
-        <div class="card-header text-center">
-          <h2>Panel de Administrador</h2>
+<div class="container-fluid mt-3 mb-4 px-4">
+  <!-- Header -->
+  <div class="row mb-3">
+    <div class="col-12 text-center">
+      <h2 style="color: #333; font-size: 28px; font-weight: 600;">Panel de Administrador</h2>
+    </div>
+  </div>
+
+  <!-- Primera Fila: Altas, Modificaciones, Pedidos -->
+  <div class="row g-3 mb-3">
+    <!-- Sección: Altas (Azul) -->
+    <div class="col-lg-4">
+      <div class="admin-section">
+        <div class="section-header" style="background-color: #4CA7BF;">
+          <i class="fas fa-plus-circle me-2"></i>
+          <h6 class="mb-0">Altas de Registros</h6>
         </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="pannelBttn">
-              <button class="btn btn-primary botonNormal" ><a class="nav-link active" aria-current="page" href="/product-create">Alta Productos</a></button>
+        <div class="section-body">
+          <div class="row g-2">
+            <div class="col-6">
+              <a href="/product-create" class="admin-card-compact">
+                <i class="fas fa-box"></i>
+                <span>Productos</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-secondary botonNormal"><a class="nav-link active" aria-current="page" href="/product-update">Modificar Productos</a></button>
-            </div>
-            <div class="pannelBttn">
-              <button class="btn btn-primary botonNormal position-relative">
-                <a class="nav-link active" aria-current="page" href="/user-create-acceptance">Alta Usuarios</a>
+            <div class="col-6">
+              <a href="/user-create-acceptance" class="admin-card-compact position-relative">
+                <i class="fas fa-user-plus"></i>
+                <span>Usuarios</span>
                 <span *ngIf="pendingUsersCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge-admin">
                   {{ pendingUsersCount }}
-                  <span class="visually-hidden">usuarios pendientes</span>
                 </span>
-              </button>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-secondary botonNormal"><a class="nav-link active" aria-current="page" href="/user-update">Modificar Usuarios</a></button>
+            <div class="col-6">
+              <a href="/supplier-create" class="admin-card-compact">
+                <i class="fas fa-truck"></i>
+                <span>Proveedores</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-primary botonNormal" ><a class="nav-link active" aria-current="page" href="/supplier-create">Alta Proveedores</a></button>
+            <div class="col-6">
+              <a href="/category-create" class="admin-card-compact">
+                <i class="fas fa-layer-group"></i>
+                <span>Categorías</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-secondary botonNormal"><a class="nav-link active" aria-current="page" href="/supplier-update">Modificar Proveedores</a></button>
+            <div class="col-12">
+              <a href="/brand-create" class="admin-card-compact">
+                <i class="fas fa-tag"></i>
+                <span>Marcas</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-primary botonNormal" ><a class="nav-link active" aria-current="page" href="/category-create">Alta Categorías</a></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Modificaciones (Gris) -->
+    <div class="col-lg-4">
+      <div class="admin-section">
+        <div class="section-header" style="background-color: #6c757d;">
+          <i class="fas fa-edit me-2"></i>
+          <h6 class="mb-0">Modificar Registros</h6>
+        </div>
+        <div class="section-body">
+          <div class="row g-2">
+            <div class="col-6">
+              <a href="/product-update" class="admin-card-compact">
+                <i class="fas fa-box"></i>
+                <span>Productos</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-secondary botonNormal"><a class="nav-link active" aria-current="page" href="/category-update">Modificar Categorías</a></button>
+            <div class="col-6">
+              <a href="/user-update" class="admin-card-compact">
+                <i class="fas fa-user-edit"></i>
+                <span>Usuarios</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-primary botonNormal"><a class="nav-link active" aria-current="page"
-                  href="/brand-create">Alta Marcas</a></button>
+            <div class="col-6">
+              <a href="/supplier-update" class="admin-card-compact">
+                <i class="fas fa-truck"></i>
+                <span>Proveedores</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-secondary botonNormal"><a class="nav-link active" aria-current="page"
-                  href="/brand-update">Modificar Marcas</a></button>
+            <div class="col-6">
+              <a href="/category-update" class="admin-card-compact">
+                <i class="fas fa-layer-group"></i>
+                <span>Categorías</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-warning botonNormal"><a class="nav-link active" aria-current="page" href="/orders-update-admin">Preparar Pedidos</a></button>
+            <div class="col-12">
+              <a href="/brand-update" class="admin-card-compact">
+                <i class="fas fa-tag"></i>
+                <span>Marcas</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-warning botonNormal"><a class="nav-link active" aria-current="page" href="/bill-create">Facturación</a></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Pedidos y Facturación (Amarillo) -->
+    <div class="col-lg-4">
+      <div class="admin-section">
+        <div class="section-header" style="background-color: orange">
+          <i class="fas fa-file-invoice-dollar me-2"></i>
+          <h6 class="mb-0">Pedidos y Facturación</h6>
+        </div>
+        <div class="section-body-centered">
+          <div class="row g-2 justify-content-center w-100 m-0" style="max-width: 85%;">
+            <div class="col-12">
+              <a href="/orders-update-admin" class="admin-card-compact">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Preparar Pedidos</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-success botonNormal position-relative">
-                <a class="nav-link active" aria-current="page" href="/stock-ingreso">Solicitud de Stock</a>
+            <div class="col-12">
+              <a href="/bill-create" class="admin-card-compact">
+                <i class="fas fa-receipt"></i>
+                <span>Facturación</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Segunda Fila: Stock y Reportes -->
+  <div class="row g-3">
+    <!-- Sección: Gestión de Stock (Verde) -->
+    <div class="col-lg-4">
+      <div class="admin-section">
+        <div class="section-header" style="background-color: #28a745;">
+          <i class="fas fa-warehouse me-2"></i>
+          <h6 class="mb-0">Gestión de Stock</h6>
+        </div>
+        <div class="section-body">
+          <div class="row g-2">
+            <div class="col-12">
+              <a href="/stock-ingreso" class="admin-card-compact position-relative">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Solicitud de Stock</span>
                 <span *ngIf="lowStockProductsCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge-admin">
                   {{ lowStockProductsCount }}
-                  <span class="visually-hidden">productos sin stock</span>
                 </span>
-              </button>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-success botonNormal"><a class="nav-link active" aria-current="page" href="/stock-cargar">Ingreso de Stock</a></button>
+            <div class="col-12">
+              <a href="/stock-cargar" class="admin-card-compact">
+                <i class="fas fa-boxes"></i>
+                <span>Ingreso de Stock</span>
+              </a>
             </div>
-            <!--<div class="pannelBttn">
-              <button class="btn btn-info botonNormal"><a class="nav-link active" aria-current="page" href="/reporte-ordenar-clientes">Ordenar clientes</a></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección: Reportes (Violeta) -->
+    <div class="col-lg-8">
+      <div class="admin-section">
+        <div class="section-header" style="background-color: #8b5cf6;">
+          <i class="fas fa-chart-bar me-2"></i>
+          <h6 class="mb-0">Reportes y Análisis</h6>
+        </div>
+        <div class="section-body">
+          <div class="row g-2">
+            <div class="col-md-6 col-lg-4">
+              <a href="/reporte-recaudacion" class="admin-card-compact">
+                <i class="fas fa-dollar-sign"></i>
+                <span>Recaudación</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-info botonNormal"><a class="nav-link active" aria-current="page" href="/reporte-agrupar-productos">Agrupar productos</a></button>
-            </div>-->
-            <div class="pannelBttn">
-              <button class="btn btn-info botonNormal"><a class="nav-link active" aria-current="page" href="/reporte-recaudacion">Recaudación</a></button>
+            <div class="col-md-6 col-lg-4">
+              <a href="/reporte-analisis-ventas" class="admin-card-compact">
+                <i class="fas fa-chart-line"></i>
+                <span>Análisis de Ventas</span>
+              </a>
             </div>
-             <div class="pannelBttn">
-              <button class="btn btn-info botonNormal"><a class="nav-link active" aria-current="page" href="/reporte-clientes-fieles">Clientes Fieles</a></button>
+            <div class="col-md-6 col-lg-4">
+              <a href="/reporte-clientes-fieles" class="admin-card-compact">
+                <i class="fas fa-star"></i>
+                <span>Clientes Fieles</span>
+              </a>
             </div>
-            <div class="pannelBttn">
-              <button class="btn btn-info botonNormal"><a class="nav-link active" aria-current="page" href="/reporte-riesgo-abandono">Riesgo de Abandono</a></button>
-            </div>  
-            <div class="pannelBttn">
-              <button class="btn btn-info botonNormal"><a class="nav-link active" aria-current="page" href="/reporte-analisis-ventas">Análisis de Ventas</a></button>
-            </div>  
-            <div class="pannelBttn">
-              <button class="btn btn-info botonNormal"><a class="nav-link active" aria-current="page" href="/reporte-pronostico-demanda">Pronóstico de Demanda</a></button>
-            </div>  
+            <div class="col-md-6 col-lg-6">
+              <a href="/reporte-riesgo-abandono" class="admin-card-compact">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Riesgo de Abandono</span>
+              </a>
+            </div>
+            <div class="col-md-6 col-lg-6">
+              <a href="/reporte-pronostico-demanda" class="admin-card-compact">
+                <i class="fas fa-chart-area"></i>
+                <span>Pronóstico de Demanda</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
