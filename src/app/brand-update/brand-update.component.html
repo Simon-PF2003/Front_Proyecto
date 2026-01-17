@@ -1,44 +1,84 @@
-<div class="container mt-4">
-  <div class="row mb-3">
-    <div class="col-md-4">
-      <label for="search" class="form-label">Buscar por descripción:</label>
-      <input type="text" id="search" class="form-control" [(ngModel)]="brand" (keyup.enter)="onBuscarClick()" placeholder="Ingrese descripción">
-    </div>
-    <div class="col-md-4 align-self-end">
-      <button class="btn btn-primary" (click)="onBuscarClick()">Buscar</button>
-    </div>
-  </div>
-  
-  <div class="row">
-    <div class="col-md-4" *ngFor="let brandObject of displayedBrands">
-      <div class="card mb-3">
+<div class="container mt-4 mb-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card">
+        <div class="card-header text-center">
+          <h2>Modificar Marcas</h2>
+        </div>
         <div class="card-body">
-          <h5 class="card-title">Descripción: {{ brandObject.brand }}</h5>
-          <div class="d-flex justify-content-between mt-2">
-            <button class="btn btn-warning" (click)="modifyBrand(brandObject)">Modificar</button>
-            <button class="btn btn-danger" (click)="deleteBrand(brandObject._id)">Eliminar</button>
+          <!-- Búsqueda -->
+          <div class="row mb-4">
+            <div class="col-md-8">
+              <label for="search" class="form-label">Buscar por descripción:</label>
+              <input type="text" id="search" class="form-control" [(ngModel)]="brand" (keyup.enter)="onBuscarClick()" placeholder="Ingrese descripción">
+            </div>
+            <div class="col-md-4 align-self-end">
+              <button class="btn btn-primary w-100" (click)="onBuscarClick()">
+                <i class="fas fa-search me-2"></i>Buscar
+              </button>
+            </div>
+          </div>
+          
+          <!-- Lista de marcas -->
+          <div class="row">
+            <div class="col-md-6 col-lg-4" *ngFor="let brandObject of displayedBrands">
+              <div class="brand-card mb-3">
+                <div class="brand-card-header">
+                  <h5 class="mb-0">{{ brandObject.brand }}</h5>
+                </div>
+                <div class="brand-card-body">
+                  <div class="brand-info-content">
+                    <div class="brand-info-item">
+                      <span class="info-label">Descripción:</span>
+                      <span class="info-value">{{ brandObject.brand }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="d-flex justify-content-between mt-3 gap-2">
+                    <button class="btn btn-warning flex-fill" (click)="modifyBrand(brandObject)">
+                      <i class="fas fa-edit me-1"></i>Modificar
+                    </button>
+                    <button class="btn btn-danger flex-fill" (click)="deleteBrand(brandObject._id)">
+                      <i class="fas fa-trash me-1"></i>Eliminar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Paginación centrada fuera de la card -->
   <nav class="mt-4">
     <ul class="pagination justify-content-center"> 
-          <li class="page-item" [class.disabled]="currentPage === 1">
-            <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2" (click)="changePage(currentPage - 1)">Anterior</button>
-          </li>
-          <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item">
-            <button 
-              class="page-link" 
-              [ngStyle]="currentPage === (i + 1) ? {'background-color': '#4CA7BF', 'border': '1px solid #CCC9C2', 'color': 'white'} : {'background-color': '#F8F4EC', 'border': '1px solid #CCC9C2'}"
-              (click)="changePage(i + 1)">
-              {{ i + 1 }}
-            </button>
-          </li>
-          <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" (click)="changePage(currentPage + 1)">Siguiente</button>
-          </li>
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2" (click)="changePage(currentPage - 1)">Anterior</button>
+      </li>
+      <li *ngFor="let page of [].constructor(totalPages); let i = index" class="page-item">
+        <button 
+          class="page-link" 
+          [ngStyle]="currentPage === (i + 1) ? {'background-color': '#4CA7BF', 'border': '1px solid #CCC9C2', 'color': 'white'} : {'background-color': '#F8F4EC', 'border': '1px solid #CCC9C2'}"
+          (click)="changePage(i + 1)">
+          {{ i + 1 }}
+        </button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;" (click)="changePage(currentPage + 1)">Siguiente</button>
+      </li>
     </ul>
   </nav>
+
+  <!-- Botón de volver alineado a la derecha de la card -->
+  <div class="row justify-content-center mt-3">
+    <div class="col-md-10">
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary" [routerLink]="'/admin-panel'">
+          <i class="fas fa-arrow-left me-2"></i>Volver al Panel
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
