@@ -26,8 +26,17 @@ export class BillService {
         return this.http.get<any>(this.URL + '/getBills', { params: { dateStart, dateEnd }});
     }
 
-    getBillPDF(billId: string): Observable<any> {
-        return this.http.get<any>(this.URL + '/getBillPDF', { params: { billId }});
+    getBillPDF(billId: string): Observable<Blob> {
+        return this.http.get(this.URL + '/getBillPDF', { 
+            params: { billId },
+            responseType: 'blob'
+        });
+    }
+
+    getBillByOrderId(orderId: string): Observable<any> {
+        return this.http.get<any>(this.URL + '/getBillByOrderId', { 
+            params: { orderId }
+        });
     }
 
     exportBillsExcel(dateStart: string, dateEnd: string): Observable<Blob> {

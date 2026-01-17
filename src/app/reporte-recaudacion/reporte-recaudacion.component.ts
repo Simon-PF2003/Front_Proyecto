@@ -174,4 +174,59 @@ export class ReporteRecaudacionComponent implements OnInit {
       }
     });
   }
+
+  verFactura(billId: string) {
+    if (!billId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'ID de factura no válido',
+      });
+      return;
+    }
+
+    // Mostrar loading mientras se obtiene el PDF
+    Swal.fire({
+      title: 'Cargando factura...',
+      text: 'Por favor espera',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    this.billService.getBillPDF(billId).subscribe({
+      next: (pdfBlob: Blob) => {
+        Swal.close();
+        
+        // Crear URL del blob y abrirlo en nueva pestaña
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl, '_blank');
+
+        // Liberar el objeto URL después de un tiempo
+        setTimeout(() => {
+          URL.revokeObjectURL(pdfUrl);
+        }, 100);
+      },
+      error: (error) => {
+        Swal.close();
+        console.error('Error al obtener PDF de factura:', error);
+        
+        let errorMessage = 'Ocurrió un error al obtener la factura.';
+        if (error.status === 404) {
+          errorMessage = 'Factura no encontrada.';
+        } else if (error.status === 400) {
+          errorMessage = 'ID de factura inválido.';
+        } else if (error.status === 500) {
+          errorMessage = 'Error interno del servidor al generar el PDF.';
+        }
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al visualizar factura',
+          text: errorMessage,
+        });
+      }
+    });
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../services/order.service';
 import { AuthService } from '../services/auth.service';
+import { BillService } from '../services/bill.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,7 +21,8 @@ export class OrdersRetrieveClientComponent implements OnInit {
 
   constructor(
     private orderService: OrderService,
-    private authService: AuthService
+    private authService: AuthService,
+    private billService: BillService
   ) {}
 
   ngOnInit(): void {
@@ -110,6 +112,92 @@ export class OrdersRetrieveClientComponent implements OnInit {
           error: (err) => {
             console.error(err);
           }
+        });
+      }
+    });
+  }
+
+  verFactura(orderId: string): void {
+    if (!orderId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'ID de orden no válido',
+      });
+      return;
+    }
+
+    // Mostrar loading mientras se obtiene el PDF
+    Swal.fire({
+      title: 'Cargando factura...',
+      text: 'Por favor espera',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Primero obtener la factura por orderId
+    this.billService.getBillByOrderId(orderId).subscribe({
+      next: (bill: any) => {
+        if (!bill || !bill._id) {
+          Swal.close();
+          Swal.fire({
+            icon: 'error',
+            title: 'Factura no encontrada',
+            text: 'Esta orden no tiene una factura asociada.',
+          });
+          return;
+        }
+
+        // Ahora obtener el PDF con el billId
+        this.billService.getBillPDF(bill._id).subscribe({
+          next: (pdfBlob: Blob) => {
+            Swal.close();
+            
+            // Crear URL del blob y abrirlo en nueva pestaña
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            window.open(pdfUrl, '_blank');
+
+            // Liberar el objeto URL después de un tiempo
+            setTimeout(() => {
+              URL.revokeObjectURL(pdfUrl);
+            }, 100);
+          },
+          error: (error) => {
+            Swal.close();
+            console.error('Error al obtener PDF de factura:', error);
+            
+            let errorMessage = 'Ocurrió un error al obtener la factura.';
+            if (error.status === 404) {
+              errorMessage = 'Factura no encontrada.';
+            } else if (error.status === 400) {
+              errorMessage = 'ID de factura inválido.';
+            } else if (error.status === 500) {
+              errorMessage = 'Error interno del servidor al generar el PDF.';
+            }
+            
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al visualizar factura',
+              text: errorMessage,
+            });
+          }
+        });
+      },
+      error: (error) => {
+        Swal.close();
+        console.error('Error al buscar factura por orden:', error);
+        
+        let errorMessage = 'No se pudo encontrar la factura para esta orden.';
+        if (error.status === 404) {
+          errorMessage = 'Esta orden no tiene una factura generada.';
+        }
+        
+        Swal.fire({
+          icon: 'error',
+          title: 'Factura no encontrada',
+          text: errorMessage,
         });
       }
     });

@@ -48,6 +48,12 @@
                                                 <i>{{ getPaymentStatusText(order.payment_status) }}</i>
                                             </p>
                                         </div>
+                                        <div *ngIf="order.billed">
+                                            <p class="text-primary mb-0 mx-2" style="cursor: pointer;" (click)="verFactura(order._id); $event.stopPropagation()">
+                                                <i class="fas fa-file-pdf"></i>
+                                                <i>Ver Factura</i>
+                                            </p>
+                                        </div>
                                         </div>
                                         <div class="mb-0 mx-4">
                                             <button *ngIf="order.status === 'Pendiente' && order.payment_status != 'Aprobado'" class="btn btn-danger"
