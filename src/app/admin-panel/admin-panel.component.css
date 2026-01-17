@@ -2,6 +2,41 @@
    ADMIN PANEL - DISEÑO COMPACTO Y AGRUPADO
    ========================================================= */
 
+/* Card principal que contiene todo el panel */
+.admin-main-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+/* Header de la card principal */
+.admin-main-header {
+  background: linear-gradient(135deg, #F8F4EC 0%, #F8F4EC 100%);
+  color: black;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.admin-main-header h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.admin-main-header i {
+  font-size: 1.5rem;
+}
+
+/* Body de la card principal */
+.admin-main-body {
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+}
+
 /* Secciones del panel */
 .admin-section {
   background-color: #fff;
@@ -146,6 +181,22 @@
 
 /* Responsive */
 @media (max-width: 768px) {
+  .admin-main-header {
+    padding: 1rem;
+  }
+
+  .admin-main-header h2 {
+    font-size: 1.35rem;
+  }
+
+  .admin-main-header i {
+    font-size: 1.2rem;
+  }
+
+  .admin-main-body {
+    padding: 1rem;
+  }
+
   .section-body {
     padding: 0.75rem;
   }

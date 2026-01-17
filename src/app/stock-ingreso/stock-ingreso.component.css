@@ -1,3 +1,191 @@
+/* =========================================================
+   VISTA DE PROVEEDORES - DISEÑO CONSISTENTE
+   ========================================================= */
+
+/* Cards de proveedor individuales */
+.supplier-card {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.supplier-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(76, 167, 191, 0.2);
+}
+
+.supplier-card-header {
+  background-color: #F8F4EC;
+  color: black;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.supplier-card-header h5 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.supplier-card-body {
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Contenedor de información que se expande */
+.supplier-info-content {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+/* Los botones siempre al fondo */
+.supplier-card-body > div:last-child {
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+/* Items de información */
+.supplier-info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.supplier-info-item:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0.5rem;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: #6c757d;
+  font-size: 0.9rem;
+  text-align: right;
+  word-break: break-word;
+  max-width: 60%;
+}
+
+/* Botones */
+.btn {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+}
+
+.btn-primary:hover {
+  background-color: #3d8fa3;
+  border-color: #3d8fa3;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+  transform: translateY(-1px);
+}
+
+/* Card principal */
+.card {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #F8F4EC;
+  color: black;
+  font-weight: 600;
+  border-radius: 10px 10px 0 0 !important;
+  padding: 1rem 1.5rem;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Form controls */
+.form-control {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #4CA7BF;
+  box-shadow: 0 0 0 0.2rem rgba(76, 167, 191, 0.25);
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .supplier-card-header h5 {
+    font-size: 0.95rem;
+  }
+
+  .info-label,
+  .info-value {
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .card-header h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .supplier-card-body {
+    padding: 0.75rem;
+  }
+
+  .supplier-card-header {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .info-value {
+    max-width: 55%;
+    font-size: 0.8rem;
+  }
+}
 
 /* =========================================================
    SISTEMA DE CARRITO — ESTILOS ESPECÍFICOS
@@ -148,6 +336,7 @@
   min-width: 18px;
   height: 18px;
   line-height: 1px;
+  color: white !important;
   animation: pulse 2s infinite;
   z-index: 10;
   transform: translate(-25%, -50%) !important;
