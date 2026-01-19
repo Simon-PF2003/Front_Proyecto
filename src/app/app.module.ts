@@ -109,6 +109,14 @@ import { PaymentErrorComponent } from './payment-status/payment-error.component'
 import { PaymentPendingComponent } from './payment-status/payment-pending.component';
 import { ProfileUpdateComponent } from './user-profile/profile-update/profile-update.component';
 
+//Dashboard
+import { DashboardRetrieveComponent } from './dashboard-retrieve/dashboard-retrieve.component';
+import { BaseChartDirective } from 'ng2-charts';
+
+// Chart.js components registration
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
+
 @NgModule({
   declarations: [
 //Genericos
@@ -198,6 +206,7 @@ import { ProfileUpdateComponent } from './user-profile/profile-update/profile-up
     PaymentErrorComponent,
     PaymentPendingComponent,
     ProfileUpdateComponent,
+    DashboardRetrieveComponent,
   ],
 
   imports: [
@@ -216,6 +225,7 @@ import { ProfileUpdateComponent } from './user-profile/profile-update/profile-up
       },
     }),
       BrowserAnimationsModule,
+      BaseChartDirective,
   ],
   providers: [
     AuthGuard,

@@ -106,42 +106,44 @@
         No se encontraron ventas en el rango de fechas y categorías seleccionadas.
       </div>
       
-      <table *ngIf="productosVentas.length > 0" class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Marca</th>
-            <th>Categoría</th>
-            <th>Unidades Vendidas</th>
-            <th>% del Total</th>
-            <th>Precio Unitario</th>
-            <th>Ingreso Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of displayedProductos">
-            <td>{{ item.productDesc }}</td>
-            <td>{{ item.brandName || 'Sin marca' }}</td>
-            <td>{{ item.categoryName || 'Sin categoría' }}</td>
-            <td class="text-center">{{ item.cantidadVendida }}</td>
-            <td class="text-center">
-              <span class="badge bg-success">{{ item.porcentaje }}%</span>
-            </td>
-            <td class="text-end">{{ item.precioUnitario | currency }}</td>
-            <td class="text-end"><strong>{{ item.ingresoTotal | currency }}</strong></td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td class="text-start"><strong>TOTALES:</strong></td>
-            <td colspan="2"></td>
-            <td class="text-center"><strong>{{ ventasTotales }}</strong></td>
-            <td class="text-center"><strong>100%</strong></td>
-            <td></td>
-            <td class="text-end"><strong>{{ ingresoTotalGeneral | currency }}</strong></td>
-          </tr>
-        </tfoot>
-      </table>
+      <div class="table-responsive" *ngIf="productosVentas.length > 0">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Marca</th>
+              <th>Categoría</th>
+              <th>Unidades Vendidas</th>
+              <th>% del Total</th>
+              <th>Precio Unitario</th>
+              <th>Ingreso Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of displayedProductos">
+              <td>{{ item.productDesc }}</td>
+              <td>{{ item.brandName || 'Sin marca' }}</td>
+              <td>{{ item.categoryName || 'Sin categoría' }}</td>
+              <td class="text-center">{{ item.cantidadVendida }}</td>
+              <td class="text-center">
+                <span class="badge bg-success">{{ item.porcentaje }}%</span>
+              </td>
+              <td class="text-end">{{ item.precioUnitario | currency }}</td>
+              <td class="text-end"><strong>{{ item.ingresoTotal | currency }}</strong></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td class="text-start"><strong>TOTALES:</strong></td>
+              <td colspan="2"></td>
+              <td class="text-center"><strong>{{ ventasTotales }}</strong></td>
+              <td class="text-center"><strong>100%</strong></td>
+              <td></td>
+              <td class="text-end"><strong>{{ ingresoTotalGeneral | currency }}</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
   </div>
 

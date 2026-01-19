@@ -69,6 +69,10 @@ import { PaymentSuccessComponent } from './payment-status/payment-success.compon
 import { PaymentErrorComponent } from './payment-status/payment-error.component';
 import { PaymentPendingComponent } from './payment-status/payment-pending.component';
 
+//Dashboard
+import { DashboardRetrieveComponent } from 'src/app/dashboard-retrieve/dashboard-retrieve.component';
+
+
 
 const routes: Routes = [
 //Products
@@ -131,6 +135,9 @@ const routes: Routes = [
   {path: 'reporte-riesgo-abandono', component:ReporteRiesgoAbandonoComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   {path: 'reporte-analisis-ventas', component:ReporteAnalisisVentasComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
   {path: 'reporte-pronostico-demanda', component:ReportePronosticoDemandaComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador'} },
+  
+//Dashboard
+  { path: 'dashboard-retrieve', component: DashboardRetrieveComponent, canActivate: [AuthGuard], data: { expectedRole: 'Administrador' }},
   
 //Extra
   { path: '', component: HomeComponent }, //ruta inicial, si quisiera que me lleve a otra --> redirecTo: '/nombre_pag',pathMatch: 'full'  
