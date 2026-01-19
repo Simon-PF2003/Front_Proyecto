@@ -34,6 +34,13 @@ export class ProductService {
     return this.http.get<any[]>(this.URL + '/featuredProducts');
   }
 
+  getRecommendedProducts(userId?: string): Observable<any[]> {
+    const url = userId 
+      ? `${this.URL}/recommendedProducts/${userId}` 
+      : `${this.URL}/recommendedProducts`;
+    return this.http.get<any[]>(url);
+  }
+
   getNoStockProducts(): Observable<any[]> {
     return this.http.get<any[]>(`${this.URL}/noProducts`);
   }

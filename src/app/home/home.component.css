@@ -7,3 +7,87 @@
 .container {
   z-index: 3;
 }
+
+/* Estilos del carrusel */
+.carousel-container {
+  position: relative;
+  padding: 0 60px;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(135deg, #4CA7BF 0%, #3d8ba0 100%);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 1.6rem;
+  box-shadow: 0 4px 12px rgba(76, 167, 191, 0.3),
+              0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.carousel-btn:hover {
+  background: linear-gradient(135deg, #3d8ba0 0%, #2e6b7d 100%);
+  transform: translateY(-50%) scale(1.15);
+  box-shadow: 0 6px 20px rgba(76, 167, 191, 0.5),
+              0 4px 10px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.carousel-btn:active {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.carousel-btn-prev {
+  left: 0;
+}
+
+.carousel-btn-next {
+  right: 0;
+}
+
+/* Responsividad */
+@media (max-width: 991px) {
+  .carousel-container {
+    padding: 0 50px;
+  }
+  
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .carousel-container {
+    padding: 0 40px;
+  }
+  
+  .carousel-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .carousel-container {
+    padding: 0 30px;
+  }
+  
+  .carousel-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+}

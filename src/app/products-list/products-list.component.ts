@@ -25,6 +25,7 @@ export class ProductsListComponent implements OnInit {
   discountPercentage: number = 0;
   categories: Category[] = [];
   brands: any[] = [];
+  isLoading: boolean = true; // Indicador de carga
 
   selectedBrands: string[] = [];
   selectedCategories: string[] = [];
@@ -92,6 +93,7 @@ export class ProductsListComponent implements OnInit {
   }
   
   async fetchProducts() {
+    this.isLoading = true; // Iniciar carga
     try {
       console.log('Aplicando filtros en el backend:', {
         searchTerm: this.searchTerm,
@@ -137,6 +139,8 @@ export class ProductsListComponent implements OnInit {
       }
       this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
       this.updateDisplayedProducts();
+    } finally {
+      this.isLoading = false; // Terminar carga siempre
     }
   }
   

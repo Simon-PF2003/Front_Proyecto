@@ -1,10 +1,66 @@
 <app-home-carousel></app-home-carousel>
 
-<div class="container my-4">
-  <h2 class="text-center">Productos Destacados</h2>
-  <div class="row">
-    <div class="col-md-3 col-sm-6 mb-4" *ngFor="let product of featuredProducts">
-      <app-product-card [product]="product"></app-product-card>
+<!-- Loader mientras carga -->
+<div *ngIf="isLoading" class="container my-5">
+  <div class="text-center">
+    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-3 text-muted">Cargando productos...</p>
+  </div>
+</div>
+
+<!-- Contenido cuando ya cargó -->
+<div *ngIf="!isLoading">
+
+  <!-- Productos Destacados -->
+  <div class="container my-4">
+    <h2 class="text-center">Productos Destacados</h2>
+    
+    <div class="carousel-container">
+      <button class="carousel-btn carousel-btn-prev" 
+              (click)="prevFeatured()" 
+              *ngIf="featuredProducts.length > itemsPerPage">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4" *ngFor="let product of visibleFeaturedProducts">
+          <app-product-card [product]="product"></app-product-card>
+        </div>
+      </div>
+      
+      <button class="carousel-btn carousel-btn-next" 
+              (click)="nextFeatured()" 
+              *ngIf="featuredProducts.length > itemsPerPage">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+
+    <!-- Productos Recomendados -->
+  <div class="container my-4" *ngIf="recommendedProducts.length > 0">
+    <h2 class="text-center">Recomendados para Ti</h2>
+    <p class="text-center text-muted mb-4">Basado en tus preferencias y productos similares</p>
+    
+    <div class="carousel-container">
+      <button class="carousel-btn carousel-btn-prev" 
+              (click)="prevRecommended()" 
+              *ngIf="recommendedProducts.length > itemsPerPage">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      
+      <div class="row">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4" *ngFor="let product of visibleRecommendedProducts">
+          <app-product-card [product]="product"></app-product-card>
+        </div>
+      </div>
+      
+      <button class="carousel-btn carousel-btn-next" 
+              (click)="nextRecommended()" 
+              *ngIf="recommendedProducts.length > itemsPerPage">
+        <i class="bi bi-chevron-right"></i>
+      </button>
     </div>
   </div>
 </div>

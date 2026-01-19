@@ -58,13 +58,16 @@ export class OrdersUpdateAdminComponent {
   ) {}
 
   ngOnInit() {
-    // Establecer rango de fechas por defecto: último mes
+    // Establecer rango de fechas por defecto: último mes hasta mañana
     const today = new Date();
     const lastMonth = new Date();
     lastMonth.setMonth(today.getMonth() - 1);
     
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    
     this.filterDateFrom = this.formatDateForInput(lastMonth);
-    this.filterDateTo = this.formatDateForInput(today);
+    this.filterDateTo = this.formatDateForInput(tomorrow);
     
     this.fetchOrders();
     

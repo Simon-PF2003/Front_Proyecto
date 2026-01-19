@@ -220,8 +220,16 @@
       </div>
 
 
+      <!-- Loader mientras carga -->
+      <div *ngIf="isLoading" class="text-center my-5">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3 text-muted">Cargando productos...</p>
+      </div>
+
       <!-- GRID de productos -->
-      <div class="row">
+      <div *ngIf="!isLoading" class="row">
         <div class="col-md-6 col-lg-4 col-xl-3 mt-4" *ngFor="let product of displayedProducts">
           <div class="product-card">
             <a [routerLink]="['/product-retrieve', product._id]" class="no-underline">
@@ -254,7 +262,7 @@
       </div>
 
       <!-- Paginación -->
-      <nav class="mt-4">
+      <nav *ngIf="!isLoading" class="mt-4">
         <ul class="pagination justify-content-center">
           <li class="page-item" [class.disabled]="currentPage === 1">
             <button class="page-link" style="background-color:#F8F4EC;border:1px solid #CCC9C2" (click)="changePage(currentPage - 1)">Anterior</button>
