@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { AuthService } from '../services/auth.service';
 import { first, firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-product-card',
@@ -12,6 +13,7 @@ import { first, firstValueFrom } from 'rxjs';
 export class ProductCardComponent {
   @Input() product: any;
   discountPercentage: number = 0;
+  apiUrl = environment.apiUrl;
 
   constructor(
     private router: Router,

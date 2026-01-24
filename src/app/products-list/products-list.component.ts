@@ -7,6 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import Swal from 'sweetalert2';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-products-list',
@@ -26,6 +27,7 @@ export class ProductsListComponent implements OnInit {
   categories: Category[] = [];
   brands: any[] = [];
   isLoading: boolean = true; // Indicador de carga
+  apiUrl = environment.apiUrl;
 
   selectedBrands: string[] = [];
   selectedCategories: string[] = [];

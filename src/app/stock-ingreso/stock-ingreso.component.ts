@@ -10,6 +10,7 @@ import { BrandSelectionService } from '../services/brand.service';
 import { SupplierService } from '../services/supplier.service';
 import { StockViewService } from '../services/stock-view.service';
 import { StockCartService } from '../services/stock-cart.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-stock-ingreso',
@@ -26,6 +27,7 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
   selectedSupplier: any = null;
   searchSupplierTerm: string = '';
   supplierLowStockCounts: { [key: string]: number } = {};
+  apiUrl = environment.apiUrl;
   
   // Datos de productos
   products: any[] = [];

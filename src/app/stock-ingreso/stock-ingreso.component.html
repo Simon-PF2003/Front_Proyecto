@@ -420,7 +420,7 @@
                  }">
               <div class="card h-100">
                 <div class="position-relative">
-                  <img class="card-img-top" [src]="'http://localhost:3000/' + product.image" alt="{{ product.desc }}">
+                  <img class="card-img-top" [src]="apiUrl + '/' + product.image" alt="{{ product.desc }}">
                   
                   <!-- Badge de stock bajo -->
                   <div *ngIf="product.isLowStock && !product.isNoStock" class="position-absolute top-0 start-0 m-2">

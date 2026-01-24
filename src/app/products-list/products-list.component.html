@@ -234,7 +234,7 @@
           <div class="product-card">
             <a [routerLink]="['/product-retrieve', product._id]" class="no-underline">
               <div class="card h-100">
-                <img class="card-img-top" [src]="'http://localhost:3000/' + product.image" alt="{{ product.name }}">
+                <img class="card-img-top" [src]="apiUrl + '/' + product.image" alt="{{ product.name }}">
                 <div class="card-body d-flex flex-column">
                   <h5 class="card-title truncate">{{ product.desc }}</h5>
                   <p class="card-text truncate">Código: {{ product.code }}</p>

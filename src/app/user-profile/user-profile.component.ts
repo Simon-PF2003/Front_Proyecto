@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import jwt_decode from 'jwt-decode';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ProfileUpdateComponent } from './profile-update/profile-update.component';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-user-profile',
@@ -65,8 +66,8 @@ export class UserProfileComponent implements OnInit {
       const formData = new FormData();
       formData.append('profileImage', this.selectedImageFile);
 
-      this.http.post('http://localhost:3000/api/upload-profile-image', formData, { headers }).subscribe((response: any) => {
-        this.imagePath = 'http://localhost:3000/uploadsProfileImages/' + response.imagePath;
+      this.http.post(`${environment.apiUrl}/api/upload-profile-image`, formData, { headers }).subscribe((response: any) => {
+        this.imagePath = `${environment.apiUrl}/uploadsProfileImages/` + response.imagePath;
         this.selectedImageFile = null;
         window.location.reload();
       });

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/services/auth.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-contact-form',
@@ -25,7 +26,7 @@ export class ContactFormComponent {
       Authorization: 'Bearer ' + authToken,
     };
  console.log(headers);
-    this.http.post('http://localhost:3000/enviar-correo', this.formData,{ headers }).subscribe(
+    this.http.post(`${environment.apiUrl}/enviar-correo`, this.formData,{ headers }).subscribe(
       {
       next: response => {
         console.log('Formulario enviado:', this.formData);

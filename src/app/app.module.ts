@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { JwtModule } from '@auth0/angular-jwt';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { environment } from '../environments/environment';
 import { RouterModule } from '@angular/router';
 
 //Genericos
@@ -220,7 +221,7 @@ Chart.register(...registerables);
       JwtModule.forRoot({
       config: {
         tokenGetter: () => localStorage.getItem('token'),
-        allowedDomains: ['http://localhost:3000'], 
+        allowedDomains: [environment.apiUrl.replace('https://', '').replace('http://', '')], 
         disallowedRoutes: [], 
       },
     }),

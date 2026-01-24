@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CartItem } from '../cart/art-item.model';
+import { environment } from '../../environments/environment';
 
 export interface StockValidationResult {
   valid: boolean;
@@ -26,7 +27,7 @@ export interface OrderRequest {
   providedIn: 'root'
 })
 export class OrderValidationService {
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = `${environment.apiUrl}/api`;
 
   constructor(private http: HttpClient) {}
 

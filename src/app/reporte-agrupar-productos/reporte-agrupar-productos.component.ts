@@ -4,6 +4,7 @@ import { CategorySelectionService } from '../services/category.service';
 import { AuthService } from '../services/auth.service';
 import { firstValueFrom } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-reporte-agrupar-productos',
@@ -18,6 +19,7 @@ export class ReporteAgruparProductosComponent implements OnInit {
   newCategory: string = '';
   showModal: boolean = false;
   searchTerm: string = '';
+  apiUrl = environment.apiUrl;
 
   currentPage: number = 1;
   pageSize: number = 8;
