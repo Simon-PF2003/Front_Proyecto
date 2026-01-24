@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://backend-app-env.eba-xfasrtvp.us-east-2.elasticbeanstalk.com'
+  apiUrl: 'https://a4zs1s3rhe.execute-api.us-east-2.amazonaws.com'
 };
