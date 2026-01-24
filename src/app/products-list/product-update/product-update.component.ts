@@ -10,6 +10,7 @@ import { CategorySelectionService, Category } from '../../services/category.serv
 import { BrandSelectionService } from '../../services/brand.service';
 import { FiltersStateService } from '../../shared/filters/filters-state.service';
 import Swal from 'sweetalert2';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-product-update',
@@ -29,6 +30,8 @@ export class ProductUpdateComponent implements OnInit {
   currentPage: number = 1;
   pageSize: number = 8;
   totalPages: number = 1;
+
+  apiUrl = environment.apiUrl;
 
   constructor(
     private modalService: NgbModal,
