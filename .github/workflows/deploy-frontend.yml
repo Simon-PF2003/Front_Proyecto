@@ -1,0 +1,97 @@
+name: Deploy Frontend to S3 + CloudFront
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-east-2
+  S3_BUCKET: pf-frontend-angular-ironpeaks
+  CLOUDFRONT_DISTRIBUTION_ID: E24TX5D8HBSCGM
+  ANGULAR_DIST_DIR: dist/proyecto_final
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Angular (production)
+        run: npm run build -- --configuration production
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Verify dist directory exists
+        run: |
+          if [ ! -d "${{ env.ANGULAR_DIST_DIR }}" ]; then
+            echo "❌ ERROR: No existe ${{ env.ANGULAR_DIST_DIR }}"
+            echo "Contenido de dist/:"
+            ls -la dist/ || echo "dist/ no existe"
+            exit 1
+          fi
+          echo "✅ Directorio ${{ env.ANGULAR_DIST_DIR }} encontrado"
+          echo "Contenido:"
+          ls -lah "${{ env.ANGULAR_DIST_DIR }}/"
+
+      - name: Upload assets with long cache (1 year)
+        run: |
+          echo "📦 Subiendo assets con cache largo..."
+          aws s3 sync "${{ env.ANGULAR_DIST_DIR }}/" "s3://${{ env.S3_BUCKET }}/" \
+            --delete \
+            --exclude "index.html" \
+            --cache-control "public,max-age=31536000,immutable" \
+            --region ${{ env.AWS_REGION }}
+          echo "✅ Assets subidos"
+
+      - name: Upload index.html with no-cache
+        run: |
+          if [ -f "${{ env.ANGULAR_DIST_DIR }}/index.html" ]; then
+            echo "📄 Subiendo index.html sin cache..."
+            aws s3 cp "${{ env.ANGULAR_DIST_DIR }}/index.html" "s3://${{ env.S3_BUCKET }}/index.html" \
+              --cache-control "no-cache, no-store, must-revalidate" \
+              --content-type "text/html" \
+              --region ${{ env.AWS_REGION }}
+            echo "✅ index.html subido"
+          else
+            echo "❌ ERROR: index.html no encontrado en ${{ env.ANGULAR_DIST_DIR }}"
+            exit 1
+          fi
+
+      - name: Invalidate CloudFront cache
+        run: |
+          echo "🔄 Invalidando cache de CloudFront..."
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+            --distribution-id ${{ env.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text)
+          echo "✅ Invalidación creada: $INVALIDATION_ID"
+          echo "🌐 URL de CloudFront: https://dggiruoxpiew1.cloudfront.net"
+
+      - name: Deployment summary
+        run: |
+          echo "========================================="
+          echo "🚀 DEPLOY COMPLETADO"
+          echo "========================================="
+          echo "📦 Bucket S3: s3://${{ env.S3_BUCKET }}"
+          echo "🌐 CloudFront: https://dggiruoxpiew1.cloudfront.net"
+          echo "📁 Dist dir: ${{ env.ANGULAR_DIST_DIR }}"
+          echo "🔗 Backend API: http://backend-app-env.eba-xfasrtvp.us-east-2.elasticbeanstalk.com"
+          echo "========================================="

@@ -3,18 +3,22 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ApiConfigService } from './api-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PurchaseOrderService {
 
-  private URL = 'http://localhost:3000/api';
+  private URL: string;
 
   constructor(
     private http: HttpClient,
-    private router: Router
-  ) {}
+    private router: Router,
+    private apiConfig: ApiConfigService
+  ) {
+    this.URL = this.apiConfig.getApiBaseUrl();
+  }
 
 //POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS
   createPurchaseOrder (purchaseOrderData: any): Observable<any> {

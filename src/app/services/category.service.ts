@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ApiConfigService } from './api-config.service';
 
 export interface CategoryAttribute {
   key: string;
@@ -29,9 +30,14 @@ export class CategorySelectionService {
   selectedCategoryId$: Observable<string> = this.selectedCategoryId.asObservable();
   categorySelected$ = this.selectedCategoryId$;
 
-  private URL = 'http://localhost:3000/api';
+  private URL: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) {
+    this.URL = this.apiConfig.getApiBaseUrl();
+  }
 
   //POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST 
   createNewCategory(categoryData: { type: string; attributes?: CategoryAttribute[] }): Observable<Category> {

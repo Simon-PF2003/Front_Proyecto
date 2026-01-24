@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ApiConfigService } from './api-config.service';
 
 export interface DashboardFilters {
   startDate?: string;
@@ -127,9 +128,14 @@ export interface SalesDetailsByClient {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'http://localhost:3000/api/dashboard';
+  private apiUrl: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) {
+    this.apiUrl = `${this.apiConfig.getApiBaseUrl()}/dashboard`;
+  }
 
   private getAuthHeaders() {
     const token = localStorage.getItem('token');

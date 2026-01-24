@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ApiConfigService } from './api-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MercadopagoService {
-  private URL = 'http://localhost:3000/api';
+  private URL: string;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) {
+    this.URL = this.apiConfig.getApiBaseUrl();
+  }
 
   /**
    * Crea una preferencia de pago en MercadoPago

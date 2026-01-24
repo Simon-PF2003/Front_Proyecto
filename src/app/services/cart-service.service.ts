@@ -3,15 +3,20 @@ import { HttpClient } from '@angular/common/http';
 import { CartItem } from '../cart/art-item.model';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
+import { ApiConfigService } from './api-config.service';
 @Injectable({
   providedIn: 'root'
 })
 export class CartServiceService {
   private cartItems: CartItem[] = [];
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl: string;
   
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) {
+    this.apiUrl = this.apiConfig.getApiBaseUrl();
     this.loadCartItems()
   }
 

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { CartItem } from '../cart/art-item.model';
+import { ApiConfigService } from './api-config.service';
 
 export interface StockValidationResult {
   valid: boolean;
@@ -30,12 +31,15 @@ export interface OrderRequest {
 })
 export class OrderService {
 
-  private URL = 'http://localhost:3000/api';
+  private URL: string;
 
   constructor(
     private http: HttpClient,
-    private router: Router
-  ) {}
+    private router: Router,
+    private apiConfig: ApiConfigService
+  ) {
+    this.URL = this.apiConfig.getApiBaseUrl();
+  }
 
 //POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS
   

@@ -2,18 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ApiConfigService } from './api-config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  private URL = 'http://localhost:3000/api';
+  private URL: string;
 
   constructor(
     private http: HttpClient,
-    private router: Router
-  ) {}
+    private router: Router,
+    private apiConfig: ApiConfigService
+  ) {
+    this.URL = this.apiConfig.getApiBaseUrl();
+  }
 
 //POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS
   createNewProduct(productData: FormData): Observable<any> {

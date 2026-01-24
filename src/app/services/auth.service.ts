@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { UserStateService } from './user-state.service';
+import { ApiConfigService } from './api-config.service';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private URL = 'http://localhost:3000/api';
+  private URL: string;
   private _userRole: string | null = null;
   get userRole(): string | null {
     return this._userRole;
@@ -18,8 +19,11 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private userStateService: UserStateService
-  ) { }
+    private userStateService: UserStateService,
+    private apiConfig: ApiConfigService
+  ) {
+    this.URL = this.apiConfig.getApiBaseUrl();
+  }
 
   //POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS POSTS 
   signUp(user: any) {

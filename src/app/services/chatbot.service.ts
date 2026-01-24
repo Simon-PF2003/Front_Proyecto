@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { ApiConfigService } from './api-config.service';
 
 export interface ChatMessage {
   id?: string;
@@ -36,7 +37,7 @@ export interface QuickAction {
   providedIn: 'root'
 })
 export class ChatbotService {
-  private readonly API_BASE_URL = 'http://localhost:3000/api/chatbot';
+  private readonly API_BASE_URL: string;
   private sessionId: string;
   
   // Estado del chat
@@ -65,7 +66,11 @@ export class ChatbotService {
     { id: 'contact', text: 'Contacto', icon: '📞' }
   ];
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) {
+    this.API_BASE_URL = `${this.apiConfig.getApiBaseUrl()}/chatbot`;
     this.sessionId = this.generateSessionId();
     this.initializeChat();
     this.checkConnection();

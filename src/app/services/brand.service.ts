@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { ApiConfigService } from './api-config.service';
 
 export interface Brand {
   _id: string;
@@ -15,9 +16,14 @@ export class BrandSelectionService {
   selectedBrandId$: Observable<string> = this.selectedBrandId.asObservable();
   categoryBrand$ = this.selectedBrandId$;
 
-  private URL = 'http://localhost:3000/api';
+  private URL: string;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private apiConfig: ApiConfigService
+  ) {
+    this.URL = this.apiConfig.getApiBaseUrl();
+  }
 
   //POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST POST 
   createNewBrand(brand: string): Observable<Brand> {
