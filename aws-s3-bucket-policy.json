@@ -11,7 +11,7 @@
       "Resource": "arn:aws:s3:::pf-frontend-angular-ironpeaks/*",
       "Condition": {
         "StringEquals": {
-          "AWS:SourceArn": "arn:aws:cloudfront::YOUR_ACCOUNT_ID:distribution/E24TX5D8HBSCGM"
+          "AWS:SourceArn": "arn:aws:cloudfront::598693230982:distribution/E24TX5D8HBSCGM"
         }
       }
     }
