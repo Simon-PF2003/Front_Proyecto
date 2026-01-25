@@ -61,6 +61,20 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ],
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
@@ -73,6 +87,10 @@
             },
             "development": {
               "browserTarget": "proyecto_final:build:development"
+            },
+            "local": {
+              "browserTarget": "proyecto_final:build:local",
+              "port": 4200
             }
           },
           "defaultConfiguration": "development"
