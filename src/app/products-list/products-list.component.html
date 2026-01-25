@@ -244,13 +244,17 @@
 
                   <div class="mt-auto">
                     <div *ngIf="discountPercentage === 0">
-                      <p class="card-price mb-1">{{ product.price | currency }}</p>
-                      <p class="text-danger mb-1" *ngIf="product.stock === 0"><small>🔴 Agotado</small></p>
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <p class="card-price mb-0">{{ product.price | currency }}</p>
+                        <span class="badge bg-danger ms-2" *ngIf="product.stock === 0">Agotado</span>
+                      </div>
                     </div>
                     <div *ngIf="discountPercentage > 0">
                       <p class="card-text text-danger mb-1"><small><del>{{ product.price | currency }}</del></small></p>
-                      <p class="card-price mb-1"><strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong></p>
-                      <p class="text-danger mb-1" *ngIf="product.stock === 0"><small>🔴 Agotado</small></p>
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <p class="card-price mb-0"><strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong></p>
+                        <span class="badge bg-danger ms-2" *ngIf="product.stock === 0">Agotado</span>
+                      </div>
                     </div>
                   </div>
 
