@@ -111,7 +111,7 @@ export class NavVarComponent implements OnInit {
   // Nuevo método para verificar si mostrar búsqueda de productos
   shouldShowProductSearch(): boolean {
     // Mostrar en products-list, product-update, reporte-agrupar-productos, cargar-stock
-    if (this.isProductosRoute() || this.isEditProductsRoute() || this.isProductCategoryRoute() || this.isChargeStockRoute()) {
+    if (this.isProductosRoute() || this.isEditProductsRoute()) {
       return true;
     }
     // En stock-ingreso solo mostrar si estamos en la vista de productos
@@ -125,16 +125,8 @@ export class NavVarComponent implements OnInit {
     return this.currentRoute.includes('/product-update');
   }
 
-  isProductCategoryRoute(): boolean {
-    return this.currentRoute.includes('/reporte-agrupar-productos');
-  }
-
   isOrdersRoute(): boolean {
     return this.currentRoute.includes('/orders-update-admin');
-  }
-
-  isChargeStockRoute(): boolean {
-    return this.currentRoute.includes('/stock-cargar');
   }
 
   isUserRoleDefined(): boolean {

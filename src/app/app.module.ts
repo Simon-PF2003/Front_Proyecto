@@ -112,7 +112,7 @@ import { ProfileUpdateComponent } from './user-profile/profile-update/profile-up
 
 //Dashboard
 import { DashboardRetrieveComponent } from './dashboard-retrieve/dashboard-retrieve.component';
-import { BaseChartDirective } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 
 // Chart.js components registration
 import { Chart, registerables } from 'chart.js';
@@ -226,7 +226,7 @@ Chart.register(...registerables);
       },
     }),
       BrowserAnimationsModule,
-      BaseChartDirective,
+      NgChartsModule,
   ],
   providers: [
     AuthGuard,

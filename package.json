@@ -30,7 +30,7 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.2",
     "jwt-decode": "^3.1.2",
-    "ng2-charts": "^8.0.0",
+    "ng2-charts": "^5.0.4",
     "ngx-bootstrap": "^11.0.2",
     "ngx-uploader": "^11.0.0",
     "rfs": "^10.0.0",

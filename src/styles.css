@@ -303,6 +303,17 @@ body {
   z-index: 999 !important; /* Below modals */
 }
 
+/* Ensure filters, accordions, and sticky elements are below chatbot */
+.filters-sidebar,
+.card.sticky-top,
+.accordion,
+.accordion-item,
+.accordion-collapse,
+.accordion-body {
+  z-index: 1 !important;
+  position: relative;
+}
+
 /* Bootstrap modal z-index hierarchy - Critical for preventing chatbot interference */
 .modal {
   z-index: 1050 !important; /* Above chatbot */

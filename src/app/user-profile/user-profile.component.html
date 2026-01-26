@@ -21,9 +21,11 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-body">
-          <div class="row card-title">
-            <h4 class="col-md-6">Información del perfil</h4>
-            <a href="/orders-retrieve-client" class="col-md-6 btn btn-primary" style=" width: 20%; margin-right: 5px;">Mis Pedidos</a>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Información del perfil</h4>
+            <a routerLink="/orders-retrieve-client" class="btn btn-sm btn-primary">
+              <i class="fas fa-shopping-bag me-2"></i>Mis Pedidos
+            </a>
           </div>
           <p class="card-text">Correo Electrónico: {{ userData.email }}</p>
           <p class="card-text">Cuit: {{ userData.cuit }}</p>
