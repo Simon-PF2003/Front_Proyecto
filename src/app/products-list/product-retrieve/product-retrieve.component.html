@@ -6,7 +6,7 @@
 </div>
 <section id="productDetails" class="section-p1" *ngIf="productDetails">
     <div class="product-retrieve-image">
-        <img [src]="productDetails.data.image" alt="Imagen del producto">
+        <img [src]="apiUrl + '/' + productDetails.data.image" alt="Imagen del producto">
     </div>
 
     <div class="product-retrieve-details">

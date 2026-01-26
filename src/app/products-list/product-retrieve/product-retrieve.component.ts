@@ -10,6 +10,7 @@ import jwt_decode from 'jwt-decode';
 import { countService } from 'src/app/services/count-cart.service';
 import { firstValueFrom } from 'rxjs';
 import { CategorySelectionService } from 'src/app/services/category.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-product-retrieve',
@@ -31,6 +32,7 @@ export class ProductRetrieveComponent implements OnInit {
   discountedPrice: number = 0;
   categories: any[] = [];
   selectedCategoryAttributes: any[] = [];
+  apiUrl = environment.apiUrl;
 
   constructor(
     private route: ActivatedRoute,
