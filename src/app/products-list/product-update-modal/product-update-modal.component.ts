@@ -343,6 +343,8 @@ obtenerProveedores() {
           } else if (err.status === 402) {
             errorMessage = 'Debe proporcionar una categoría';
           } else if (err.status === 403) {
+            errorMessage = 'Esta es una demostración. Las operaciones de escritura están deshabilitadas para proteger los datos.';
+          } else if (err.status === 405) {
             errorMessage = 'Error en la validación de los atributos de la categoría.';
           }
 

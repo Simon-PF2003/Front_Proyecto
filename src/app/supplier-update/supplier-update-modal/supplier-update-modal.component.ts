@@ -29,8 +29,16 @@ export class SupplierUpdateModalComponent {
           Swal.fire('Proveedor actualizado con éxito!!', '', 'success');
         },
         error: err => {
-          Swal.fire('Error', 'Error al actualizar el proveedor', 'error');
-          
+          if (err.status === 403) {
+                      Swal.fire({
+                        title: 'Actualización fallida',
+                        html: `<p class="text-muted mt-2">${err.error.message || ''}</p>`,
+                        icon: 'error',
+                        confirmButtonText: 'Entendido'
+                      });
+          } else {
+            Swal.fire('Error', 'Error al actualizar el proveedor', 'error');
+          }
         }
       }
     );

@@ -1,23 +1,97 @@
 .pic-banner {
   width: 100%;
-  /* Ajustar el ancho según tu diseño */
   max-height: 100px;
-  /* Ajustar la altura según tu diseño */
   display: block;
   margin: 0 auto;
-  /* Centrar horizontalmente */
 }
 
+/* Estilos coherentes con la identidad visual */
 .cont-info {
-  color: rgb(23, 20, 51);
-  font-size: 18px;
-  align-items: center;
-
-  justify-content: center;
-  display: flex;
-
+  background-color: #F8F4EC;
+  min-height: 100vh;
+  padding: 40px 20px;
 }
 
-.mi-parrafo {
-  line-height: 1.5;
+.cont-info .bg-light {
+  background-color: white !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.text-primary {
+  color: #4CA7BF !important;
+}
+
+.border-primary {
+  border-color: #4CA7BF !important;
+}
+
+.text-secondary {
+  color: #333 !important;
+}
+
+.text-muted {
+  color: #666 !important;
+}
+
+.border-start {
+  border-left: 4px solid #4CA7BF !important;
+  padding-left: 1rem;
+  background-color: #F8F4EC;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+/* Cards de desarrolladores */
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #CCC9C2;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(76, 167, 191, 0.15) !important;
+}
+
+.btn-outline-primary {
+  color: #4CA7BF;
+  border-color: #4CA7BF;
+}
+
+.btn-outline-primary:hover {
+  background-color: #4CA7BF;
+  border-color: #4CA7BF;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cont-info {
+    padding: 20px 10px;
+  }
+  
+  .cont-info .bg-light {
+    padding: 2rem !important;
+  }
+  
+  .display-4 {
+    font-size: 2rem !important;
+  }
+  
+  .h3 {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .cont-info .bg-light {
+    padding: 1.5rem !important;
+  }
+  
+  .display-4 {
+    font-size: 1.75rem !important;
+  }
+  
+  .lead {
+    font-size: 1rem !important;
+  }
 }

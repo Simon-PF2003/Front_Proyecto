@@ -282,6 +282,14 @@ export class ProductUpdateComponent implements OnInit {
               this.router.navigate(['/product-update']);
             },
             error: (err) => {
+              if (err.status === 403) {
+                Swal.fire({
+                  title: 'Eliminación fallida',
+                  html: `<p class="text-muted mt-2">${err.error.message || ''}</p>`,
+                  icon: 'error',
+                  confirmButtonText: 'Entendido'
+                });
+              }
               console.error(err);
             }
           });       

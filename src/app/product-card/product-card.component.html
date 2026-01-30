@@ -1,19 +1,32 @@
-<div class="card">
-  <img class="card-img-top" [src]="apiUrl + '/' + product.image" alt="{{ product.name }}">
-  <div class="card-body">
-    <h5 class="card-title">{{ product.desc }}</h5>
-    <!-- <p class="card-text">{{ product.desc }}</p> -->
-    <p class="card-text">Marca: {{ product.brand?.brand || 'Sin marca' }}</p>
-    <p class="card-text">Categoría: {{ product.cat?.type || 'Sin categoría' }}</p>
-    <div *ngIf="discountPercentage === 0">
-      <p class="card-price mb-1">{{ product.price | currency }}</p>
-      <p class="text-danger mb-1" *ngIf="product.stock === 0"><small>🔴 Agotado</small></p>
-    </div>
+<div class="product-card">
+  <div class="card h-100">
+    <img class="card-img-top" [src]="apiUrl + '/' + product.image" alt="{{ product.name }}">
+    <div class="card-body d-flex flex-column">
+      <h5 class="card-title truncate">{{ product.desc }}</h5>
+      <p class="card-text truncate">Código: {{ product.code }}</p>
+      <p class="card-text truncate">Marca: {{ product.brand?.brand || 'Sin marca' }}</p>
+      <p class="card-text truncate">Categoría: {{ product.cat?.type || '' }}</p>
+      <p class="card-text">Stock: {{ product.stock }}</p>
 
-    <div *ngIf="discountPercentage > 0">
-      <p class="card-text text-danger mb-2"><small><del>{{ product.price | currency }}</del></small></p>
-      <p class="card-price mb-2"><strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong></p>
-      <p class="text-danger mb-2" *ngIf="product.stock === 0"><small>🔴 Agotado</small></p>
+      <div class="mt-auto">
+        <div *ngIf="discountPercentage === 0">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <p class="card-price mb-0">{{ product.price | currency }}</p>
+            <span class="badge bg-danger ms-2" *ngIf="product.stock === 0">Agotado</span>
+          </div>
+        </div>
+
+        <div *ngIf="discountPercentage > 0">
+          <p class="card-text text-danger mb-1"><small><del>{{ product.price | currency }}</del></small></p>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <p class="card-price mb-0"><strong>{{ product.price * (1 - (discountPercentage)) | currency }}</strong></p>
+            <span class="badge bg-danger ms-2" *ngIf="product.stock === 0">Agotado</span>
+          </div>
+        </div>
+        
+        <button class="btn btn-primary w-100 mt-2" (click)="comprar()">
+          <i class="fas fa-shopping-cart me-2"></i>Comprar
+        </button>
+      </div>
     </div>
-    <button class="btn btn-primary" style="font-family: BlinkMacSystemFont, 'Segoe UI'; border: none; width: 100%;" (click)="comprar()"> Comprar</button>
   </div>

@@ -189,9 +189,16 @@ export class ProductCreateComponent implements OnInit {
         } else if (err.status === 400) {
           const msg = err.error?.error || 'No se ha adjuntado una imagen.';
           Swal.fire({ icon: 'error', title: 'Registro fallido', text: msg });
-        } else {
+        } else if (err.status === 403) {
+          Swal.fire({
+            title: 'Registro fallido',
+            html: `<p class="text-muted mt-2">${err.error.message || ''}</p>`,
+            icon: 'error',
+            confirmButtonText: 'Entendido'
+          });
+        } else  {
           Swal.fire({ icon: 'error', title: 'Registro fallido', text: err.error });
-        }
+        } 
       }
     });
   }

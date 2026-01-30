@@ -609,6 +609,7 @@ export class StockIngresoComponent implements OnInit, OnDestroy {
         console.error('Error al crear la orden de compra:', error);
         let errorMessage = 'Hubo un problema al crear la orden de compra';
         if (error.status === 404) errorMessage = 'No se encontró el proveedor seleccionado';
+        else if (error.status === 403) errorMessage = 'Esta es una demostración. Las operaciones de escritura están deshabilitadas para proteger los datos.';
         else if (error.status === 400) errorMessage = 'Los datos de la orden no son válidos';
         else if (error.status === 500) errorMessage = 'Error interno del servidor. Intente nuevamente';
 

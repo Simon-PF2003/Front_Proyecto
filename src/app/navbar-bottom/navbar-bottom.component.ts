@@ -12,7 +12,7 @@ export class NavbarBottomComponent {
     return this.shouldDisplay;
   }
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onScroll() {
     const windowHeight = "innerHeight" in window ? window.innerHeight : document.documentElement.offsetHeight;
     const body = document.body;

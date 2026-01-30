@@ -51,7 +51,16 @@ export class UserUpdateModalComponent {
           Swal.fire('Usuario actualizado con éxito!!', '', 'success');
         },
         error: err => {
-          Swal.fire('Error', 'Error al actualizar el usuario', 'error');
+          if (err.status === 403) {
+                      Swal.fire({
+                        title: 'Actualización fallida',
+                        html: `<p class="text-muted mt-2">${err.error.message || ''}</p>`,
+                        icon: 'error',
+                        confirmButtonText: 'Entendido'
+                      });
+          } else {
+            Swal.fire('Error', 'Error al actualizar el usuario', 'error');
+          }
         }
       }
     );
