@@ -1,16 +1,37 @@
-<div class="container mt-4">
-  <div class="row">
-    <div class="col-12">
-      <img src="../../assets/contact-form/c47f3779c2ba1f89dcbbbecfbb1f1da9.jpg" alt="Banner"
-        class="pic-banner img-fluid" />
-    </div>
-  </div>
-</div>
+<div class="contact-wrapper" style="background-color: white; padding: 40px 20px;">
+  <div class="container" style="max-width: 800px;">
+    
+    <!-- Card única que engloba todo -->
+    <div class="p-4 rounded shadow-sm" style="background-color: #F8F4EC; border: 1px solid #CCC9C2;">
+      
+      <!-- Encabezado -->
+      <div class="text-center mb-4">
+        <h2 class="fw-bold mb-2" style="color: #333;">
+          <i class="fas fa-envelope me-2" style="color: #4CA7BF;"></i>Contacto
+        </h2>
+        <p class="text-muted mb-0 small">Podés dejar tu mensaje y te responderemos a la brevedad.</p>
+      </div>
 
-<div class="container mt-5 mb-5">
-  <div class="row">
-    <div class="col-12 col-md-6">
+      <!-- Formulario -->
       <app-contact-form></app-contact-form>
+      
+      <!-- Información de contacto -->
+      <div class="mt-4 pt-3" style="border-top: 1px solid #CCC9C2;">
+        <p class="text-muted small text-center mb-2" style="color: #555;">
+          <i class="fas fa-info-circle me-1" style="color: #4CA7BF;"></i>
+          También podés contactarnos directamente:
+        </p>
+        <div class="d-flex flex-wrap justify-content-center gap-3 small">
+          <a href="mailto:ironpeakstech@gmail.com" class="text-decoration-none" style="color: #4CA7BF;">
+            <i class="fas fa-envelope me-1"></i>ironpeakstech@gmail.com
+          </a>
+          <span class="text-muted">·</span>
+          <a href="tel:+5434111111111" class="text-decoration-none" style="color: #4CA7BF;">
+            <i class="fas fa-phone me-1"></i>+54 341 1111111
+          </a>
+        </div>
+      </div>
     </div>
+
   </div>
 </div>

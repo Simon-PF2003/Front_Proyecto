@@ -1,0 +1,39 @@
+/* Estilo coherente con styles.css */
+.form-label {
+  color: #555;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-control {
+  border: 1px solid #CCC9C2;
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  background-color: white;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus {
+  border-color: #4CA7BF;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(76, 167, 191, 0.1);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.btn-soft-primary {
+  padding: 0.65rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-soft-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(76, 167, 191, 0.3);
+}

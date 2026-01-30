@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   templateUrl: './contact-form.component.html',
   styleUrls: ['./contact-form.component.css']
 })
-export class ContactFormComponent {
+export class ContactFormComponent implements OnInit {
   formData = {
     name: '',
     email: '',
@@ -17,7 +17,26 @@ export class ContactFormComponent {
   };
 
   constructor(private http: HttpClient,
-    private authService: AuthService,) { }
+    private authService: AuthService) { }
+
+  ngOnInit() {
+    // Cargar email del usuario si está logueado
+    if (this.authService.loggedIn()) {
+      this.authService.getUserData().subscribe({
+        next: (userData) => {
+          if (userData && userData.email) {
+            this.formData.email = userData.email;
+            if (userData.name) {
+              this.formData.name = userData.name;
+            }
+          }
+        },
+        error: (err) => {
+          console.error('Error al obtener datos del usuario:', err);
+        }
+      });
+    }
+  }
 
   submitForm() {
     const authToken= this.authService.getToken();
