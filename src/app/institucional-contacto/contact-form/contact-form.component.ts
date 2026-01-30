@@ -26,8 +26,8 @@ export class ContactFormComponent implements OnInit {
         next: (userData) => {
           if (userData && userData.email) {
             this.formData.email = userData.email;
-            if (userData.name) {
-              this.formData.name = userData.name;
+            if (userData.businessName) {
+              this.formData.name = userData.businessName;
             }
           }
         },
