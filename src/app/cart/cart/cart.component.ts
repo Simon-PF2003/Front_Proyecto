@@ -8,7 +8,7 @@ import { MercadopagoService } from 'src/app/services/mercadopago.service';
 import Swal from 'sweetalert2';
 import { ProductService } from 'src/app/services/product.service';
 import { Router } from '@angular/router';
-
+import jwt_decode from 'jwt-decode';
 
 @Component({
   selector: 'app-cart',
@@ -65,8 +65,6 @@ removeFromCart(productId: string) {
 }
 
 confirmarPedido() {
-  console.log('=== INICIO CONFIRMAR PEDIDO ===');
-  console.log('Items en carrito:', this.cartItems);
   
   if (this.cartItems.length === 0) {
     Swal.fire({
@@ -75,6 +73,15 @@ confirmarPedido() {
       text: `Debe agregar items al carrito`,
     });
     return;
+  }
+
+  const token = localStorage.getItem('token');
+  if (token) {
+    const decodedToken: any = jwt_decode(token);
+    if (decodedToken.role === 'Administrador') {
+      Swal.fire({ title: 'Acción no permitida', text: 'Los administradores no pueden realizar pedidos', icon: 'error' });
+      return;
+    }
   }
 
   // Verificar si el usuario está autenticado antes de proceder

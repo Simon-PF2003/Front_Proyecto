@@ -4,6 +4,8 @@ import { CartItem } from '../cart/art-item.model';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ApiConfigService } from './api-config.service';
+import jwt_decode from 'jwt-decode';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +19,7 @@ export class CartServiceService {
     private apiConfig: ApiConfigService
   ) {
     this.apiUrl = this.apiConfig.getApiBaseUrl();
-    this.loadCartItems()
+    this.loadCartItems();
   }
 
   /**
@@ -25,6 +27,20 @@ export class CartServiceService {
    */
   addToCart(item: CartItem): Observable<boolean> {
     return new Observable(observer => {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        const decodedToken: any = jwt_decode(token);
+        if (decodedToken.role === 'Administrador') {
+          Swal.fire({
+            title: 'Acción no permitida',
+            text: 'Los administradores no pueden agregar productos al carrito',
+            icon: 'error'
+          });
+          observer.next(false);
+          observer.complete();
+          return;
+        }
+      }
       const existingItemIndex = this.cartItems.findIndex(cartItem => cartItem._id === item._id);
     
       if (existingItemIndex !== -1) {

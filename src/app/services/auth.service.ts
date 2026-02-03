@@ -396,6 +396,7 @@ async getClienteEmail(cuit: string, authToken: string): Promise<any> {
   logOut() {
     localStorage.removeItem('token');
     localStorage.removeItem('cartItems');
+    localStorage.removeItem('productsInCart');
     this.router.navigate(['/login']);
   }
 

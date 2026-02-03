@@ -152,7 +152,10 @@ export class ProductRetrieveComponent implements OnInit {
     } else if (this.userStatus === 'Moroso') {
       Swal.fire({ title: 'No puedes comprar', text: 'No puedes comprar productos siendo moroso', icon: 'error' });
       return;
-    } 
+    } else if (this.userRole === 'Administrador') {
+      Swal.fire({ title: 'Acción no permitida', text: 'Los administradores no pueden agregar productos al carrito', icon: 'error' });
+      return;
+    }
 
     const originalPrice = this.productDetails.data.price;
     const priceWithDiscount = this.discountPercentage > 0 
@@ -179,7 +182,7 @@ export class ProductRetrieveComponent implements OnInit {
           Swal.fire({
             icon: 'success',
             title: 'Producto agregado',
-            text: `${productToAdd.desc} agregado al carrito con descuento aplicado`,
+            text: `${productToAdd.desc} agregado al carrito`,
             timer: 2000,
             showConfirmButton: false
           });
