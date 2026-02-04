@@ -1,5 +1,8 @@
 # Proyecto_Final
 # Frontend
+
+![Home](https://github.com/user-attachments/assets/8bd0f635-2a26-47d9-a65c-0ba64f74aee3)
+
 Este repositorio contiene el frontend de mi proyecto final de la carrera: una plataforma de e-commerce full stack con chatbot integrado, panel de administración y dashboards de inteligencia de negocios.
 
 El frontend provee una interfaz de usuario responsiva para clientes y administradores, permitiendo la navegación de productos, gestión del carrito de compras, realización de pedidos y visualización de datos.
@@ -10,8 +13,11 @@ El frontend provee una interfaz de usuario responsiva para clientes y administra
 - Flujo de carrito de compras y proceso de checkout
 - Panel de administración para la gestión de productos, usuarios, pedidos y stock
 - Chatbot con IA integrado para asistencia al cliente
+  ![Chatbot](https://github.com/user-attachments/assets/f0653b05-493e-4d30-b021-d3747c2ca731)
 - Dashboards de BI para análisis de ventas y negocio
+  ![Dashboard BI](https://github.com/user-attachments/assets/c0e575bc-f62b-42e3-841d-7776ddbe95e4)
 - Sistema de pronóstico de demanda
+  ![Sin título](https://github.com/user-attachments/assets/de36e6ae-d6b2-4975-926c-353b7176c2f2)
 - Interfaz responsiva para dispositivos desktop y móviles
 
 # Stack tecnológico
