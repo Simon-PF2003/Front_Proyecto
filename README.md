@@ -53,6 +53,9 @@ Los endpoints son consumidos mediante servici
 
 # Final Degree Project
 # Frontend
+
+![Home](https://github.com/user-attachments/assets/8bd0f635-2a26-47d9-a65c-0ba64f74aee3)
+
 This repository contains the frontend of my final degree project: a full-stack e-commerce platform with an integrated chatbot, admin panel, and business intelligence dashboards.
 
 The frontend provides a responsive user interface for customers and administrators, enabling product browsing, shopping cart management, order placement, and data visualization.
@@ -63,8 +66,14 @@ The frontend provides a responsive user interface for customers and administrato
 - Shopping cart and checkout flow
 - Admin panel for managing products, users, orders, and stock
 - Integrated AI chatbot for customer assistance
+  
+  ![Chatbot](https://github.com/user-attachments/assets/f0653b05-493e-4d30-b021-d3747c2ca731)
 - BI dashboards for sales and business analysis
+    
+  ![Dashboard BI](https://github.com/user-attachments/assets/c0e575bc-f62b-42e3-841d-7776ddbe95e4)
 - Demand Forecasting System
+    
+  ![Sin título](https://github.com/user-attachments/assets/de36e6ae-d6b2-4975-926c-353b7176c2f2)
 - Responsive UI for desktop and mobile devices
 
 # Tech Stack
