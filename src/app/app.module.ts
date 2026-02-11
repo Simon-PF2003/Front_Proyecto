@@ -1,5 +1,5 @@
 //Modules
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
@@ -10,6 +10,11 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from '../environments/environment';
 import { RouterModule } from '@angular/router';
+import { registerLocaleData } from '@angular/common';
+import localeEsCo from '@angular/common/locales/es-CO';
+
+// Registrar locale español de Colombia (usa $ y coma como separador decimal)
+registerLocaleData(localeEsCo);
 
 //Genericos
 import { HomeCarouselComponent } from './home-carousel/home-carousel.component';
@@ -114,6 +119,9 @@ import { ProfileUpdateComponent } from './user-profile/profile-update/profile-up
 import { DashboardRetrieveComponent } from './dashboard-retrieve/dashboard-retrieve.component';
 import { NgChartsModule } from 'ng2-charts';
 
+//Custom Pipes
+import { CustomCurrencyPipe } from './shared/pipes/custom-currency.pipe';
+
 // Chart.js components registration
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
@@ -208,6 +216,9 @@ Chart.register(...registerables);
     PaymentPendingComponent,
     ProfileUpdateComponent,
     DashboardRetrieveComponent,
+
+    //Custom Pipes
+    CustomCurrencyPipe,
   ],
 
   imports: [
@@ -234,6 +245,10 @@ Chart.register(...registerables);
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptorService,
       multi: true,
+    },
+    {
+      provide: LOCALE_ID,
+      useValue: 'es-CO'
     },
     AuthService,
     CategorySelectionService

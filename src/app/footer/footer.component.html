@@ -11,6 +11,16 @@
           <p class="footer-text">
             Tu E-Commerce de confianza para productos de calidad.
           </p>
+          <div *ngIf="isAdministrador() || isUsuarioComun()">
+            <h6 class="footer-title mt-4">
+              <i class="fas fa-book"></i> Manual de Usuario
+            </h6>
+            <p class="footer-text">
+              <a (click)="abrirManual()" class="footer-link" style="cursor: pointer;">
+                {{ isAdministrador() ? 'Descargar Manual de Administrador' : 'Descargar Manual de Cliente' }}
+              </a>
+            </p>
+          </div>
         </div>
 
         <div class="footer-col footer-col-center">
