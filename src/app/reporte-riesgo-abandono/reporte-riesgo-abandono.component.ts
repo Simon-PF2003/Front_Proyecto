@@ -39,10 +39,10 @@ export class ReporteRiesgoAbandonoComponent implements OnInit {
 
   setDefaultDateRange() {
     const today = new Date();
-    const lastMonth = new Date();
-    lastMonth.setMonth(today.getMonth() - 1);
+    const lastYear = new Date();
+    lastYear.setFullYear(today.getFullYear() - 1);
 
-    this.dateRangeStart = lastMonth.toISOString().split('T')[0];
+    this.dateRangeStart = lastYear.toISOString().split('T')[0];
     this.dateRangeEnd = today.toISOString().split('T')[0];
   }
 

@@ -201,53 +201,70 @@
           </div>
         </div>
 
-        <!-- Products Chart -->
+        <!-- Categories Pie Chart -->
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header" style="background-color: #F8F4EC;">
+              <i class="fas fa-chart-pie me-2"></i>Distribución por Categoría
+            </div>
+            <div class="card-body" style="height: 300px;">
+              <canvas baseChart
+                *ngIf="!loading.profitability && profitabilityCategories.length > 0"
+                [data]="categoriesChartData"
+                [options]="categoriesChartOptions"
+                [type]="categoriesChartType">
+              </canvas>
+              <div *ngIf="loading.profitability" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Products Chart -->
+      <div class="row g-3 mb-4">
         <div class="col-lg-6">
           <div class="card">
             <div class="card-header" style="background-color: #F8F4EC;">
               <i class="fas fa-trophy me-2"></i>Top Productos Vendidos
             </div>
-            <div class="card-body" style="height: 300px;">
+            <div class="card-body" style="height: 350px;">
               <canvas baseChart
                 *ngIf="!loading.products && productsMostSold.length > 0"
                 [data]="productsChartData"
                 [options]="productsChartOptions"
                 [type]="productsChartType">
               </canvas>
+              <div *ngIf="!loading.products && productsMostSold.length === 0" class="text-center py-5">
+                <p class="text-muted">No hay datos suficientes para mostrar</p>
+              </div>
+              <div *ngIf="loading.products" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Products Most Sold Table -->
-      <div class="card mb-4">
-        <div class="card-header" style="background-color: #F8F4EC;">
-          <i class="fas fa-star me-2"></i>Productos Más Vendidos
-        </div>
-        <div class="card-body p-0">
-          <div class="table-responsive" *ngIf="!loading.products">
-            <table class="table table-hover mb-0">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Categoría</th>
-                  <th>Marca</th>
-                  <th class="text-end">Cantidad</th>
-                  <th class="text-end">Ingresos</th>
-                  <th class="text-center">Ventas</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let product of productsMostSold.slice(0, 10)">
-                  <td>{{ product.productName }}</td>
-                  <td><span class="badge bg-secondary">{{ product.category }}</span></td>
-                  <td>{{ product.brand }}</td>
-                  <td class="text-end">{{ formatNumber(product.totalQuantity) }}</td>
-                  <td class="text-end">{{ formatCurrency(product.totalRevenue) }}</td>
-                  <td class="text-center">{{ product.salesCount }}</td>
-                </tr>
-              </tbody>
-            </table>
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-header" style="background-color: #F8F4EC;">
+              <i class="fas fa-exclamation-triangle me-2"></i>Productos con Menor Rendimiento
+            </div>
+            <div class="card-body" style="height: 350px;">
+              <canvas baseChart
+                *ngIf="!loading.products && productsLeastSold.length > 0"
+                [data]="worstProductsChartData"
+                [options]="worstProductsChartOptions"
+                [type]="worstProductsChartType">
+              </canvas>
+              <div *ngIf="!loading.products && productsLeastSold.length === 0" class="text-center py-5">
+                <p class="text-muted">No hay datos suficientes para mostrar</p>
+              </div>
+              <div *ngIf="loading.products" class="text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -390,6 +407,47 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Worst Performing Clients -->
+      <div class="card mb-4">
+        <div class="card-header" style="background-color: #F8F4EC;">
+          <i class="fas fa-user-times me-2"></i>Clientes con Menor Actividad
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive" *ngIf="!loading.customers && clientsLeastActive.length > 0">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th>Posición</th>
+                  <th>Cliente</th>
+                  <th>Email</th>
+                  <th class="text-end">Total Gastado</th>
+                  <th class="text-center">Compras</th>
+                  <th class="text-end">Cantidad Productos</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let client of clientsLeastActive; let i = index">
+                  <td>
+                    <span class="badge bg-danger">{{ i + 1 }}</span>
+                  </td>
+                  <td>{{ client.businessName }}</td>
+                  <td><small class="text-muted">{{ client.email }}</small></td>
+                  <td class="text-end"><strong>{{ formatCurrency(client.totalSpent || 0) }}</strong></td>
+                  <td class="text-center">{{ client.salesCount }}</td>
+                  <td class="text-end">{{ formatNumber(client.totalQuantity || 0) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="!loading.customers && clientsLeastActive.length === 0" class="text-center py-5">
+            <p class="text-muted">No hay datos suficientes para mostrar</p>
+          </div>
+          <div *ngIf="loading.customers" class="text-center py-4">
+            <div class="spinner-border text-primary" role="status"></div>
           </div>
         </div>
       </div>

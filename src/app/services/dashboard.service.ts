@@ -101,6 +101,7 @@ export interface ClientRanking {
   email: string;
   role: string;
   totalQuantity?: number;
+  totalSpent?: number;
   salesCount: number;
 }
 
@@ -169,6 +170,12 @@ export class DashboardService {
     return this.http.get<ProductSold[]>(`${this.apiUrl}/products/most-sold`, { params, headers });
   }
 
+  getProductsLeastSold(filters: DashboardFilters = {}): Observable<ProductSold[]> {
+    const params = this.buildParams(filters);
+    const headers = this.getAuthHeaders();
+    return this.http.get<ProductSold[]>(`${this.apiUrl}/products/least-sold`, { params, headers });
+  }
+
   getProfitabilityByProduct(filters: DashboardFilters = {}): Observable<ProfitabilityProduct[]> {
     const params = this.buildParams(filters);
     const headers = this.getAuthHeaders();
@@ -221,5 +228,11 @@ export class DashboardService {
     const params = this.buildParams(filters);
     const headers = this.getAuthHeaders();
     return this.http.get<ClientRankingsResponse>(`${this.apiUrl}/customers/rankings`, { params, headers });
+  }
+
+  getClientsLeastActive(filters: DashboardFilters = {}): Observable<ClientRanking[]> {
+    const params = this.buildParams(filters);
+    const headers = this.getAuthHeaders();
+    return this.http.get<ClientRanking[]>(`${this.apiUrl}/customers/least-active`, { params, headers });
   }
 }

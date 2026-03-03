@@ -12,6 +12,7 @@ import {
   ActiveClients,
   ImportantClientsResponse,
   ClientRankingsResponse,
+  ClientRanking,
   QuarterlyComparison
 } from '../services/dashboard.service';
 import { CategorySelectionService, Category } from '../services/category.service';
@@ -61,6 +62,7 @@ export class DashboardRetrieveComponent implements OnInit {
 
   // Products data
   productsMostSold: ProductSold[] = [];
+  productsLeastSold: ProductSold[] = [];
   profitabilityProducts: ProfitabilityProduct[] = [];
   profitabilityCategories: ProfitabilityCategory[] = [];
 
@@ -73,6 +75,7 @@ export class DashboardRetrieveComponent implements OnInit {
   activeClients: ActiveClients = { total: 0, clients: [] };
   importantClients: ImportantClientsResponse = { stats: { totalVIPClients: 0, avgPurchaseCount: 0, avgTotalSpent: 0, avgVIPScore: 0 }, clients: [] };
   clientRankings: ClientRankingsResponse = { byQuantity: [], byLiters: [] };
+  clientsLeastActive: ClientRanking[] = [];
 
   // Chart configurations
   public salesChartData: ChartData<'line'> = {
@@ -134,6 +137,44 @@ export class DashboardRetrieveComponent implements OnInit {
   };
   
   public productsChartType: ChartType = 'bar';
+
+  // Worst Products Chart
+  public worstProductsChartData: ChartData<'bar'> = {
+    labels: [],
+    datasets: []
+  };
+  
+  public worstProductsChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: {
+      legend: { display: false },
+      title: { display: true, text: 'Productos con Menor Rendimiento' }
+    },
+    scales: {
+      x: { beginAtZero: true }
+    }
+  };
+  
+  public worstProductsChartType: ChartType = 'bar';
+
+  // Categories Pie Chart
+  public categoriesChartData: ChartData<'pie'> = {
+    labels: [],
+    datasets: []
+  };
+  
+  public categoriesChartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'right' },
+      title: { display: true, text: 'Distribución por Categoría' }
+    }
+  };
+  
+  public categoriesChartType: ChartType = 'pie';
 
   constructor(
     private dashboardService: DashboardService,
@@ -206,14 +247,26 @@ export class DashboardRetrieveComponent implements OnInit {
 
   loadProducts(): void {
     this.loading.products = true;
+    
     this.dashboardService.getProductsMostSold(this.filters).subscribe({
       next: (data) => {
         this.productsMostSold = data;
         this.updateProductsChart();
-        this.loading.products = false;
       },
       error: (error) => {
         console.error('Error loading products:', error);
+      }
+    });
+
+    this.dashboardService.getProductsLeastSold({ ...this.filters, limit: 10 }).subscribe({
+      next: (data) => {
+        console.log('Productos menos vendidos recibidos:', data);
+        this.productsLeastSold = data;
+        this.updateWorstProductsChart();
+        this.loading.products = false;
+      },
+      error: (error) => {
+        console.error('Error loading least sold products:', error);
         this.loading.products = false;
       }
     });
@@ -234,6 +287,7 @@ export class DashboardRetrieveComponent implements OnInit {
     this.dashboardService.getProfitabilityByCategory(this.filters).subscribe({
       next: (data) => {
         this.profitabilityCategories = data;
+        this.updateCategoriesChart();
         this.loading.profitability = false;
       },
       error: (error) => {
@@ -302,10 +356,20 @@ export class DashboardRetrieveComponent implements OnInit {
     this.dashboardService.getClientRankings(this.filters).subscribe({
       next: (data) => {
         this.clientRankings = data;
-        this.loading.customers = false;
       },
       error: (error) => {
         console.error('Error loading client rankings:', error);
+      }
+    });
+
+    this.dashboardService.getClientsLeastActive({ ...this.filters, limit: 10 }).subscribe({
+      next: (data) => {
+        console.log('Clientes menos activos recibidos:', data);
+        this.clientsLeastActive = data;
+        this.loading.customers = false;
+      },
+      error: (error) => {
+        console.error('Error loading least active clients:', error);
         this.loading.customers = false;
       }
     });
@@ -434,6 +498,41 @@ export class DashboardRetrieveComponent implements OnInit {
         label: 'Cantidad Vendida',
         data: quantities,
         backgroundColor: '#4299e1'
+      }]
+    };
+  }
+
+  updateWorstProductsChart(): void {
+    const worstProducts = this.productsLeastSold.slice(0, 10);
+    const labels = worstProducts.map(p => p.productName || 'N/A');
+    const quantities = worstProducts.map(p => p.totalQuantity);
+
+    this.worstProductsChartData = {
+      labels: labels,
+      datasets: [{
+        label: 'Cantidad Vendida',
+        data: quantities,
+        backgroundColor: '#ed8936'
+      }]
+    };
+  }
+
+  updateCategoriesChart(): void {
+    const topCategories = this.profitabilityCategories.slice(0, 8);
+    const labels = topCategories.map(c => c.categoryName || 'Sin categoría');
+    const revenues = topCategories.map(c => c.totalRevenue);
+
+    const colors = [
+      '#4299e1', '#48bb78', '#ed8936', '#9f7aea',
+      '#f56565', '#38b2ac', '#ecc94b', '#ed64a6'
+    ];
+
+    this.categoriesChartData = {
+      labels: labels,
+      datasets: [{
+        label: 'Ingresos por Categoría',
+        data: revenues,
+        backgroundColor: colors.slice(0, labels.length)
       }]
     };
   }
